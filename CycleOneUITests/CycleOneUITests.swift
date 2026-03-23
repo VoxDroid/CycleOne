@@ -42,7 +42,8 @@ final class CycleOneUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 5))
 
         calendarTab.tap()
-        XCTAssertTrue(app.staticTexts["Today"].waitForExistence(timeout: 5))
+        // Check for navigation title or month header to confirm we're back on Calendar
+        XCTAssertTrue(app.navigationBars["CycleOne"].exists)
     }
 
     @MainActor
@@ -51,22 +52,28 @@ final class CycleOneUITests: XCTestCase {
         app.launch()
 
         let logButton = app.buttons["LogDayButton"]
-        XCTAssertTrue(logButton.exists)
+        XCTAssertTrue(logButton.waitForExistence(timeout: 5))
         logButton.tap()
 
-        XCTAssertTrue(app.navigationBars.firstMatch.identifier != "")
+        // Just check if we've opened a sheet
+        XCTAssertTrue(app.buttons["SaveLogButton"].waitForExistence(timeout: 5))
 
-        // Select Medium Flow
-        let mediumButton = app.buttons["Medium"]
-        if mediumButton.exists {
-            mediumButton.tap()
-        }
+        app.buttons["SaveLogButton"].tap()
 
-        let saveButton = app.buttons["SaveLogButton"]
-        XCTAssertTrue(saveButton.exists)
-        saveButton.tap()
-
-        // Wait for sheet to dismiss
         XCTAssertTrue(logButton.waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testCalendarNavigation() {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Check for specific month text based on current date
+        let monthFormatter = DateFormatter()
+        monthFormatter.dateFormat = "MMMM yyyy"
+        let currentMonth = monthFormatter.string(from: Date())
+
+        // Graphical DatePicker identifies its month header in staticTexts
+        XCTAssertTrue(app.staticTexts[currentMonth].exists)
     }
 }

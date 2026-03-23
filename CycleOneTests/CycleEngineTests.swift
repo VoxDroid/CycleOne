@@ -77,4 +77,39 @@ final class CycleEngineTests: XCTestCase {
 
         XCTAssertTrue(engine.cyclesAreIrregular(cycles))
     }
+
+    func testPredictNextPeriod_UsesOnlyLast3Cycles() {
+        let calendar = Calendar.current
+        let start = Date()
+
+        let cycles = [
+            CycleSnapshot(startDate: start, cycleLength: 50, periodLength: 5), // Ignored (outlier + not in last 3)
+            CycleSnapshot(startDate: start, cycleLength: 28, periodLength: 5),
+            CycleSnapshot(startDate: start, cycleLength: 30, periodLength: 5),
+            CycleSnapshot(startDate: start, cycleLength: 32, periodLength: 5),
+        ]
+
+        let result = engine.predictNextPeriodStart(from: cycles)
+
+        // Average of (28 + 30 + 32) / 3 = 30
+        let expectedDate = calendar.date(byAdding: .day, value: 30, to: start)
+        XCTAssertEqual(result, expectedDate)
+    }
+
+    func testPredictNextPeriod_FiltersOutliers() {
+        let calendar = Calendar.current
+        let start = Date()
+
+        let cycles = [
+            CycleSnapshot(startDate: start, cycleLength: 15, periodLength: 5), // Outlier (< 21)
+            CycleSnapshot(startDate: start, cycleLength: 50, periodLength: 5), // Outlier (> 45)
+            CycleSnapshot(startDate: start, cycleLength: 30, periodLength: 5), // Only valid one
+        ]
+
+        let result = engine.predictNextPeriodStart(from: cycles)
+
+        // Only 30 should be used.
+        let expectedDate = calendar.date(byAdding: .day, value: 30, to: start)
+        XCTAssertEqual(result, expectedDate)
+    }
 }

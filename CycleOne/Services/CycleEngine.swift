@@ -20,9 +20,14 @@ class CycleEngine {
     func predictNextPeriodStart(from cycles: [CycleSnapshot]) -> Date? {
         guard let lastCycle = cycles.last else { return nil }
 
-        let averageLength = cycles.count > 0
-            ? Int(cycles.map(\.cycleLength).reduce(0, +) / cycles.count)
-            : defaultCycleLength
+        // Only use the last 3 cycles that are within healthy bounds (21-45 days)
+        let validCycles = cycles.suffix(3).filter { $0.cycleLength >= 21 && $0.cycleLength <= 45 }
+
+        let averageLength: Int = if validCycles.isEmpty {
+            defaultCycleLength
+        } else {
+            Int(validCycles.map(\.cycleLength).reduce(0, +) / validCycles.count)
+        }
 
         let lengthToUse = averageLength > 0 ? averageLength : defaultCycleLength
 

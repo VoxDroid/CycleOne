@@ -31,7 +31,13 @@ class NotificationService {
 
         let components = triggerComponents(for: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        let request = UNNotificationRequest(identifier: "period_alert", content: content, trigger: trigger)
+
+        let dateString = ISO8601DateFormatter().string(from: date).prefix(10)
+        let request = UNNotificationRequest(
+            identifier: "period_alert_\(dateString)",
+            content: content,
+            trigger: trigger
+        )
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error {
@@ -48,7 +54,13 @@ class NotificationService {
 
         let components = triggerComponents(for: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        let request = UNNotificationRequest(identifier: "fertile_alert", content: content, trigger: trigger)
+
+        let dateString = ISO8601DateFormatter().string(from: date).prefix(10)
+        let request = UNNotificationRequest(
+            identifier: "fertile_alert_\(dateString)",
+            content: content,
+            trigger: trigger
+        )
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error {

@@ -1,13 +1,14 @@
-// Release.xcconfig
 //
-//  Created by Antigravity on 3/23/26.
+//  Release.xcconfig
+//  CycleOne
 //
 
-// Simple placeholder for Release settings
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
 PRODUCT_NAME = CycleOne
-PRODUCT_BUNDLE_IDENTIFIER = com.drei.CycleOne
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-ENABLE_NS_ASSERTIONS = NO
+PRODUCT_BUNDLE_IDENTIFIER = drei.CycleOne
+IPHONEOS_DEPLOYMENT_TARGET = 17.0
 SWIFT_OPTIMIZATION_LEVEL = -O
 VALIDATE_PRODUCT = YES
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
