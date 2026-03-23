@@ -33,7 +33,7 @@
 | Field | Value |
 |---|---|
 | App Name | CycleOne |
-| Bundle ID | `com.yourname.cycleone` |
+| Bundle ID | `com.drei.CycleOne` |
 | Platform | iOS 16.0+ |
 | Language | Swift 5.9 |
 | UI Framework | SwiftUI |
@@ -513,7 +513,7 @@ ContentView (TabView)
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/yourname/cycleone.git
+git clone https://github.com/VoxDroid/cycleone.git
 cd cycleone
 
 # 2. Install tooling via Homebrew
@@ -1206,7 +1206,7 @@ Use `#if DEBUG` for anything that should only run in development:
 ```swift
 #if DEBUG
 import OSLog
-let logger = Logger(subsystem: "com.yourname.cycleone", category: "debug")
+let logger = Logger(subsystem: "com.drei.CycleOne", category: "debug")
 #endif
 ```
 
