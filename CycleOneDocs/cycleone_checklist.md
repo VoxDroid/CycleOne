@@ -83,7 +83,7 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] Logging flow E2E
 
 ## 7. CI/CD & Build Configuration
-- [x] `.github/workflows/ci.yml` configured (macOS-14, Xcode 15.4)
+- [x] `.github/workflows/ci.yml` configured (macos-15, Xcode 16.1)
 - [x] `Release` and `Debug` `.xcconfig` files created
 - [x] `#if DEBUG` used for development-only code (e.g. Loggers)
 
