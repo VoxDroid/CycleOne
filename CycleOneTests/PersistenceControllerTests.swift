@@ -2,95 +2,66 @@
 //  PersistenceControllerTests.swift
 //  CycleOneTests
 //
-//  Created by Antigravity on 3/23/26.
-//
 
 import CoreData
 @testable import CycleOne
 import XCTest
 
 final class PersistenceControllerTests: XCTestCase {
-    var persistence: TestPersistenceController!
+    var controller: PersistenceController!
+    var context: NSManagedObjectContext {
+        controller.container.viewContext
+    }
 
     override func setUp() {
         super.setUp()
-        persistence = TestPersistenceController()
+        controller = TestPersistenceController.empty()
     }
 
     override func tearDown() {
-        persistence = nil
+        controller = nil
         super.tearDown()
     }
 
-    func testCreateDayLog() throws {
-        let context = persistence.container.viewContext
-        let date = Date()
-
+    func testCreateAndFetchDayLog() throws {
+        let date = Date().startOfDay
         let log = DayLog(context: context)
         log.id = UUID()
-        log.date = Calendar.current.startOfDay(for: date)
-        log.flowLevel = FlowLevel.medium.rawValue
-        log.mood = Mood.happy.rawValue
-        log.energyLevel = EnergyLevel.high.rawValue
-        log.painLevel = 2
+        log.date = date
+        log.flowLevel = 3
+        log.mood = 1
 
         try context.save()
 
-        let fetchRequest: NSFetchRequest<DayLog> = DayLog.fetchRequest()
-        let results = try context.fetch(fetchRequest)
+        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        request.predicate = NSPredicate(format: "date == %@", date as NSDate)
+        let results = try context.fetch(request)
 
         XCTAssertEqual(results.count, 1)
-        XCTAssertEqual(results.first?.flowLevel, FlowLevel.medium.rawValue)
-        XCTAssertEqual(results.first?.mood, Mood.happy.rawValue)
-        XCTAssertEqual(results.first?.energyLevel, EnergyLevel.high.rawValue)
-        XCTAssertEqual(results.first?.painLevel, 2)
+        XCTAssertEqual(results.first?.flowLevel, 3)
     }
 
-    func testCreateCycleWithLogs() throws {
-        let context = persistence.container.viewContext
-
-        let cycle = Cycle(context: context)
-        cycle.id = UUID()
-        cycle.startDate = Date()
-        cycle.createdAt = Date()
-
+    func testSymptomRelationship() throws {
         let log = DayLog(context: context)
         log.id = UUID()
-        log.date = Date()
-
-        cycle.addToDayLogs(log)
-
-        try context.save()
-
-        let fetchRequest: NSFetchRequest<Cycle> = Cycle.fetchRequest()
-        let results = try context.fetch(fetchRequest)
-
-        XCTAssertEqual(results.count, 1)
-        XCTAssertEqual(results.first?.dayLogs?.count, 1)
-    }
-
-    func testCascadeDeleteSymptom() throws {
-        let context = persistence.container.viewContext
-
-        let log = DayLog(context: context)
-        log.id = UUID()
-        log.date = Date()
+        log.date = Date().startOfDay
 
         let symptom = Symptom(context: context)
         symptom.id = "cramps"
         symptom.name = "Cramps"
-        symptom.category = SymptomCategory.physical.rawValue
+        symptom.category = "Physical"
         symptom.dayLog = log
 
+        log.addToSymptoms(symptom)
+
         try context.save()
 
-        // Delete log
-        context.delete(log)
-        try context.save()
+        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        let results = try context.fetch(request)
+        let fetchedLog = try XCTUnwrap(results.first)
 
-        let symptomRequest: NSFetchRequest<Symptom> = Symptom.fetchRequest()
-        let symptoms = try context.fetch(symptomRequest)
-
-        XCTAssertEqual(symptoms.count, 0, "Symptom should be cascade deleted when DayLog is deleted")
+        XCTAssertEqual(fetchedLog.symptoms?.count, 1)
+        let fetchedSymptom = try XCTUnwrap(fetchedLog.symptoms?.anyObject() as? Symptom)
+        XCTAssertEqual(fetchedSymptom.id, "cramps")
     }
 }

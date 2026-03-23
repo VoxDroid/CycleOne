@@ -50,6 +50,7 @@ struct InsightsView: View {
                 }
             }
             .navigationTitle("Insights")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.calculateStats()
             }

@@ -38,7 +38,10 @@ final class LogViewModel: ObservableObject {
                 energy = EnergyLevel(rawValue: log.energyLevel) ?? .medium
                 painLevel = Double(log.painLevel)
                 notes = log.notes ?? ""
-                selectedSymptoms = Set(log.symptoms?.compactMap { ($0 as? Symptom)?.id } ?? [])
+
+                if let existingSymptoms = log.symptoms as? Set<Symptom> {
+                    selectedSymptoms = Set(existingSymptoms.compactMap(\.id))
+                }
             }
         } catch {
             Logger.storage.error("Failed to load log for \(self.date): \(error.localizedDescription)")
@@ -77,7 +80,12 @@ final class LogViewModel: ObservableObject {
     }
 
     private func updateSymptoms(for log: DayLog) {
-        // Clear current symptoms
+        // Delete existing symptoms for this log to avoid orphans from previous saves
+        if let existing = log.symptoms as? Set<Symptom> {
+            for symptom in existing {
+                context.delete(symptom)
+            }
+        }
         log.symptoms = []
 
         for id in selectedSymptoms {
@@ -86,6 +94,7 @@ final class LogViewModel: ObservableObject {
                 symptom.id = id
                 symptom.name = type.name
                 symptom.category = type.category.rawValue
+                symptom.dayLog = log
                 log.addToSymptoms(symptom)
             }
         }

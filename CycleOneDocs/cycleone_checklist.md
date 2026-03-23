@@ -33,3 +33,15 @@
 - [x] Privacy Manifest (`PrivacyInfo.xcprivacy`)
 - [x] Bundled Privacy Policy
 - [x] High-resolution App Icon (1024x1024)
+
+## Advanced Features (Phase 7)
+- [x] **Calendar**: Swipable `TabView`, Month/Year Picker
+- [x] **Theming**: System/Light/Dark mode switcher
+- [x] **Stability**: Fixed layout frames for cards
+
+## Robust Overhaul (Phase 8 & 9)
+- [x] **Native Calendar**: `UICalendarView` with decorations
+- [x] **Logging Flow**: Navigation-based logging (No modals)
+- [x] **Auto-Save**: Automatic persistence on dismiss
+- [x] **UX Polish**: Scrollable main screen, energy highlights
+- [x] **Stability**: Fixed symptom selection & test suite refinement

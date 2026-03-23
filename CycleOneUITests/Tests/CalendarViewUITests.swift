@@ -11,19 +11,40 @@ final class CalendarViewUITests: XCTestCase {
     }
 
     @MainActor
-    func testCalendarNavigation() {
+    func testCalendarLayout() {
         let app = XCUIApplication()
         app.launch()
 
-        // Check for specific month text
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "MMMM yyyy"
-        let currentMonth = monthFormatter.string(from: Date())
+        // Verify navigation title
+        XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
 
-        XCTAssertTrue(app.staticTexts[currentMonth].exists)
+        // Find the NavigationLink to LogView
+        let logButton = app.buttons
+            .matching(NSPredicate(format: "label CONTAINS 'Log Day' OR label CONTAINS 'Edit Log'")).firstMatch
+        XCTAssertTrue(logButton.exists)
+    }
 
-        // Tap next month
-        app.buttons["chevron.right"].tap()
-        // ... verify next month
+    @MainActor
+    func testNavigationToLogView() {
+        let app = XCUIApplication()
+        app.launch()
+
+        // Tap the Log Day button
+        let logButton = app.buttons
+            .matching(NSPredicate(format: "label CONTAINS 'Log Day' OR label CONTAINS 'Edit Log'")).firstMatch
+        XCTAssertTrue(logButton.waitForExistence(timeout: 5))
+        logButton.tap()
+
+        // Verify we are on the Log Day screen
+        XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 5))
+
+        // Use standard back button (first button in nav bar usually) or "Dismiss"
+        if app.buttons["Dismiss"].exists {
+            app.buttons["Dismiss"].tap()
+        } else {
+            app.navigationBars.buttons.element(boundBy: 0).tap()
+        }
+
+        XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
     }
 }

@@ -46,15 +46,16 @@ struct SymptomChip: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Text(name)
-                .font(.subheadline)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(isSelected ? Color.themePeriod : Color(.secondarySystemBackground))
-                .foregroundColor(isSelected ? .white : .primary)
-                .cornerRadius(20)
-        }
+        Text(name)
+            .font(.subheadline)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(isSelected ? Color.themePeriod : Color(.secondarySystemBackground))
+            .foregroundColor(isSelected ? .white : .primary)
+            .cornerRadius(20)
+            .onTapGesture {
+                action()
+            }
     }
 }
 

@@ -67,29 +67,41 @@ struct LogView: View {
                     SymptomGridView(selectedSymptoms: $viewModel.selectedSymptoms, symptoms: SymptomType.defaults)
                 }
 
-                Section("Notes") {
-                    TextEditor(text: $viewModel.notes)
-                        .frame(minHeight: 100)
-                        .onChange(of: viewModel.notes) { _, newValue in
-                            if newValue.count > 500 {
-                                viewModel.notes = String(newValue.prefix(500))
-                            }
+                Section {
+                    ZStack(alignment: .topLeading) {
+                        if viewModel.notes.isEmpty {
+                            Text("Empty")
+                                .foregroundColor(.secondary.opacity(0.5))
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 8)
                         }
+
+                        TextEditor(text: $viewModel.notes)
+                            .frame(minHeight: 100)
+                            .onChange(of: viewModel.notes) { _, newValue in
+                                if newValue.count > 500 {
+                                    viewModel.notes = String(newValue.prefix(500))
+                                }
+                            }
+                    }
+                } header: {
+                    HStack {
+                        Text("Notes")
+                        Image(systemName: "pencil")
+                            .font(.caption)
+                    }
                 }
             }
             .navigationTitle("Log Day")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") { dismiss() }
-                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        viewModel.save()
-                        dismiss()
-                    }
-                    .bold()
+                    Button("Dismiss") { dismiss() }
+                        .fontWeight(.medium)
                 }
+            }
+            .onDisappear {
+                viewModel.save()
             }
         }
     }

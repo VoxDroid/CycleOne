@@ -11,14 +11,16 @@ final class SettingsUITests: XCTestCase {
     }
 
     @MainActor
-    func testSettingsNavigation() {
+    func testThemePickerExists() {
         let app = XCUIApplication()
         app.launch()
 
-        app.tabBars.buttons["SettingsTab"].tap()
-        XCTAssertTrue(app.navigationBars["Settings"].exists)
+        // Tap Settings tab (using index if ID is missing, but let's try label)
+        let settingsTab = app.tabBars.buttons.element(boundBy: 1)
+        XCTAssertTrue(settingsTab.waitForExistence(timeout: 5))
+        settingsTab.tap()
 
-        app.staticTexts["Notifications"].tap()
-        XCTAssertTrue(app.navigationBars["Notifications"].exists)
+        // Verify Theme picker exists
+        XCTAssertTrue(app.staticTexts["Theme"].waitForExistence(timeout: 5))
     }
 }

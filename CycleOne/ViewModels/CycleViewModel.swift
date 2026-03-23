@@ -15,6 +15,7 @@ final class CycleViewModel: ObservableObject {
     @Published var daysUntilPeriod: Int?
     @Published var isIrregular: Bool = false
     @Published var dayStatuses: [Date: DayStatus] = [:]
+    @Published var selectedDayLog: DayLog?
 
     @AppStorage("enablePredictions") var enablePredictions = true
 
@@ -53,6 +54,9 @@ final class CycleViewModel: ObservableObject {
 
             // Update day statuses for current month and neighbors
             updateDayStatuses(cycles: cycles)
+
+            // Refresh selected day log
+            fetchSelectedDayLog()
         } catch {
             Logger.storage.error("Fetch failed: \(error.localizedDescription)")
         }
@@ -91,10 +95,32 @@ final class CycleViewModel: ObservableObject {
                 var status = statuses[ovDate.startOfDay] ?? DayStatus()
                 status.isOvulation = true
                 statuses[ovDate.startOfDay] = status
+
+                // Fertile window: -5 to +1 days from ovulation
+                for offset in -5 ... 1 {
+                    if let date = Calendar.current.date(byAdding: .day, value: offset, to: ovDate)?.startOfDay {
+                        var fStatus = statuses[date] ?? DayStatus()
+                        fStatus.isFertile = true
+                        statuses[date] = fStatus
+                    }
+                }
             }
         }
 
         self.dayStatuses = statuses
+    }
+
+    private func fetchSelectedDayLog() {
+        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        request.predicate = NSPredicate(format: "date == %@", selectedDate as NSDate)
+        request.fetchLimit = 1
+
+        selectedDayLog = (try? context.fetch(request))?.first
+    }
+
+    func selectDate(_ date: Date) {
+        selectedDate = date.startOfDay
+        fetchSelectedDayLog()
     }
 
     func nextMonth() {
@@ -107,5 +133,16 @@ final class CycleViewModel: ObservableObject {
         if let newMonth = Calendar.current.date(byAdding: .month, value: -1, to: currentMonth) {
             currentMonth = newMonth
         }
+    }
+
+    func goTo(date: Date) {
+        currentMonth = date.startOfMonth
+        refreshData()
+    }
+}
+
+extension Date {
+    var startOfMonth: Date {
+        Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self)) ?? self
     }
 }

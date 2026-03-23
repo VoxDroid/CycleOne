@@ -17,26 +17,40 @@ struct CycleHistoryList: View {
                         title: "No data yet",
                         message: "Your cycle history will appear here once you log your first period."
                     )
+                    .listRowBackground(Color.clear)
                 }
             } else {
-                ForEach(cycles) { cycle in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(cycle.startDate?.formatted(date: .long, time: .omitted) ?? "Unknown Start")
-                            .font(.headline)
-
-                        HStack {
-                            if cycle.cycleLength > 0 {
-                                PillBadge(text: "\(cycle.cycleLength) days total", color: .themeAccent)
+                Section {
+                    ForEach(cycles) { cycle in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text(cycle.startDate?.formatted(.dateTime.month(.wide).day().year()) ?? "Unknown")
+                                    .font(.headline)
+                                Spacer()
+                                if cycle.cycleLength > 0 {
+                                    PillBadge(text: "\(cycle.cycleLength) days", color: .themeAccent)
+                                }
                             }
-                            if cycle.periodLength > 0 {
-                                PillBadge(text: "\(cycle.periodLength) days period", color: .themePeriod)
+
+                            HStack(spacing: 12) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "drop.fill")
+                                        .font(.caption2)
+                                        .foregroundColor(.themePeriod)
+                                    Text("\(cycle.periodLength) days period")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 4)
+                } header: {
+                    Text("Past Cycles")
                 }
             }
         }
         .navigationTitle("History")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

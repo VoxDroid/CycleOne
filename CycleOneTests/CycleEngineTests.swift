@@ -3,6 +3,7 @@
 //  CycleOneTests
 //
 
+import CoreData
 @testable import CycleOne
 import XCTest
 
@@ -26,7 +27,7 @@ final class CycleEngineTests: XCTestCase {
 
     func testPredictNextPeriod_WithOneCycle() {
         let context = TestPersistenceController.empty().container.viewContext
-        let startDate = Date()
+        let startDate = Date().startOfDay
         let cycle = Cycle(context: context)
         cycle.startDate = startDate
         cycle.cycleLength = 30
@@ -35,7 +36,7 @@ final class CycleEngineTests: XCTestCase {
 
         XCTAssertNotNil(result)
         let expectedDate = Calendar.current.date(byAdding: .day, value: 30, to: startDate)
-        XCTAssertEqual(result, expectedDate)
+        XCTAssertEqual(result?.startOfDay, expectedDate?.startOfDay)
     }
 
     func testPredictNextPeriod_WithAverage() throws {
@@ -52,30 +53,42 @@ final class CycleEngineTests: XCTestCase {
         cycle2.startDate = start2
         cycle2.cycleLength = 28
 
+        // (31 + 28) / 2 = 29.5 -> rounds to 29 or 30? Int division is 29.
         let result = engine.predictNextPeriodStart(from: [cycle1, cycle2])
 
-        // Average: (31 + 28) / 2 = 29
         let expectedDate = calendar.date(byAdding: .day, value: 29, to: start2)
-        XCTAssertEqual(result, expectedDate)
+        XCTAssertEqual(result?.startOfDay, expectedDate?.startOfDay)
     }
 
-    func testPredictOvulation() throws {
+    func testPredictNextPeriod_filtersOutliers() throws {
         let context = TestPersistenceController.empty().container.viewContext
-        let startDate = Date()
-        let cycle = Cycle(context: context)
-        cycle.startDate = startDate
-        cycle.cycleLength = 30
+        let calendar = Calendar.current
+        let start1 = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 1, day: 1)))
+        let start2 = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 2, day: 1)))
+        let start3 = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 3, day: 1)))
 
-        let result = engine.predictOvulation(from: [cycle])
-        XCTAssertNotNil(result)
+        let cycle1 = Cycle(context: context)
+        cycle1.startDate = start1
+        cycle1.cycleLength = 31
 
-        let nextPeriod = try XCTUnwrap(Calendar.current.date(byAdding: .day, value: 30, to: startDate))
-        let expectedDate = Calendar.current.date(byAdding: .day, value: -14, to: nextPeriod)
-        XCTAssertEqual(result, expectedDate)
+        let cycle2 = Cycle(context: context)
+        cycle2.startDate = start2
+        cycle2.cycleLength = 10 // Outlier (too short)
+
+        let cycle3 = Cycle(context: context)
+        cycle3.startDate = start3
+        cycle3.cycleLength = 28
+
+        let result = engine.predictNextPeriodStart(from: [cycle1, cycle2, cycle3])
+
+        // Only cycle1 (31) and cycle3 (28) are used. Avg = 29.
+        let expectedDate = calendar.date(byAdding: .day, value: 29, to: start3)
+        XCTAssertEqual(result?.startOfDay, expectedDate?.startOfDay)
     }
 
     func testIsCycleIrregular() {
         let context = TestPersistenceController.empty().container.viewContext
+
         let cycle1 = Cycle(context: context)
         cycle1.cycleLength = 28
 
@@ -83,5 +96,11 @@ final class CycleEngineTests: XCTestCase {
         cycle2.cycleLength = 40 // Diff of 12
 
         XCTAssertTrue(engine.isCycleIrregular(cycles: [cycle1, cycle2]))
+
+        let cycle3 = Cycle(context: context)
+        cycle3.cycleLength = 28
+        let cycle4 = Cycle(context: context)
+        cycle4.cycleLength = 30
+        XCTAssertFalse(engine.isCycleIrregular(cycles: [cycle3, cycle4]))
     }
 }

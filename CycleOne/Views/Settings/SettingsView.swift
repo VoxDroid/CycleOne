@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.managedObjectContext) var context
     @AppStorage("enablePredictions") private var enablePredictions = true
+    @EnvironmentObject private var themeManager: ThemeManager
     @State private var showingDeleteAlert = false
 
     var body: some View {
@@ -21,6 +22,15 @@ struct SettingsView: View {
                     NavigationLink(destination: NotificationSettingsView()) {
                         Label("Notifications", systemImage: "bell.fill")
                     }
+                }
+
+                Section("Appearance") {
+                    Picker("Theme", selection: $themeManager.selectedTheme) {
+                        ForEach(AppTheme.allCases) { theme in
+                            Text(theme.rawValue).tag(theme)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 }
 
                 Section("Data") {
@@ -52,9 +62,27 @@ struct SettingsView: View {
                         Text("1.0.0")
                             .foregroundColor(.secondary)
                     }
+
+                    if let url = URL(string: "https://apps.apple.com/app/id6742514330?action=write-review") {
+                        Link(destination: url) {
+                            Label("Rate CycleOne", systemImage: "star.fill")
+                        }
+                    }
+                }
+
+                Section {
+                    HStack {
+                        Spacer()
+                        Text("Made with ❤️ by Drei")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .listRowBackground(Color.clear)
                 }
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
             .alert("Delete All Data?", isPresented: $showingDeleteAlert) {
                 Button("Delete", role: .destructive) {
                     deleteAllData()

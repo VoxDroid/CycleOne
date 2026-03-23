@@ -42,11 +42,16 @@ struct CalendarDayCell: View {
                 }
             }
         }
-        .aspectRatio(1, contentMode: .fill)
+        .aspectRatio(1, contentMode: .fit)
+        .padding(4)
         .overlay(
-            Circle()
+            RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.themeAccent, lineWidth: isSelected ? 2 : 0)
         )
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(date.formatted(date: .long, time: .omitted))")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private var textColor: Color {
@@ -61,6 +66,7 @@ struct DayStatus {
     var flow: FlowLevel = .none
     var isPredicted: Bool = false
     var isOvulation: Bool = false
+    var isFertile: Bool = false
     var hasLogs: Bool = false
 
     var fillColor: Color? {
