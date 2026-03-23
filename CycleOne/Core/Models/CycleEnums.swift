@@ -37,6 +37,16 @@ enum Mood: Int16, CaseIterable {
         case .angry: "face.smiling.inverse" // placeholder
         }
     }
+
+    var description: String {
+        switch self {
+        case .happy: "Happy"
+        case .neutral: "Neutral"
+        case .sad: "Sad"
+        case .anxious: "Anxious"
+        case .angry: "Angry"
+        }
+    }
 }
 
 enum SymptomCategory: String, CaseIterable {

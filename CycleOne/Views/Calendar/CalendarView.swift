@@ -69,6 +69,17 @@ struct CalendarView: View {
                 Text("Days until next period")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+
+                if viewModel.isFertileToday {
+                    Text("Fertile Window")
+                        .font(.caption.bold())
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.themeFertile)
+                        .cornerRadius(8)
+                        .padding(.top, 4)
+                }
             } else {
                 Text("Start logging to see predictions")
                     .font(.subheadline)
@@ -77,7 +88,7 @@ struct CalendarView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(Color.pink.opacity(0.1))
+        .background(Color.themePeriod.opacity(0.1))
         .cornerRadius(16)
         .padding(.horizontal)
     }
@@ -94,9 +105,10 @@ struct CalendarView: View {
 
     private func statusColor(for status: CycleViewModel.DayStatus) -> Color {
         switch status {
-        case .period, .predictedPeriod: .pink
-        case .fertile, .ovulation: .purple
-        case .none: .pink // app accent
+        case .period, .predictedPeriod: .themePeriod
+        case .fertile: .themeFertile
+        case .ovulation: .themeOvulation
+        case .none: .themeAccent
         }
     }
 }

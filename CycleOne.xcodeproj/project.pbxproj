@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35B9FFEC2F7136840074EB22 /* project_overview.md in Resources */ = {isa = PBXBuildFile; fileRef = 35B9FFEB2F7136840074EB22 /* project_overview.md */; };
+		35B9FFEC2F7136840074EB22 /* CycleOneDocs/project_overview.md in Resources */ = {isa = PBXBuildFile; fileRef = 35B9FFEB2F7136840074EB22 /* CycleOneDocs/project_overview.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +31,7 @@
 		35B9FFC12F7136200074EB22 /* CycleOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B9FFCE2F7136210074EB22 /* CycleOneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleOneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B9FFD82F7136210074EB22 /* CycleOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleOneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		35B9FFEB2F7136840074EB22 /* project_overview.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CycleOneDocs/project_overview.md; sourceTree = "<group>"; };
+		35B9FFEB2F7136840074EB22 /* CycleOneDocs/project_overview.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CycleOneDocs/project_overview.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -80,7 +80,7 @@
 		35B9FFB82F7136200074EB22 = {
 			isa = PBXGroup;
 			children = (
-				35B9FFEB2F7136840074EB22 /* project_overview.md */,
+				35B9FFEB2F7136840074EB22 /* CycleOneDocs/project_overview.md */,
 				35B9FFC32F7136200074EB22 /* CycleOne */,
 				35B9FFD12F7136210074EB22 /* CycleOneTests */,
 				35B9FFDB2F7136210074EB22 /* CycleOneUITests */,
@@ -225,7 +225,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35B9FFEC2F7136840074EB22 /* project_overview.md in Resources */,
+				35B9FFEC2F7136840074EB22 /* CycleOneDocs/project_overview.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

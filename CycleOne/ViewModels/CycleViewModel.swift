@@ -67,6 +67,19 @@ class CycleViewModel: NSObject, ObservableObject {
             let fertileWindow = engine.fertileWindow(ovulationDate: ovulation)
             self.isFertileToday = fertileWindow.contains { Calendar.current.isDateInToday($0) }
         }
+
+        scheduleNotifications()
+    }
+
+    private func scheduleNotifications() {
+        if let nextPeriod = nextPeriodDate {
+            NotificationService.shared.schedulePeriodAlert(for: nextPeriod)
+
+            let ovulation = engine.estimatedOvulationDate(nextPeriodStart: nextPeriod)
+            if let firstFertileDay = engine.fertileWindow(ovulationDate: ovulation).first {
+                NotificationService.shared.scheduleFertileWindowAlert(for: firstFertileDay)
+            }
+        }
     }
 
     enum DayStatus {

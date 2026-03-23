@@ -36,7 +36,7 @@ struct LogView: View {
                             VStack {
                                 Image(systemName: item.icon)
                                     .font(.title2)
-                                    .foregroundColor(mood == item ? .pink : .secondary)
+                                    .foregroundColor(mood == item ? .themeAccent : .secondary)
                                     .onTapGesture {
                                         mood = item
                                     }
@@ -55,7 +55,8 @@ struct LogView: View {
                                     .font(.caption)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
-                                    .background(selectedSymptoms.contains(symptom.id) ? Color.pink : Color.secondary
+                                    .background(selectedSymptoms.contains(symptom.id) ? Color.themePeriod : Color
+                                        .secondary
                                         .opacity(0.1))
                                     .foregroundColor(selectedSymptoms.contains(symptom.id) ? .white : .primary)
                                     .cornerRadius(20)

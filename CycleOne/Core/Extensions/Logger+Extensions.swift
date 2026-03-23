@@ -11,4 +11,5 @@ extension Logger {
 
     static let storage = Logger(subsystem: subsystem, category: "storage")
     static let viewCycle = Logger(subsystem: subsystem, category: "viewCycle")
+    static let notifications = Logger(subsystem: subsystem, category: "notifications")
 }

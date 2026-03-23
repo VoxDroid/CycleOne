@@ -40,14 +40,14 @@ This checklist is derived from `project_overview.md` to track the full developme
 
 ## 4. MVVM Architecture
 - [ ] **Entities/Models**: Core Data subclasses
-- [ ] **Services**:
+- [x] **Services**:
     - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
-    - [ ] `NotificationService`: `UserNotifications` (Local only)
-    - [ ] `ExportService`: Plain-text/CSV generation
+    - [x] `NotificationService`: `UserNotifications` (Local only)
+    - [x] `ExportService`: Plain-text/CSV generation
 - [x] **ViewModels**: `ObservableObject` classes with `@Published` state
     - [x] `CycleViewModel`
-    - [ ] `LogViewModel`
-    - [ ] `InsightsViewModel`
+    - [x] `LogViewModel` (Integrated in views)
+    - [x] `InsightsViewModel`
 
 ## 5. UI Implementation (MVP)
 - [x] **Main Navigation**: `TabView` (Calendar, Insights, Settings)
@@ -62,15 +62,15 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] Notes (Text Field, 500 chars)
     - [x] Auto-save on dismiss (`onDisappear`)
     - [x] Automatic `Cycle` creation logic
-- [ ] **Insights View**:
-    - [ ] Stats display (Averages, shortest/longest cycle, top symptoms)
-    - [ ] Cycle History List (NavigationLink to details)
-- [ ] **Settings View**:
-    - [ ] Notification toggles (Period, Fertile Window)
-    - [ ] Export button with `UIActivityViewController`
-    - [ ] App Info (Version, Local Privacy Policy HTML, Rate deep link)
-- [ ] **Shared Components**:
-    - [ ] `Color+Theme.swift` tokens used (no hardcoded hex)
+- [x] **Insights View**:
+    - [x] Stats display (Averages, shortest/longest cycle, top symptoms)
+    - [x] Cycle History List (NavigationLink to details)
+- [x] **Settings View**:
+    - [x] Notification toggles (Period, Fertile Window)
+    - [x] Export button with `UIActivityViewController` (Using `ShareLink`)
+    - [x] App Info (Version, Local Privacy Policy HTML, Rate deep link)
+- [x] **Shared Components**:
+    - [x] `Color+Theme.swift` tokens used (no hardcoded hex)
     - [ ] Accessibility identifiers set on all interactive elements
 
 ## 6. Testing Strategy

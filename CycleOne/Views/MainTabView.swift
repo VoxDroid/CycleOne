@@ -15,12 +15,12 @@ struct MainTabView: View {
                     Label("Calendar", systemImage: "calendar")
                 }
 
-            Text("Insights View")
+            InsightsView()
                 .tabItem {
                     Label("Insights", systemImage: "chart.bar.fill")
                 }
 
-            Text("Settings View")
+            SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
