@@ -39,7 +39,7 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] Index on `Cycle.startDate` and `DayLog.date`
 
 ## 4. MVVM Architecture
-- [ ] **Entities/Models**: Core Data subclasses
+- [x] **Entities/Models**: Core Data subclasses
 - [x] **Services**:
     - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
     - [x] `NotificationService`: `UserNotifications` (Local only)
@@ -71,26 +71,26 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] App Info (Version, Local Privacy Policy HTML, Rate deep link)
 - [x] **Shared Components**:
     - [x] `Color+Theme.swift` tokens used (no hardcoded hex)
-    - [ ] Accessibility identifiers set on all interactive elements
+    - [x] Accessibility identifiers set on all interactive elements
 
 ## 6. Testing Strategy
-- [ ] **Unit Tests (`CycleOneTests`)**:
+- [x] **Unit Tests (`CycleOneTests`)**:
     - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
-    - [ ] `NotificationService` (Trigger calculation)
-    - [ ] `PersistenceController` (CRUD, In-memory store)
-- [ ] **UI Tests (`CycleOneUITests`)**:
-    - [ ] Navigation flows
-    - [ ] Logging flow E2E
+    - [x] `NotificationService` (Trigger calculation)
+    - [x] `PersistenceController` (CRUD, In-memory store)
+- [x] **UI Tests (`CycleOneUITests`)**:
+    - [x] Navigation flows
+    - [x] Logging flow E2E
 
 ## 7. CI/CD & Build Configuration
-- [ ] `.github/workflows/ci.yml` configured (macOS-14, Xcode 15.4)
-- [ ] `Release` and `Debug` `.xcconfig` files created
-- [ ] `#if DEBUG` used for development-only code (e.g. Loggers)
+- [x] `.github/workflows/ci.yml` configured (macOS-14, Xcode 15.4)
+- [x] `Release` and `Debug` `.xcconfig` files created
+- [x] `#if DEBUG` used for development-only code (e.g. Loggers)
 
 ## 8. App Store Readiness
-- [ ] `PrivacyInfo.xcprivacy` declaring zero data collection
-- [ ] Local Privacy Policy HTML bundled
-- [ ] App description/metadata consistent with "local-only" promise
-- [ ] Version and build numbers updated
-- [ ] App Icons & Screenshots generated
-- [ ] Age rating set to 12+
+- [x] `PrivacyInfo.xcprivacy` declaring zero data collection
+- [x] Local Privacy Policy HTML bundled
+- [x] App description/metadata consistent with "local-only" promise
+- [x] Version and build numbers updated
+- [x] App Icons & Screenshots generated (Generated custom Bubu/Dudu icon)
+- [ ] Age rating set to 12+ (Requires setting in App Store Connect)

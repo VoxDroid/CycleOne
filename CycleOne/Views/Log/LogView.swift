@@ -41,7 +41,9 @@ struct LogView: View {
                                     .font(.title2)
                                     .foregroundColor(mood == item ? .themeAccent : .secondary)
                                     .frame(maxWidth: .infinity)
+                                    .contentShape(Rectangle())
                                     .onTapGesture { mood = item }
+                                    .accessibilityIdentifier("Mood_\(item.description)")
                             }
                         }
 
@@ -54,7 +56,9 @@ struct LogView: View {
                                     .font(.title2)
                                     .foregroundColor(energy == item ? .themeAccent : .secondary)
                                     .frame(maxWidth: .infinity)
+                                    .contentShape(Rectangle())
                                     .onTapGesture { energy = item }
+                                    .accessibilityIdentifier("Energy_\(item.description)")
                             }
                         }
                     }
@@ -70,6 +74,7 @@ struct LogView: View {
                         Text("10").font(.caption)
                     }
                     .accentColor(.themePeriod)
+                    .accessibilityIdentifier("PainSlider")
                 }
 
                 Section(header: Text("Symptoms")) {
@@ -101,12 +106,16 @@ struct LogView: View {
                 Section(header: Text("Notes (Max 500 chars)")) {
                     TextEditor(text: $notes)
                         .frame(minHeight: 100)
+                        .accessibilityIdentifier("NotesEditor")
                         .onChange(of: notes) { _, newValue in
                             if newValue.count > 500 {
                                 notes = String(newValue.prefix(500))
                             }
                         }
                 }
+            }
+            .onDisappear {
+                saveLog()
             }
             .navigationTitle(date.formatted(date: .abbreviated, time: .omitted))
             .toolbar {

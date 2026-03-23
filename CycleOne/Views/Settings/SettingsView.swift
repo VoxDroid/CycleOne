@@ -58,11 +58,27 @@ struct SettingsView: View {
                         Label("Privacy Policy", systemImage: "shield.lefthalf.filled")
                     }
 
+                    Button {
+                        if let url = URL(string: "itms-apps://itunes.apple.com/app/idYOUR_APP_ID?action=write-review") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Label("Rate CycleOne", systemImage: "star.fill")
+                    }
+
                     Text("All data is stored locally on your device and is not collected by the developer.")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
+
+                    VStack(spacing: 4) {
+                        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
+                        Text("Build \(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1")")
+                    }
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity)
                 }
                 .listRowBackground(Color.clear)
             }

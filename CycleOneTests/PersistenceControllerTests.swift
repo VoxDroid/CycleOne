@@ -52,11 +52,13 @@ final class PersistenceControllerTests: XCTestCase {
         let cycle = Cycle(context: context)
         cycle.id = UUID()
         cycle.startDate = Date()
+        cycle.createdAt = Date()
 
         let log = DayLog(context: context)
         log.id = UUID()
         log.date = Date()
-        log.cycle = cycle
+
+        cycle.addToDayLogs(log)
 
         try context.save()
 

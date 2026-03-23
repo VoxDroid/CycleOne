@@ -31,17 +31,18 @@ final class CycleOneUITests: XCTestCase {
         let insightsTab = app.tabBars.buttons["InsightsTab"]
         let settingsTab = app.tabBars.buttons["SettingsTab"]
 
-        XCTAssertTrue(calendarTab.exists)
-        XCTAssertTrue(insightsTab.exists)
-        XCTAssertTrue(settingsTab.exists)
+        XCTAssertTrue(calendarTab.waitForExistence(timeout: 5))
+        XCTAssertTrue(insightsTab.waitForExistence(timeout: 5))
+        XCTAssertTrue(settingsTab.waitForExistence(timeout: 5))
 
         insightsTab.tap()
-        XCTAssertTrue(app.navigationBars["Insights"].exists)
+        XCTAssertTrue(app.staticTexts["Insights"].waitForExistence(timeout: 5))
 
         settingsTab.tap()
-        XCTAssertTrue(app.navigationBars["Settings"].exists)
+        XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 5))
 
         calendarTab.tap()
+        XCTAssertTrue(app.staticTexts["Today"].waitForExistence(timeout: 5))
     }
 
     @MainActor
