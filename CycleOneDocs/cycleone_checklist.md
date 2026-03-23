@@ -3,25 +3,25 @@
 This checklist is derived from `project_overview.md` to track the full development lifecycle of CycleOne.
 
 ## 1. Project Foundation & Identity
-- [ ] Bundle ID configured: `com.drei.CycleOne`
-- [ ] Deployment Target: iOS 16.0+
-- [ ] Language: Swift 5.9
-- [ ] UI Framework: SwiftUI
-- [ ] Persistence: Core Data (on-device, SQLite)
-- [ ] **NO** Third-party SDKs or dependencies (SPM/CocoaPods/Carthage)
-- [ ] Privacy-first focus: No accounts, no cloud, no cloud-sync (iCloud disabled)
+- [x] Bundle ID configured: `com.drei.CycleOne`
+- [x] Deployment Target: iOS 16.0+
+- [x] Language: Swift 5.9
+- [x] UI Framework: SwiftUI
+- [x] Persistence: Core Data (on-device, SQLite)
+- [x] **NO** Third-party SDKs or dependencies (SPM/CocoaPods/Carthage)
+- [x] Privacy-first focus: No accounts, no cloud, no cloud-sync (iCloud disabled)
 
 ## 2. Tech Stack & Tooling Setup
-- [ ] Xcode 15.0+ installed
-- [ ] Homebrew tools:
-    - [ ] `swiftlint`
-    - [ ] `swiftformat`
-    - [ ] `pre-commit`
-- [ ] Pre-commit hooks installed (`pre-commit install`)
-- [ ] `.swiftlint.yml` created and configured
-- [ ] `.swiftformat` created and configured
-- [ ] `Makefile` created for common tasks (`lint`, `format`, `test`, `build`)
-- [ ] `.gitignore` configured for iOS/macOS/Xcode
+- [x] Xcode 15.0+ installed
+- [x] Homebrew tools:
+    - [x] `swiftlint`
+    - [x] `swiftformat`
+    - [x] `pre-commit`
+- [x] Pre-commit hooks installed (`pre-commit install`)
+- [x] `.swiftlint.yml` created and configured
+- [x] `.swiftformat` created and configured
+- [x] `Makefile` created for common tasks (`lint`, `format`, `test`, `build`)
+- [x] `.gitignore` configured for iOS/macOS/Xcode
 
 ## 3. Core Data Architecture
 - [ ] `PersistenceController` (singleton) implemented

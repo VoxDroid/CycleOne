@@ -1,0 +1,14 @@
+# .swiftformat
+
+--swiftversion 5.9
+--indent 4
+--maxwidth 120
+--else-position same-line
+--trimwhitespace always
+--insertlines enabled
+--removelines enabled
+--emptybraces no-space
+--shortoptionals always
+--trailingclosures always
+--disable redundantSelf
+--disable unusedArguments

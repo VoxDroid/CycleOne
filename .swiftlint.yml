@@ -1,0 +1,32 @@
+# .swiftlint.yml
+
+# ── Paths ──────────────────────────────────────────────────────────────────
+included:
+  - CycleOne
+  - CycleOneTests
+  - CycleOneUITests
+
+# ── Rules — disabled ───────────────────────────────────────────────────────
+disabled_rules:
+  - trailing_whitespace
+  - todo
+  - opening_brace
+
+# ── Rules — opt-in ─────────────────────────────────────────────────────────
+opt_in_rules:
+  - array_init
+  - closure_spacing
+  - collection_alignment
+  - vertical_whitespace_closing_braces
+  - force_unwrapping
+
+# ── Rule configuration ─────────────────────────────────────────────────────
+line_length: 120
+
+# ── Custom rules ───────────────────────────────────────────────────────────
+custom_rules:
+  no_print_in_release:
+    name: "No print statements"
+    regex: '^\s*print\('
+    message: "Use Logger instead of print()."
+    severity: warning
