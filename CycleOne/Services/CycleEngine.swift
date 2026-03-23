@@ -14,10 +14,19 @@ struct CycleSnapshot {
 }
 
 class CycleEngine {
+    private let defaultCycleLength = 28
+    private let defaultPeriodLength = 5
+
     func predictNextPeriodStart(from cycles: [CycleSnapshot]) -> Date? {
-        guard !cycles.isEmpty else { return nil }
-        // Simple implementation for skeleton
-        return nil
+        guard let lastCycle = cycles.last else { return nil }
+
+        let averageLength = cycles.count > 0
+            ? Int(cycles.map(\.cycleLength).reduce(0, +) / cycles.count)
+            : defaultCycleLength
+
+        let lengthToUse = averageLength > 0 ? averageLength : defaultCycleLength
+
+        return Calendar.current.date(byAdding: .day, value: lengthToUse, to: lastCycle.startDate)
     }
 
     func estimatedOvulationDate(nextPeriodStart: Date) -> Date {
@@ -25,11 +34,16 @@ class CycleEngine {
     }
 
     func fertileWindow(ovulationDate: Date) -> [Date] {
-        // Return 6 days surrounding ovulation
-        []
+        // High fertility: 5 days before ovulation up to ovulation day
+        (0 ... 5).compactMap { day in
+            Calendar.current.date(byAdding: .day, value: -day, to: ovulationDate)
+        }.sorted()
     }
 
     func cyclesAreIrregular(_ cycles: [CycleSnapshot]) -> Bool {
-        false
+        guard cycles.count >= 2 else { return false }
+        let lengths = cycles.map(\.cycleLength)
+        guard let min = lengths.min(), let max = lengths.max() else { return false }
+        return (max - min) > 8
     }
 }

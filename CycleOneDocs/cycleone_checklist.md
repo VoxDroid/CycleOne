@@ -24,23 +24,23 @@ This checklist is derived from `project_overview.md` to track the full developme
 - [x] `.gitignore` configured for iOS/macOS/Xcode
 
 ## 3. Core Data Architecture
-- [ ] `PersistenceController` (singleton) implemented
-- [ ] `CycleOne.xcdatamodeld` defined with:
-    - [ ] `Cycle` entity (id, startDate, endDate, cycleLength, periodLength, createdAt, notes)
-    - [ ] `DayLog` entity (id, date, flowLevel, mood, energyLevel, painLevel, notes)
-    - [ ] `Symptom` entity (id, name, category)
-- [ ] Relationships configured:
-    - [ ] `Cycle` (1) <---> (N) `DayLog` (Cascade delete)
-    - [ ] `DayLog` (1) <---> (N) `Symptom` (Cascade delete)
-- [ ] Constraints & Indices:
-    - [ ] Unique constraint on `DayLog.date`
-    - [ ] `NSMergeByPropertyObjectTrumpMergePolicy` configured
-    - [ ] Index on `Cycle.startDate` and `DayLog.date`
+- [x] `PersistenceController` (singleton) implemented
+- [x] `CycleOne.xcdatamodeld` defined with:
+    - [x] `Cycle` entity (id, startDate, endDate, cycleLength, periodLength, createdAt, notes)
+    - [x] `DayLog` entity (id, date, flowLevel, mood, energyLevel, painLevel, notes)
+    - [x] `Symptom` entity (id, name, category)
+- [x] Relationships configured:
+    - [x] `Cycle` (1) <---> (N) `DayLog` (Cascade delete)
+    - [x] `DayLog` (1) <---> (N) `Symptom` (Cascade delete)
+- [x] Constraints & Indices:
+    - [x] Unique constraint on `DayLog.date`
+    - [x] `NSMergeByPropertyObjectTrumpMergePolicy` configured
+    - [x] Index on `Cycle.startDate` and `DayLog.date`
 
 ## 4. MVVM Architecture
 - [ ] **Entities/Models**: Core Data subclasses
 - [ ] **Services**:
-    - [ ] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
+    - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
     - [ ] `NotificationService`: `UserNotifications` (Local only)
     - [ ] `ExportService`: Plain-text/CSV generation
 - [ ] **ViewModels**: `ObservableObject` classes with `@Published` state
@@ -74,7 +74,7 @@ This checklist is derived from `project_overview.md` to track the full developme
 
 ## 6. Testing Strategy
 - [ ] **Unit Tests (`CycleOneTests`)**:
-    - [ ] `CycleEngine` (Prediction math, irregular cycles)
+    - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
     - [ ] `NotificationService` (Trigger calculation)
     - [ ] `PersistenceController` (CRUD, In-memory store)
 - [ ] **UI Tests (`CycleOneUITests`)**:

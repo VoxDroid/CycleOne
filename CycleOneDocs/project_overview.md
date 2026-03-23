@@ -1,5 +1,5 @@
 # CycleOne — Project Overview
-> A privacy-first, one-time-purchase iOS period & cycle tracker.  
+> A privacy-first, one-time-purchase iOS period & cycle tracker.
 > No subscriptions. No cloud. No account. Your data stays on your phone — forever.
 
 ---
