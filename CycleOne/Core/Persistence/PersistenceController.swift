@@ -17,9 +17,24 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores { _, error in
+        let container = self.container
+        container.loadPersistentStores { description, error in
             if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                // If migration fails, delete and retry (development only)
+                // 134110: NSMigrationMissingSourceModelError
+                // 134140: NSMigrationMissingMappingModelError
+                if error.code == 134_110 || error.code == 134_140 {
+                    if let url = description.url {
+                        try? FileManager.default.removeItem(at: url)
+                        container.loadPersistentStores { _, retryError in
+                            if let retryError = retryError as NSError? {
+                                fatalError("Failed to load store after reset: \(retryError)")
+                            }
+                        }
+                    }
+                } else {
+                    fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true

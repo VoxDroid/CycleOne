@@ -10,6 +10,12 @@ repos:
         types: [swift]
         pass_filenames: false
 
+      - id: xcode-build
+        name: Xcode Build
+        language: system
+        entry: make build
+        pass_filenames: false
+
       - id: swiftformat
         name: SwiftFormat
         language: system

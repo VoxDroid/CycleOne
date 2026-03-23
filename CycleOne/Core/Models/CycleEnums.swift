@@ -38,3 +38,27 @@ enum Mood: Int16, CaseIterable {
         }
     }
 }
+
+enum SymptomCategory: String, CaseIterable {
+    case physical = "Physical"
+    case mood = "Mood & Mental"
+    case digestion = "Digestion"
+    case other = "Other"
+}
+
+struct SymptomType: Identifiable, Hashable {
+    let id: String
+    let name: String
+    let category: SymptomCategory
+
+    static let defaults: [SymptomType] = [
+        SymptomType(id: "cramps", name: "Cramps", category: .physical),
+        SymptomType(id: "bloating", name: "Bloating", category: .physical),
+        SymptomType(id: "headache", name: "Headache", category: .physical),
+        SymptomType(id: "acne", name: "Acne", category: .physical),
+        SymptomType(id: "breast_tenderness", name: "Breast Tenderness", category: .physical),
+        SymptomType(id: "nausea", name: "Nausea", category: .digestion),
+        SymptomType(id: "cravings", name: "Cravings", category: .other),
+        SymptomType(id: "insomnia", name: "Insomnia", category: .other),
+    ]
+}

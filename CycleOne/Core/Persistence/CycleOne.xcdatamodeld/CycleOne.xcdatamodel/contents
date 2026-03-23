@@ -26,7 +26,7 @@
     </entity>
     <entity name="Symptom" kt-model-name="Symptom" representedClassName="Symptom" syncable="YES" codeGenerationType="class">
         <attribute name="category" optional="NO" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" optional="NO" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="NO" attributeType="String" syncable="YES"/>
         <relationship name="dayLog" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DayLog" inverseName="symptoms" inverseEntity="DayLog" syncable="YES"/>
     </entity>

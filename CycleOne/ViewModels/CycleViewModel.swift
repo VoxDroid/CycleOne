@@ -68,6 +68,44 @@ class CycleViewModel: NSObject, ObservableObject {
             self.isFertileToday = fertileWindow.contains { Calendar.current.isDateInToday($0) }
         }
     }
+
+    enum DayStatus {
+        case none, period, predictedPeriod, fertile, ovulation
+    }
+
+    func status(for date: Date) -> DayStatus {
+        let normalizedDate = Calendar.current.startOfDay(for: date)
+
+        // 1. Check for logged period
+        if cycles.contains(where: { cycle in
+            guard let start = cycle.startDate else { return false }
+            let end = Calendar.current.date(byAdding: .day, value: Int(cycle.periodLength), to: start) ?? start
+            return normalizedDate >= start && normalizedDate < end
+        }) {
+            return .period
+        }
+
+        // 2. Check for predicted period
+        if let nextStart = nextPeriodDate {
+            let predictedEnd = Calendar.current.date(byAdding: .day, value: 5, to: nextStart) ?? nextStart
+            if normalizedDate >= nextStart, normalizedDate < predictedEnd {
+                return .predictedPeriod
+            }
+
+            // 3. Check for fertile window/ovulation
+            let ovulation = engine.estimatedOvulationDate(nextPeriodStart: nextStart)
+            if Calendar.current.isDate(normalizedDate, inSameDayAs: ovulation) {
+                return .ovulation
+            }
+
+            let fertileWindow = engine.fertileWindow(ovulationDate: ovulation)
+            if fertileWindow.contains(where: { Calendar.current.isDate($0, inSameDayAs: normalizedDate) }) {
+                return .fertile
+            }
+        }
+
+        return .none
+    }
 }
 
 extension CycleViewModel: NSFetchedResultsControllerDelegate {

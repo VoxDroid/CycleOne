@@ -18,6 +18,7 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] `swiftformat`
     - [x] `pre-commit`
 - [x] Pre-commit hooks installed (`pre-commit install`)
+- [x] Added `Xcode Build` to pre-commit (`.pre-commit-config.yaml`)
 - [x] `.swiftlint.yml` created and configured
 - [x] `.swiftformat` created and configured
 - [x] `Makefile` created for common tasks (`lint`, `format`, `test`, `build`)
@@ -50,17 +51,17 @@ This checklist is derived from `project_overview.md` to track the full developme
 
 ## 5. UI Implementation (MVP)
 - [x] **Main Navigation**: `TabView` (Calendar, Insights, Settings)
-- [/] **Calendar View**:
-    - [ ] Color-coded day states (Period, Predicted, Ovulation, Fertile, Today)
+- [x] **Calendar View**:
+    - [x] Color-coded day states (Period, Predicted, Ovulation, Fertile, Today)
     - [x] Header banner with countdown/prediction string
     - [x] Month navigation (Swipe/Chevrons)
     - [x] Log sheet trigger on day tap
-- [/] **Log View (Sheet)**:
+- [x] **Log View (Sheet)**:
     - [x] Flow (Segmented), Pain (Slider), Mood/Energy (Icon Pickers)
-    - [ ] Symptom Chip Grid (Multi-select)
+    - [x] Symptom Chip Grid (Multi-select)
     - [x] Notes (Text Field, 500 chars)
     - [x] Auto-save on dismiss (`onDisappear`)
-    - [ ] Automatic `Cycle` creation logic
+    - [x] Automatic `Cycle` creation logic
 - [ ] **Insights View**:
     - [ ] Stats display (Averages, shortest/longest cycle, top symptoms)
     - [ ] Cycle History List (NavigationLink to details)

@@ -16,7 +16,7 @@ struct CalendarView: View {
                 // Header Banner
                 predictionHeader
 
-                // Calendar Grid Placeholder
+                // Calendar Grid Header Placeholder
                 DatePicker(
                     "Select Date",
                     selection: $selectedDate,
@@ -24,6 +24,21 @@ struct CalendarView: View {
                 )
                 .datePickerStyle(.graphical)
                 .padding()
+                .overlay(
+                    // Simple overlay to show the power of the ViewModel status
+                    VStack {
+                        let status = viewModel.status(for: selectedDate)
+                        if status != .none {
+                            Text(statusName(for: status))
+                                .font(.caption.bold())
+                                .foregroundColor(statusColor(for: status))
+                                .padding(6)
+                                .background(statusColor(for: status).opacity(0.1))
+                                .cornerRadius(8)
+                                .padding(.top, 40)
+                        }
+                    }, alignment: .topTrailing
+                )
 
                 Spacer()
 
@@ -34,7 +49,7 @@ struct CalendarView: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.pink)
+                        .background(statusColor(for: viewModel.status(for: Date()))) // Dynamic color
                         .cornerRadius(12)
                 })
                 .padding()
@@ -65,5 +80,23 @@ struct CalendarView: View {
         .background(Color.pink.opacity(0.1))
         .cornerRadius(16)
         .padding(.horizontal)
+    }
+
+    private func statusName(for status: CycleViewModel.DayStatus) -> String {
+        switch status {
+        case .period: "Period"
+        case .predictedPeriod: "Predicted Period"
+        case .fertile: "Fertile"
+        case .ovulation: "Ovulation"
+        case .none: ""
+        }
+    }
+
+    private func statusColor(for status: CycleViewModel.DayStatus) -> Color {
+        switch status {
+        case .period, .predictedPeriod: .pink
+        case .fertile, .ovulation: .purple
+        case .none: .pink // app accent
+        }
     }
 }

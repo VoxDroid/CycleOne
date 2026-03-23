@@ -11,6 +11,7 @@ disabled_rules:
   - trailing_whitespace
   - todo
   - opening_brace
+  - trailing_comma
 
 # ── Rules — opt-in ─────────────────────────────────────────────────────────
 opt_in_rules:
