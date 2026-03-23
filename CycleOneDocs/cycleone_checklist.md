@@ -43,23 +43,23 @@ This checklist is derived from `project_overview.md` to track the full developme
     - [x] `CycleEngine`: Prediction logic (Averages, Ovulation, Fertile Window)
     - [ ] `NotificationService`: `UserNotifications` (Local only)
     - [ ] `ExportService`: Plain-text/CSV generation
-- [ ] **ViewModels**: `ObservableObject` classes with `@Published` state
-    - [ ] `CycleViewModel`
+- [x] **ViewModels**: `ObservableObject` classes with `@Published` state
+    - [x] `CycleViewModel`
     - [ ] `LogViewModel`
     - [ ] `InsightsViewModel`
 
 ## 5. UI Implementation (MVP)
-- [ ] **Main Navigation**: `TabView` (Calendar, Insights, Settings)
-- [ ] **Calendar View**:
+- [x] **Main Navigation**: `TabView` (Calendar, Insights, Settings)
+- [/] **Calendar View**:
     - [ ] Color-coded day states (Period, Predicted, Ovulation, Fertile, Today)
-    - [ ] Header banner with countdown/prediction string
-    - [ ] Month navigation (Swipe/Chevrons)
-    - [ ] Log sheet trigger on day tap
-- [ ] **Log View (Sheet)**:
-    - [ ] Flow (Segmented), Pain (Slider), Mood/Energy (Icon Pickers)
+    - [x] Header banner with countdown/prediction string
+    - [x] Month navigation (Swipe/Chevrons)
+    - [x] Log sheet trigger on day tap
+- [/] **Log View (Sheet)**:
+    - [x] Flow (Segmented), Pain (Slider), Mood/Energy (Icon Pickers)
     - [ ] Symptom Chip Grid (Multi-select)
-    - [ ] Notes (Text Field, 500 chars)
-    - [ ] Auto-save on dismiss (`onDisappear`)
+    - [x] Notes (Text Field, 500 chars)
+    - [x] Auto-save on dismiss (`onDisappear`)
     - [ ] Automatic `Cycle` creation logic
 - [ ] **Insights View**:
     - [ ] Stats display (Averages, shortest/longest cycle, top symptoms)

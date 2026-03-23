@@ -31,7 +31,7 @@
 		35B9FFC12F7136200074EB22 /* CycleOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B9FFCE2F7136210074EB22 /* CycleOneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleOneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B9FFD82F7136210074EB22 /* CycleOneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleOneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		35B9FFEB2F7136840074EB22 /* project_overview.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = project_overview.md; sourceTree = "<group>"; };
+		35B9FFEB2F7136840074EB22 /* project_overview.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CycleOneDocs/project_overview.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */

@@ -1,0 +1,14 @@
+//
+//  Logger+Extensions.swift
+//  CycleOne
+//
+
+import Foundation
+import OSLog
+
+extension Logger {
+    private static var subsystem = Bundle.main.bundleIdentifier!
+
+    static let storage = Logger(subsystem: subsystem, category: "storage")
+    static let viewCycle = Logger(subsystem: subsystem, category: "viewCycle")
+}
