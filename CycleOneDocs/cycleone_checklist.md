@@ -39,9 +39,10 @@
 - [x] **Theming**: System/Light/Dark mode switcher
 - [x] **Stability**: Fixed layout frames for cards
 
-## Robust Overhaul (Phase 8 & 9)
-- [x] **Native Calendar**: `UICalendarView` with decorations
+## Robust Overhaul (Phase 8, 9 & 10)
+- [x] **Native Calendar**: `UICalendarView` with red circle decorations
 - [x] **Logging Flow**: Navigation-based logging (No modals)
 - [x] **Auto-Save**: Automatic persistence on dismiss
 - [x] **UX Polish**: Scrollable main screen, energy highlights
-- [x] **Stability**: Fixed symptom selection & test suite refinement
+- [x] **TestDataSeeder**: Programmatic test data seeding
+- [x] **Stability**: Fixed symptom selection & navigation bugs

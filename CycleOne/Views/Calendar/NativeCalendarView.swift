@@ -64,18 +64,29 @@ struct NativeCalendarView: UIViewRepresentable {
                           decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration?
         {
             guard let date = Calendar.current.date(from: dateComponents) else { return nil }
+
+            if !lastDecoratedDates.contains(dateComponents) {
+                lastDecoratedDates.append(dateComponents)
+            }
+
             let status = parent.viewModel.dayStatuses[date.startOfDay] ?? DayStatus()
 
-            lastDecoratedDates.append(dateComponents)
-
+            // Multiple decorations if needed
             if status.flow != .none {
-                return .default(color: .systemPink, size: .medium)
+                return .customView {
+                    let view = UIView()
+                    view.backgroundColor = UIColor.systemPink // Standard period color
+                    view.layer.cornerRadius = 6 // Smaller circle for decoration area
+                    view.alpha = 0.6
+                    view.frame = CGRect(x: 0, y: 0, width: 12, height: 12)
+                    return view
+                }
             } else if status.isPredicted {
-                return .default(color: .systemPink.withAlphaComponent(0.4), size: .small)
+                return .default(color: .systemGray, size: .small)
             } else if status.isOvulation {
                 return .default(color: .systemTeal, size: .medium)
             } else if status.isFertile {
-                return .default(color: .systemTeal.withAlphaComponent(0.4), size: .small)
+                return .default(color: UIColor.systemTeal.withAlphaComponent(0.3), size: .small)
             } else if status.hasLogs {
                 return .default(color: .secondaryLabel, size: .small)
             }

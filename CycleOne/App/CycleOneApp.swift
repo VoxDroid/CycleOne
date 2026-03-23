@@ -20,6 +20,9 @@ struct CycleOneApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(themeManager)
                 .preferredColorScheme(themeManager.selectedTheme.colorScheme)
+                .onAppear {
+                    TestDataSeeder.seed(context: persistenceController.container.viewContext)
+                }
         }
     }
 }
