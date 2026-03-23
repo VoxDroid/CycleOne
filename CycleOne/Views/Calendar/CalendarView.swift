@@ -52,6 +52,7 @@ struct CalendarView: View {
                         .background(statusColor(for: viewModel.status(for: Date()))) // Dynamic color
                         .cornerRadius(12)
                 })
+                .accessibilityIdentifier("LogDayButton")
                 .padding()
             }
             .navigationTitle("CycleOne")

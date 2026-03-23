@@ -15,6 +15,8 @@ struct LogView: View {
 
     @State private var flow: FlowLevel = .none
     @State private var mood: Mood = .neutral
+    @State private var energy: EnergyLevel = .medium
+    @State private var painLevel: Double = 0
     @State private var notes: String = ""
     @State private var selectedSymptoms: Set<String> = []
 
@@ -30,21 +32,44 @@ struct LogView: View {
                     .pickerStyle(.segmented)
                 }
 
-                Section(header: Text("Mood")) {
-                    HStack {
-                        ForEach(Mood.allCases, id: \.self) { item in
-                            VStack {
+                Section(header: Text("Mood & Energy")) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Mood").font(.caption).foregroundColor(.secondary)
+                        HStack {
+                            ForEach(Mood.allCases, id: \.self) { item in
                                 Image(systemName: item.icon)
                                     .font(.title2)
                                     .foregroundColor(mood == item ? .themeAccent : .secondary)
-                                    .onTapGesture {
-                                        mood = item
-                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .onTapGesture { mood = item }
                             }
-                            .frame(maxWidth: .infinity)
+                        }
+
+                        Divider().padding(.vertical, 4)
+
+                        Text("Energy").font(.caption).foregroundColor(.secondary)
+                        HStack {
+                            ForEach(EnergyLevel.allCases, id: \.self) { item in
+                                Image(systemName: item.icon)
+                                    .font(.title2)
+                                    .foregroundColor(energy == item ? .themeAccent : .secondary)
+                                    .frame(maxWidth: .infinity)
+                                    .onTapGesture { energy = item }
+                            }
                         }
                     }
                     .padding(.vertical, 8)
+                }
+
+                Section(header: Text("Pain Level: \(Int(painLevel))")) {
+                    Slider(value: $painLevel, in: 0 ... 10, step: 1) {
+                        Text("Pain Level")
+                    } minimumValueLabel: {
+                        Text("0").font(.caption)
+                    } maximumValueLabel: {
+                        Text("10").font(.caption)
+                    }
+                    .accentColor(.themePeriod)
                 }
 
                 Section(header: Text("Symptoms")) {
@@ -95,6 +120,7 @@ struct LogView: View {
                         saveLog()
                         dismiss()
                     })
+                    .accessibilityIdentifier("SaveLogButton")
                     .bold()
                 }
             }
@@ -116,6 +142,8 @@ struct LogView: View {
             log.date = normalizedDate
             log.flowLevel = flow.rawValue
             log.mood = mood.rawValue
+            log.energyLevel = energy.rawValue
+            log.painLevel = Int16(painLevel)
             log.notes = notes
 
             // Manage Symptoms

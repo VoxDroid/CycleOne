@@ -23,19 +23,49 @@ final class CycleOneUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() {
-        // UI tests must launch the application that they test.
+    func testNavigation() {
         let app = XCUIApplication()
         app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let calendarTab = app.tabBars.buttons["CalendarTab"]
+        let insightsTab = app.tabBars.buttons["InsightsTab"]
+        let settingsTab = app.tabBars.buttons["SettingsTab"]
+
+        XCTAssertTrue(calendarTab.exists)
+        XCTAssertTrue(insightsTab.exists)
+        XCTAssertTrue(settingsTab.exists)
+
+        insightsTab.tap()
+        XCTAssertTrue(app.navigationBars["Insights"].exists)
+
+        settingsTab.tap()
+        XCTAssertTrue(app.navigationBars["Settings"].exists)
+
+        calendarTab.tap()
     }
 
     @MainActor
-    func testLaunchPerformance() {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+    func testLoggingFlow() {
+        let app = XCUIApplication()
+        app.launch()
+
+        let logButton = app.buttons["LogDayButton"]
+        XCTAssertTrue(logButton.exists)
+        logButton.tap()
+
+        XCTAssertTrue(app.navigationBars.firstMatch.identifier != "")
+
+        // Select Medium Flow
+        let mediumButton = app.buttons["Medium"]
+        if mediumButton.exists {
+            mediumButton.tap()
         }
+
+        let saveButton = app.buttons["SaveLogButton"]
+        XCTAssertTrue(saveButton.exists)
+        saveButton.tap()
+
+        // Wait for sheet to dismiss
+        XCTAssertTrue(logButton.waitForExistence(timeout: 5))
     }
 }

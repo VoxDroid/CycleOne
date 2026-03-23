@@ -14,16 +14,19 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }
+                .accessibilityIdentifier("CalendarTab")
 
             InsightsView()
                 .tabItem {
                     Label("Insights", systemImage: "chart.bar.fill")
                 }
+                .accessibilityIdentifier("InsightsTab")
 
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
+                .accessibilityIdentifier("SettingsTab")
         }
         .accentColor(.pink)
     }

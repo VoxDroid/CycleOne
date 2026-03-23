@@ -29,9 +29,7 @@ class NotificationService {
         content.body = "Your period is predicted to start tomorrow."
         content.sound = .default
 
-        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
-
+        let components = triggerComponents(for: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         let request = UNNotificationRequest(identifier: "period_alert", content: content, trigger: trigger)
 
@@ -48,9 +46,7 @@ class NotificationService {
         content.body = "Your fertile window starts tomorrow."
         content.sound = .default
 
-        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
-
+        let components = triggerComponents(for: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         let request = UNNotificationRequest(identifier: "fertile_alert", content: content, trigger: trigger)
 
@@ -59,6 +55,14 @@ class NotificationService {
                 Logger.notifications.error("Failed to schedule fertile alert: \(error.localizedDescription)")
             }
         }
+    }
+
+    func triggerComponents(for date: Date) -> DateComponents {
+        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
+        components.hour = 8
+        components.minute = 0
+        return components
     }
 
     func cancelAll() {

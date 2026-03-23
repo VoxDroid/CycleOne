@@ -33,8 +33,8 @@ enum Mood: Int16, CaseIterable {
         case .happy: "face.smiling"
         case .neutral: "face.dashed"
         case .sad: "face.frowning"
-        case .anxious: "face.smiling.inverse" // placeholder
-        case .angry: "face.smiling.inverse" // placeholder
+        case .anxious: "face.smiling.inverse"
+        case .angry: "face.smiling.inverse"
         }
     }
 
@@ -45,6 +45,28 @@ enum Mood: Int16, CaseIterable {
         case .sad: "Sad"
         case .anxious: "Anxious"
         case .angry: "Angry"
+        }
+    }
+}
+
+enum EnergyLevel: Int16, CaseIterable {
+    case low = 0
+    case medium = 1
+    case high = 2
+
+    var icon: String {
+        switch self {
+        case .low: "battery.25"
+        case .medium: "battery.50"
+        case .high: "battery.100"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .low: "Low"
+        case .medium: "Normal"
+        case .high: "High"
         }
     }
 }

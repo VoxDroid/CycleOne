@@ -54,6 +54,10 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink(destination: PrivacyPolicyView()) {
+                        Label("Privacy Policy", systemImage: "shield.lefthalf.filled")
+                    }
+
                     Text("All data is stored locally on your device and is not collected by the developer.")
                         .font(.caption)
                         .foregroundColor(.secondary)
