@@ -41,7 +41,9 @@ class ExportService {
                 csvString += "\(dateStr),\(flowStr),\(painStr),\(moodStr),\(energyStr),\(symptoms),\(notes)\n"
             }
 
-            let fileName = "CycleOne_Export_\(Date().formatted(date: .numeric, time: .omitted)).csv"
+            let fileDateFormatter = DateFormatter()
+            fileDateFormatter.dateFormat = "yyyyMMdd"
+            let fileName = "CycleOne_Export_\(fileDateFormatter.string(from: Date())).csv"
             let path = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
 
             try csvString.write(to: path, atomically: true, encoding: .utf8)

@@ -2,104 +2,71 @@
 //  InsightsViewModel.swift
 //  CycleOne
 //
-//  Created by Antigravity on 3/23/26.
-//
 
 import Combine
 import CoreData
 import Foundation
 import OSLog
+import SwiftUI
 
-class InsightsViewModel: NSObject, ObservableObject {
-    @Published var averageCycleLength: Int = 0
-    @Published var averagePeriodLength: Int = 0
-    @Published var cycleHistory: [Cycle] = []
+final class InsightsViewModel: ObservableObject {
+    @Published var avgCycleLength: Double = 0
+    @Published var avgPeriodLength: Double = 0
+    @Published var shortestCycle: Int = 0
+    @Published var longestCycle: Int = 0
+    @Published var totalCycles: Int = 0
     @Published var topSymptoms: [String] = []
+    @Published var recentCycles: [Cycle] = []
 
     private let context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<Cycle>!
 
-    init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
+    init(context: NSManagedObjectContext) {
         self.context = context
-        super.init()
-        setupFetchedResultsController()
         calculateStats()
     }
 
-    private func setupFetchedResultsController() {
+    func calculateStats() {
         let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Cycle.startDate, ascending: false)]
 
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        fetchedResultsController.delegate = self
-
         do {
-            try fetchedResultsController.performFetch()
-            self.cycleHistory = fetchedResultsController.fetchedObjects ?? []
+            let cycles = try context.fetch(request)
+            recentCycles = cycles
+            totalCycles = cycles.count
+
+            let validCycles = cycles.filter { $0.cycleLength > 0 }
+            if !validCycles.isEmpty {
+                avgCycleLength = Double(validCycles.map { Int($0.cycleLength) }.reduce(0, +)) /
+                    Double(validCycles.count)
+                shortestCycle = validCycles.map { Int($0.cycleLength) }.min() ?? 0
+                longestCycle = validCycles.map { Int($0.cycleLength) }.max() ?? 0
+            }
+
+            let periodCycles = cycles.filter { $0.periodLength > 0 }
+            if !periodCycles.isEmpty {
+                avgPeriodLength = Double(periodCycles.map { Int($0.periodLength) }.reduce(0, +)) /
+                    Double(periodCycles.count)
+            }
+
+            // Top symptoms
+            calculateTopSymptoms()
         } catch {
-            Logger.storage.error("Failed to fetch cycles for insights: \(error.localizedDescription)")
+            Logger.storage.error("Failed to calculate insights: \(error.localizedDescription)")
         }
-    }
-
-    func calculateStats() {
-        let cycles = fetchedResultsController.fetchedObjects ?? []
-        guard !cycles.isEmpty else { return }
-
-        // Last 6 cycles for average
-        let recentCycles = Array(cycles.prefix(6))
-
-        let validCycleLengths = recentCycles.map { Int($0.cycleLength) }.filter { $0 > 0 }
-        if !validCycleLengths.isEmpty {
-            self.averageCycleLength = validCycleLengths.reduce(0, +) / validCycleLengths.count
-        }
-
-        let validPeriodLengths = recentCycles.map { Int($0.periodLength) }.filter { $0 > 0 }
-        if !validPeriodLengths.isEmpty {
-            self.averagePeriodLength = validPeriodLengths.reduce(0, +) / validPeriodLengths.count
-        }
-
-        calculateTopSymptoms()
     }
 
     private func calculateTopSymptoms() {
-        let logRequest: NSFetchRequest<DayLog> = DayLog.fetchRequest()
-        // Last 30 days for symptoms
-        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
-        logRequest.predicate = NSPredicate(format: "date >= %@", thirtyDaysAgo as NSDate)
-
+        let request: NSFetchRequest<Symptom> = Symptom.fetchRequest()
         do {
-            let logs = try context.fetch(logRequest)
-            var counts: [String: Int] = [:]
-
-            for log in logs {
-                if let symptoms = log.symptoms as? Set<Symptom> {
-                    for symptom in symptoms {
-                        if let name = symptom.name {
-                            counts[name, default: 0] += 1
-                        }
-                    }
+            let symptoms = try context.fetch(request)
+            let counts = symptoms.reduce(into: [String: Int]()) { counts, symptom in
+                if let name = symptom.name {
+                    counts[name, default: 0] += 1
                 }
             }
-
-            self.topSymptoms = counts.sorted { $0.value > $1.value }
-                .prefix(5)
-                .map(\.key)
+            topSymptoms = Array(counts.sorted { $0.value > $1.value }.prefix(3).map(\.key))
         } catch {
-            Logger.storage.error("Failed to calculate top symptoms: \(error.localizedDescription)")
-        }
-    }
-}
-
-extension InsightsViewModel: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        DispatchQueue.main.async {
-            self.cycleHistory = self.fetchedResultsController.fetchedObjects ?? []
-            self.calculateStats()
+            Logger.storage.error("Failed to fetch symptoms for stats: \(error.localizedDescription)")
         }
     }
 }

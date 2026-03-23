@@ -3,37 +3,36 @@
 //  CycleOne
 //
 
+import CoreData
 import SwiftUI
 
 struct MainTabView: View {
-    @StateObject private var viewModel = CycleViewModel()
+    @Environment(\.managedObjectContext) var context
+    @State private var selectedTab = 0
 
     var body: some View {
-        TabView {
-            CalendarView(viewModel: viewModel)
+        TabView(selection: $selectedTab) {
+            CalendarView(context: context)
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }
+                .tag(0)
                 .accessibilityIdentifier("CalendarTab")
 
-            InsightsView()
+            InsightsView(context: context)
                 .tabItem {
                     Label("Insights", systemImage: "chart.bar.fill")
                 }
+                .tag(1)
                 .accessibilityIdentifier("InsightsTab")
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label("Settings", systemImage: "gear")
                 }
+                .tag(2)
                 .accessibilityIdentifier("SettingsTab")
         }
-        .accentColor(.pink)
-    }
-}
-
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView()
+        .accentColor(.themeAccent)
     }
 }

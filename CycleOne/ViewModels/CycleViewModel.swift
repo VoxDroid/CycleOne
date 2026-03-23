@@ -2,130 +2,110 @@
 //  CycleViewModel.swift
 //  CycleOne
 //
-//  Created by Antigravity on 3/23/26.
-//
 
 import Combine
 import CoreData
 import Foundation
 import OSLog
+import SwiftUI
 
-class CycleViewModel: NSObject, ObservableObject {
-    @Published var cycles: [Cycle] = []
-    @Published var nextPeriodDate: Date?
-    @Published var daysUntilNextPeriod: Int?
-    @Published var isFertileToday: Bool = false
+final class CycleViewModel: ObservableObject {
+    @Published var selectedDate: Date = .init().startOfDay
+    @Published var currentMonth: Date = .init().startOfDay
+    @Published var daysUntilPeriod: Int?
+    @Published var isIrregular: Bool = false
+    @Published var dayStatuses: [Date: DayStatus] = [:]
+
+    @AppStorage("enablePredictions") var enablePredictions = true
 
     private let context: NSManagedObjectContext
     private let engine = CycleEngine()
-    private var fetchedResultsController: NSFetchedResultsController<Cycle>!
+    private var cancellables = Set<AnyCancellable>()
 
-    init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
+    init(context: NSManagedObjectContext) {
         self.context = context
-        super.init()
-        setupFetchedResultsController()
+
+        // Refresh when context changes
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave, object: context)
+            .sink { [weak self] _ in
+                self?.refreshData()
+            }
+            .store(in: &cancellables)
+
         refreshData()
     }
 
-    private func setupFetchedResultsController() {
-        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Cycle.startDate, ascending: true)]
-
-        fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        fetchedResultsController.delegate = self
+    func refreshData() {
+        let fetchRequest: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Cycle.startDate, ascending: true)]
 
         do {
-            try fetchedResultsController.performFetch()
-            self.cycles = fetchedResultsController.fetchedObjects ?? []
+            let cycles = try context.fetch(fetchRequest)
+
+            // Stats & Predictions
+            if enablePredictions {
+                daysUntilPeriod = engine.predictNextPeriodStart(from: cycles).map { Date().startOfDay.days(from: $0) }
+                isIrregular = engine.isCycleIrregular(cycles: cycles)
+            } else {
+                daysUntilPeriod = nil
+                isIrregular = false
+            }
+
+            // Update day statuses for current month and neighbors
+            updateDayStatuses(cycles: cycles)
         } catch {
-            Logger.storage.error("Failed to fetch cycles: \(error.localizedDescription)")
+            Logger.storage.error("Fetch failed: \(error.localizedDescription)")
         }
     }
 
-    func refreshData() {
-        let snapshots = cycles.compactMap { cycle -> CycleSnapshot? in
-            guard let startDate = cycle.startDate else { return nil }
-            return CycleSnapshot(
-                startDate: startDate,
-                cycleLength: Int(cycle.cycleLength),
-                periodLength: Int(cycle.periodLength)
-            )
-        }
+    private func updateDayStatuses(cycles: [Cycle]) {
+        var statuses: [Date: DayStatus] = [:]
 
-        self.nextPeriodDate = engine.predictNextPeriodStart(from: snapshots)
-
-        if let nextDate = nextPeriodDate {
-            let diff = Calendar.current.dateComponents([.day], from: Date(), to: nextDate).day ?? 0
-            self.daysUntilNextPeriod = max(0, diff)
-
-            let ovulation = engine.estimatedOvulationDate(nextPeriodStart: nextDate)
-            let fertileWindow = engine.fertileWindow(ovulationDate: ovulation)
-            self.isFertileToday = fertileWindow.contains { Calendar.current.isDateInToday($0) }
-        }
-
-        scheduleNotifications()
-    }
-
-    private func scheduleNotifications() {
-        if let nextPeriod = nextPeriodDate {
-            NotificationService.shared.schedulePeriodAlert(for: nextPeriod)
-
-            let ovulation = engine.estimatedOvulationDate(nextPeriodStart: nextPeriod)
-            if let firstFertileDay = engine.fertileWindow(ovulationDate: ovulation).first {
-                NotificationService.shared.scheduleFertileWindowAlert(for: firstFertileDay)
-            }
-        }
-    }
-
-    enum DayStatus {
-        case none, period, predictedPeriod, fertile, ovulation
-    }
-
-    func status(for date: Date) -> DayStatus {
-        let normalizedDate = Calendar.current.startOfDay(for: date)
-
-        // 1. Check for logged period
-        if cycles.contains(where: { cycle in
-            guard let start = cycle.startDate else { return false }
-            let end = Calendar.current.date(byAdding: .day, value: Int(cycle.periodLength), to: start) ?? start
-            return normalizedDate >= start && normalizedDate < end
-        }) {
-            return .period
-        }
-
-        // 2. Check for predicted period
-        if let nextStart = nextPeriodDate {
-            let predictedEnd = Calendar.current.date(byAdding: .day, value: 5, to: nextStart) ?? nextStart
-            if normalizedDate >= nextStart, normalizedDate < predictedEnd {
-                return .predictedPeriod
-            }
-
-            // 3. Check for fertile window/ovulation
-            let ovulation = engine.estimatedOvulationDate(nextPeriodStart: nextStart)
-            if Calendar.current.isDate(normalizedDate, inSameDayAs: ovulation) {
-                return .ovulation
-            }
-
-            let fertileWindow = engine.fertileWindow(ovulationDate: ovulation)
-            if fertileWindow.contains(where: { Calendar.current.isDate($0, inSameDayAs: normalizedDate) }) {
-                return .fertile
+        // 1. Logged days
+        let logRequest: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        if let logs = try? context.fetch(logRequest) {
+            for log in logs {
+                if let date = log.date {
+                    var status = DayStatus()
+                    status.flow = FlowLevel(rawValue: log.flowLevel) ?? .none
+                    status.hasLogs = true
+                    statuses[date.startOfDay] = status
+                }
             }
         }
 
-        return .none
-    }
-}
+        // 2. Predictions
+        if enablePredictions, !cycles.isEmpty {
+            let predictedStart = engine.predictNextPeriodStart(from: cycles)
+            if let start = predictedStart {
+                for offset in 0 ..< 5 { // Assume 5 days period for prediction
+                    let date = start.adding(days: offset).startOfDay
+                    var status = statuses[date] ?? DayStatus()
+                    status.isPredicted = true
+                    statuses[date] = status
+                }
+            }
 
-extension CycleViewModel: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        DispatchQueue.main.async {
-            self.cycles = self.fetchedResultsController.fetchedObjects ?? []
-            self.refreshData()
+            let ovulation = engine.predictOvulation(from: cycles)
+            if let ovDate = ovulation {
+                var status = statuses[ovDate.startOfDay] ?? DayStatus()
+                status.isOvulation = true
+                statuses[ovDate.startOfDay] = status
+            }
+        }
+
+        self.dayStatuses = statuses
+    }
+
+    func nextMonth() {
+        if let newMonth = Calendar.current.date(byAdding: .month, value: 1, to: currentMonth) {
+            currentMonth = newMonth
+        }
+    }
+
+    func previousMonth() {
+        if let newMonth = Calendar.current.date(byAdding: .month, value: -1, to: currentMonth) {
+            currentMonth = newMonth
         }
     }
 }
