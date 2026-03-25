@@ -9,6 +9,7 @@ import SwiftUI
 struct CalendarView: View {
     @Environment(\.managedObjectContext) var context
     @StateObject private var viewModel: CycleViewModel
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     init(context: NSManagedObjectContext) {
         _viewModel = StateObject(wrappedValue: CycleViewModel(context: context))
@@ -16,35 +17,48 @@ struct CalendarView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    // Prediction Banner
-                    CycleHeaderView(
-                        daysUntilPeriod: viewModel.daysUntilPeriod,
-                        isIrregular: viewModel.isIrregular
-                    )
-                    .padding()
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // Prediction Banner
+                        CycleHeaderView(
+                            daysUntilPeriod: viewModel.daysUntilPeriod,
+                            daysUntilOvulation: viewModel.daysUntilOvulation,
+                            isIrregular: viewModel.isIrregular
+                        )
+                        .padding()
 
-                    // Native Calendar View
-                    NativeCalendarView(viewModel: viewModel)
-                        .padding(.horizontal)
-                        .frame(minHeight: 400) // Ensure it has enough space
+                        // Native Calendar View
+                        NativeCalendarView(viewModel: viewModel)
+                            .padding(.horizontal)
+                            .frame(minHeight: 400) // Ensure it has enough space
 
-                    CalendarDayDetailView(
-                        date: viewModel.selectedDate,
-                        log: viewModel.selectedDayLog,
-                        onLog: {} // Interaction handled by NavigationLink in detail view
-                    )
-                    .padding(.top)
+                        CalendarDayDetailView(
+                            date: viewModel.selectedDate,
+                            log: viewModel.selectedDayLog,
+                            onLog: {} // Interaction handled by NavigationLink in detail view
+                        )
+                        .padding(.top)
 
-                    Spacer()
+                        Spacer()
+                    }
                 }
-            }
-            .background(Color(.systemBackground))
-            .navigationTitle("CycleOne")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: Date.self) { date in
-                LogView(date: date, context: context)
+                .background(Color(.systemBackground))
+                .navigationTitle("CycleOne")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: Date.self) { date in
+                    LogView(date: date, context: context)
+                }
+
+                if !hasSeenOnboarding {
+                    OnboardingTipView {
+                        withAnimation {
+                            hasSeenOnboarding = true
+                        }
+                    }
+                    .transition(.opacity)
+                    .zIndex(1)
+                }
             }
         }
     }

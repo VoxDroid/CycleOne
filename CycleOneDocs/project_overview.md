@@ -374,9 +374,9 @@ App Launch
 ContentView (TabView)
     ├── Tab 1: CalendarView            ← Default tab
     │       │
-    │       └── [Tap day] → LogView (sheet)
+    │       └── [Tap day] → LogView (NavigationLink)
     │                   │
-    │                   └── SymptomGridView (inline in sheet)
+    │                   └── SymptomGridView (inline in form)
     │
     ├── Tab 2: InsightsView
     │       │
@@ -389,8 +389,8 @@ ContentView (TabView)
 
 ### Navigation Rules
 
-- The app uses a `TabView` with three tabs. No nested navigation stacks except inside Insights (history list) and Settings.
-- `LogView` is always a `.sheet` presented from the calendar. It is never pushed onto a navigation stack.
+- The app uses a `TabView` with three tabs. No nested navigation stacks except inside Calendar (log flow), Insights (history list) and Settings.
+- `LogView` is a navigation destination presented from the calendar via `NavigationLink`.
 - There is no onboarding flow at MVP. The calendar screen is the first screen the user sees on first launch.
 - A lightweight first-launch tip overlay (shown once, dismissed by tapping anywhere) explains the three main actions: tap a day to log, swipe months to navigate, check the header for your next predicted period.
 
@@ -402,12 +402,12 @@ ContentView (TabView)
 
 **Purpose:** The home screen. Shows the current month with color-coded days.
 
-**Day states and their colors:**
-- Period day (logged) — rose/red fill
-- Predicted period day — rose/red fill, 50% opacity
-- Ovulation day (estimated) — teal fill
-- Fertile window day — teal fill, 30% opacity
-- Today — outlined (ring), no fill unless also a period/ovulation day
+**Day states (UICalendarView decorations):**
+- Period day (logged) — rose/red circle decoration
+- Predicted period day — gray dot decoration
+- Ovulation day (estimated) — teal dot decoration
+- Fertile window day — light teal dot decoration
+- Today — standard native selection/today outline
 - Logged (symptom/mood only, no flow) — small dot indicator
 - Future days — default, no fill
 
@@ -417,11 +417,11 @@ ContentView (TabView)
 - If fewer than 2 cycles are logged, shows "Log your first period to see predictions"
 
 **Interactions:**
-- Tap any day → opens `LogView` sheet for that day
+- Tap any day → opens `LogView` for that day
 - Swipe left/right to navigate months
 - Pull-to-refresh is not relevant (no network). Month navigation is via chevron buttons or swipe gesture.
 
-### 9.2 Log View (Sheet)
+### 9.2 Log View
 
 **Purpose:** Log data for a selected day.
 
@@ -437,7 +437,7 @@ ContentView (TabView)
 6. **Notes** — optional text field, plain text, max 500 characters
 
 **Save behavior:**
-- Auto-saves on sheet dismiss (no explicit "Save" button needed — use `onDisappear` + `onChange` on the ViewModel)
+- Auto-saves on view dismiss (no explicit "Save" button needed — use `onDisappear` on the ViewModel)
 - If it is the first day of a new cycle (user sets flow > 0 on a day with no recent period), a new `Cycle` record is created automatically
 
 **Period start / end detection logic:**

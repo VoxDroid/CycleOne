@@ -14,6 +14,7 @@ final class LogFlowUITests: XCTestCase {
     func testBasicLogging() {
         let app = XCUIApplication()
         app.launch()
+        dismissOnboarding(app: app)
 
         // Find the Log/Edit button using a predicate
         let logButton = app.buttons
@@ -26,5 +27,12 @@ final class LogFlowUITests: XCTestCase {
         // We use "Dismiss" now, and it auto-saves
         app.buttons["Dismiss"].tap()
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
+    }
+
+    private func dismissOnboarding(app: XCUIApplication) {
+        let gotItButton = app.buttons["Got it!"]
+        if gotItButton.waitForExistence(timeout: 2) {
+            gotItButton.tap()
+        }
     }
 }

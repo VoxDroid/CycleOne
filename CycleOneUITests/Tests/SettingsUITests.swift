@@ -14,6 +14,7 @@ final class SettingsUITests: XCTestCase {
     func testThemePickerExists() {
         let app = XCUIApplication()
         app.launch()
+        dismissOnboarding(app: app)
 
         // Tap Settings tab (Settings is the third tab, index 2)
         let settingsTab = app.tabBars.buttons.element(boundBy: 2)
@@ -21,6 +22,13 @@ final class SettingsUITests: XCTestCase {
         settingsTab.tap()
 
         // Verify Theme picker exists
-        XCTAssertTrue(app.staticTexts["Theme"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Theme"].exists)
+    }
+
+    private func dismissOnboarding(app: XCUIApplication) {
+        let gotItButton = app.buttons["Got it!"]
+        if gotItButton.waitForExistence(timeout: 2) {
+            gotItButton.tap()
+        }
     }
 }

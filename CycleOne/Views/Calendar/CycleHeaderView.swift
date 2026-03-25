@@ -7,6 +7,7 @@ import SwiftUI
 
 struct CycleHeaderView: View {
     let daysUntilPeriod: Int?
+    let daysUntilOvulation: Int?
     let isIrregular: Bool
 
     var body: some View {
@@ -17,11 +18,17 @@ struct CycleHeaderView: View {
                         .font(.title2)
                         .fontWeight(.bold)
 
-                    if let days = daysUntilPeriod {
-                        Text(days == 0 ? "Expected today" : "In \(days) days")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    Group {
+                        if let days = daysUntilPeriod {
+                            Text(days == 0 ? "Expected today" : "In \(days) days")
+                        }
+
+                        if let ovDays = daysUntilOvulation, ovDays >= 0 {
+                            Text("Ovulation window: \(ovDays == 0 ? "starts today" : "in \(ovDays) days")")
+                        }
                     }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
                 }
                 Spacer()
 
@@ -43,7 +50,7 @@ struct CycleHeaderView: View {
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         )
         .padding(.horizontal)
-        .frame(minHeight: 100, alignment: .top)
+        .frame(minHeight: 120, alignment: .top)
     }
 
     private var predictionText: String {

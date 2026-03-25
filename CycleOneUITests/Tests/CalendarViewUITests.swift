@@ -14,6 +14,7 @@ final class CalendarViewUITests: XCTestCase {
     func testCalendarLayout() {
         let app = XCUIApplication()
         app.launch()
+        dismissOnboarding(app: app)
 
         // Verify navigation title
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
@@ -28,6 +29,7 @@ final class CalendarViewUITests: XCTestCase {
     func testNavigationToLogView() {
         let app = XCUIApplication()
         app.launch()
+        dismissOnboarding(app: app)
 
         // Tap the Log Day button
         let logButton = app.buttons
@@ -46,5 +48,12 @@ final class CalendarViewUITests: XCTestCase {
         }
 
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
+    }
+
+    private func dismissOnboarding(app: XCUIApplication) {
+        let gotItButton = app.buttons["Got it!"]
+        if gotItButton.waitForExistence(timeout: 2) {
+            gotItButton.tap()
+        }
     }
 }

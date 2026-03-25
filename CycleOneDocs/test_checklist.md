@@ -19,3 +19,5 @@
 - [x] UI Alignment: Fixed "lowered down" issue via `NavigationStack` refactor
 - [x] Persistence: Settings and logs remain after app killed/restarted
 - [x] Export: CSV file is valid and contains all logged data
+- [x] Disclaimer: Verify "Predictions are estimates only" label visibility
+- [x] Onboarding: Verify tip overlay appears on first launch (post-implementation)

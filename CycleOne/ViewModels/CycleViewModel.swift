@@ -13,6 +13,7 @@ final class CycleViewModel: ObservableObject {
     @Published var selectedDate: Date = .init().startOfDay
     @Published var currentMonth: Date = .init().startOfDay
     @Published var daysUntilPeriod: Int?
+    @Published var daysUntilOvulation: Int?
     @Published var isIrregular: Bool = false
     @Published var dayStatuses: [Date: DayStatus] = [:]
     @Published var selectedDayLog: DayLog?
@@ -46,9 +47,11 @@ final class CycleViewModel: ObservableObject {
             // Stats & Predictions
             if enablePredictions {
                 daysUntilPeriod = engine.predictNextPeriodStart(from: cycles).map { Date().startOfDay.days(from: $0) }
+                daysUntilOvulation = engine.predictOvulation(from: cycles).map { Date().startOfDay.days(from: $0) }
                 isIrregular = engine.isCycleIrregular(cycles: cycles)
             } else {
                 daysUntilPeriod = nil
+                daysUntilOvulation = nil
                 isIrregular = false
             }
 
