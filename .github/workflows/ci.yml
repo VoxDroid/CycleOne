@@ -20,6 +20,33 @@ jobs:
         with:
           xcode-version: '16.3'
 
+      - name: Cache iOS Simulator Runtime
+        id: cache-ios-runtime
+        uses: actions/cache@v4
+        with:
+          path: /Library/Developer/CoreSimulator/Profiles/Runtimes/
+          key: ios-runtime-xcode-16.3
+
+      - name: Install iOS Simulator Runtime
+        if: steps.cache-ios-runtime.outputs.cache-hit != 'true'
+        run: |
+          MAX_ATTEMPTS=3
+          DELAY=15
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Download attempt $attempt of $MAX_ATTEMPTS..."
+            if xcodebuild -downloadPlatform iOS; then
+              echo "Runtime downloaded successfully."
+              break
+            fi
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "All $MAX_ATTEMPTS attempts failed. Aborting."
+              exit 1
+            fi
+            echo "Attempt $attempt failed. Retrying in ${DELAY}s..."
+            sleep $DELAY
+            DELAY=$((DELAY * 2))
+          done
+
       - name: Install dependencies
         run: |
           brew install swiftlint swiftformat pre-commit
