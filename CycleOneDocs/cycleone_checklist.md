@@ -49,3 +49,8 @@
 - [x] **Onboarding**: Lightweight first-launch tip overlay (Section 8 & 9.1)
 - [x] **UI Polish**: Prediction Engine Disclaimer Label (Section 9.3)
 - [x] **UI Polish**: Ovulation window line in Header Banner (Section 9.1)
+
+## UX Upgrades (Phase 11)
+- [x] **Legend**: Calendar legend for dot decorations
+- [x] **Guide**: Dedicated Help & Guide page in Settings
+- [x] **Navigation**: Navigation tips and support links

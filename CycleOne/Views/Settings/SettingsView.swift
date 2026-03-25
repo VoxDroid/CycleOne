@@ -46,6 +46,10 @@ struct SettingsView: View {
                 }
 
                 Section("App") {
+                    NavigationLink(destination: HelpView()) {
+                        Label("Help & Guide", systemImage: "questionmark.circle.fill")
+                    }
+
                     if let url = URL(string: "https://github.com/VoxDroid/CycleOne") {
                         Link(destination: url) {
                             Label("Support & Feedback", systemImage: "link")

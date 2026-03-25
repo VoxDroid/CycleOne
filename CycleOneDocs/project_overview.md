@@ -383,6 +383,7 @@ ContentView (TabView)
     │       └── CycleHistoryList (NavigationLink)
     │
     └── Tab 3: SettingsView
+            ├── Help & Guide (NavigationLink)
             ├── NotificationSettingsView (NavigationLink)
             └── ExportView (NavigationLink)
 ```
@@ -418,6 +419,7 @@ ContentView (TabView)
 
 **Interactions:**
 - Tap any day → opens `LogView` for that day
+- Legend at bottom of screen explains colors/dots
 - Swipe left/right to navigate months
 - Pull-to-refresh is not relevant (no network). Month navigation is via chevron buttons or swipe gesture.
 

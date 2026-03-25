@@ -33,6 +33,10 @@ struct CalendarView: View {
                             .padding(.horizontal)
                             .frame(minHeight: 400) // Ensure it has enough space
 
+                        CalendarLegendView()
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+
                         CalendarDayDetailView(
                             date: viewModel.selectedDate,
                             log: viewModel.selectedDayLog,

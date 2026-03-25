@@ -21,3 +21,5 @@
 - [x] Export: CSV file is valid and contains all logged data
 - [x] Disclaimer: Verify "Predictions are estimates only" label visibility
 - [x] Onboarding: Verify tip overlay appears on first launch (post-implementation)
+- [x] Legend: Verify legend visibility and accuracy on Calendar
+- [x] Help: Verify navigation to Help page and content readability
