@@ -1,0 +1,1 @@
+xcodebuild test -project CycleOne.xcodeproj -scheme CycleOne -destination 'platform=iOS Simulator,name=iPhone 16e' -parallel-testing-enabled NO
