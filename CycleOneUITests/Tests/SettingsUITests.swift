@@ -15,8 +15,8 @@ final class SettingsUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        // Tap Settings tab (using index if ID is missing, but let's try label)
-        let settingsTab = app.tabBars.buttons.element(boundBy: 1)
+        // Tap Settings tab (Settings is the third tab, index 2)
+        let settingsTab = app.tabBars.buttons.element(boundBy: 2)
         XCTAssertTrue(settingsTab.waitForExistence(timeout: 5))
         settingsTab.tap()
 

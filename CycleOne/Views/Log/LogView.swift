@@ -43,7 +43,7 @@ struct LogView: View {
                         VStack {
                             Image(systemName: energy.icon)
                                 .font(.title2)
-                                .padding(8)
+                                .padding(12)
                                 .background(viewModel.energy == energy ? Color.themeAccent.opacity(0.2) : Color
                                     .clear)
                                 .clipShape(Circle())

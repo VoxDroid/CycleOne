@@ -32,9 +32,9 @@ enum Mood: Int16, CaseIterable {
         switch self {
         case .happy: "face.smiling"
         case .neutral: "face.dashed"
-        case .sad: "face.frowning"
+        case .sad: "cloud.drizzle.fill"
         case .anxious: "face.smiling.inverse"
-        case .angry: "face.smiling.inverse"
+        case .angry: "flame.fill"
         }
     }
 

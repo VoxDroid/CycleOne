@@ -30,6 +30,7 @@ enum TestDataSeeder {
             let cycle1 = Cycle(context: context)
             cycle1.id = UUID()
             cycle1.startDate = pastStartDate
+            cycle1.createdAt = Date()
             cycle1.periodLength = 5
             cycle1.cycleLength = 28
 
@@ -58,7 +59,9 @@ enum TestDataSeeder {
             let cycle2 = Cycle(context: context)
             cycle2.id = UUID()
             cycle2.startDate = currentStartDate
+            cycle2.createdAt = Date()
             cycle2.periodLength = 5
+            cycle2.cycleLength = 28
 
             for index in 0 ..< 3 {
                 guard let logDate = calendar.date(byAdding: .day, value: index, to: currentStartDate) else { continue }

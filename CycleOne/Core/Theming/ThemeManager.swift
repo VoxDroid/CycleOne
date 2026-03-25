@@ -24,15 +24,6 @@ enum AppTheme: String, CaseIterable, Identifiable {
     }
 }
 
-class ThemeManager: ObservableObject {
-    @Published var selectedTheme: AppTheme = .system {
-        didSet {
-            UserDefaults.standard.set(selectedTheme.rawValue, forKey: "appTheme")
-        }
-    }
-
-    init() {
-        let raw = UserDefaults.standard.string(forKey: "appTheme") ?? AppTheme.system.rawValue
-        self.selectedTheme = AppTheme(rawValue: raw) ?? .system
-    }
+final class ThemeManager: ObservableObject {
+    @AppStorage("selected_app_theme") var selectedTheme: AppTheme = .system
 }
