@@ -8,12 +8,23 @@
 import CoreData
 
 struct PersistenceController {
+    static let model: NSManagedObjectModel = {
+        let bundle = Bundle(for: CycleManager.self)
+        guard let url = bundle.url(forResource: "CycleOne", withExtension: "momd") else {
+            fatalError("Failed to find CycleOne.momd in bundle \(bundle)")
+        }
+        guard let model = NSManagedObjectModel(contentsOf: url) else {
+            fatalError("Failed to load NSManagedObjectModel from \(url)")
+        }
+        return model
+    }()
+
     static let shared = PersistenceController()
 
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "CycleOne")
+        container = NSPersistentContainer(name: "CycleOne", managedObjectModel: Self.model)
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }

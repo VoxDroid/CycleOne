@@ -40,7 +40,6 @@ final class SettingsUITests: XCTestCase {
         }
 
         if !accentColor.waitForExistence(timeout: 15) {
-            print("UI Hierarchy: \(app.debugDescription)")
             XCTFail("Expected accent color picker in Settings. Title not found.")
         }
     }

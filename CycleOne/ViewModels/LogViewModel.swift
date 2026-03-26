@@ -88,12 +88,10 @@ final class LogViewModel: ObservableObject {
             // Sync Symptoms
             updateSymptoms(for: log)
 
-            // Auto Cycle creation
-            if flow != .none {
-                startNewCycleIfNeeded()
-            }
-
             try context.save()
+            // Robustly rebuild all cycles from flow logs
+            CycleManager.shared.rebuildAllCycles(in: context)
+
             hasExistingLog = true
             Logger.storage.info("Saved log for \(self.date)")
         } catch {
@@ -104,7 +102,7 @@ final class LogViewModel: ObservableObject {
     }
 
     func deleteLog() {
-        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        let request = NSFetchRequest<DayLog>(entityName: "DayLog")
         request.predicate = NSPredicate(
             format: "date == %@", date as NSDate
         )
@@ -120,7 +118,11 @@ final class LogViewModel: ObservableObject {
                 }
                 context.delete(log)
             }
+
             try context.save()
+            // Robustly rebuild all cycles from flow logs
+            CycleManager.shared.rebuildAllCycles(in: context)
+
             hasExistingLog = false
             resetFields()
             Logger.storage.info(
@@ -172,43 +174,5 @@ final class LogViewModel: ObservableObject {
                 log.addToSymptoms(symptom)
             }
         }
-    }
-
-    private func startNewCycleIfNeeded() {
-        let cycleRequest: NSFetchRequest<Cycle> = Cycle.fetchRequest()
-        cycleRequest.sortDescriptors = [
-            NSSortDescriptor(
-                keyPath: \Cycle.startDate, ascending: false
-            ),
-        ]
-        cycleRequest.fetchLimit = 1
-
-        do {
-            let lastCycles = try context.fetch(cycleRequest)
-            if let last = lastCycles.first {
-                let diff = date.days(
-                    from: last.startDate ?? Date()
-                )
-                if diff >= 20 {
-                    createNewCycle()
-                }
-            } else {
-                createNewCycle()
-            }
-        } catch {
-            Logger.storage.error(
-                "Failed to check last cycle: \(error.localizedDescription)"
-            )
-        }
-    }
-
-    private func createNewCycle() {
-        let newCycle = Cycle(context: context)
-        newCycle.id = UUID()
-        newCycle.startDate = date
-        newCycle.createdAt = Date()
-        Logger.storage.info(
-            "Created new cycle starting \(self.date)"
-        )
     }
 }
