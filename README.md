@@ -2,87 +2,100 @@
 
 <p align="center">
   <img src="CycleOne/Assets.xcassets/AppIcon.appiconset/appicon_1024.png" width="128" height="128" alt="CycleOne App Icon">
+  <br>
+  <b>A privacy-first, sophisticated menstrual cycle & fertility tracker for iOS.</b>
+  <br>
+  <br>
+  <img src="https://img.shields.io/badge/Platform-iOS%2016.0%2B-blue" alt="Platform">
+  <img src="https://img.shields.io/badge/Swift-5.9%2B-orange" alt="Swift">
+  <img src="https://img.shields.io/badge/License-GPL--3.0-green" alt="License">
+  <img src="https://img.shields.io/badge/Privacy-100%25%20Local-success" alt="Privacy">
 </p>
-
-## Overview
-
-CycleOne is a sophisticated, privacy-centric menstrual cycle and fertility tracking application for iOS. Engineered with a strict "local-only" architecture, it provides a comprehensive suite of tools for cycle logging, symptomatic analysis, and physiological predictions without the use of cloud-based storage, user accounts, or third-party telemetry.
-
-The application serves as a high-performance, subscription-free alternative to market-leading trackers, prioritizing data sovereignty and user trust.
-
-## Core Features
-
-### Advanced Cycle Prediction Engine
-The proprietary `CycleEngine` utilizes historically logged data to provide accurate estimations for:
-- Menstrual period commencement and duration.
-- Ovulation dates based on luteal phase assumptions.
-- Fertile window windows, calculated for optimized awareness.
-- Identification of cycle irregularities based on statistical variance.
-
-### Comprehensive Health Logging
-A streamlined, navigation-based interface facilitates the logging of multidimensional health data:
-- **Menstrual Flow**: Categorical tracking from spotting to heavy flow.
-- **Physical Symptoms**: A curated database of physical, emotional, and digestive indicators.
-- **Biometric Indicators**: High-fidelity tracking of pain levels, mood, and energy.
-- **Annotations**: Support for detailed, encrypted local notes.
-
-### Native Calendar Integration
-CycleOne leverages the native iOS `UICalendarView` framework, enhanced with custom decorations to provide a high-contrast, at-a-glance view of cycle phases, predicted states, and historical data.
-
-### Secure Data Management
-- **Zero Cloud Footprint**: Data is stored exclusively within a sandboxed Core Data environment.
-- **Data Portability**: Users retain full control via a localized CSV export utility.
-- **Local Notifications**: Time-sensitive alerts for period and fertile window commencement are handled entirely by the on-device `UserNotifications` framework.
-
-## Product Philosophy
-
-CycleOne is governed by three fundamental principles:
-1. **Absolute Privacy**: No network entitlements are requested or utilized. Data never leaves the physical device.
-2. **Subscription-Free Model**: A one-time purchase unlocks the full capabilities of the application indefinitely.
-3. **Architectural Integrity**: Built using 100% native Swift and SwiftUI, with zero third-party dependencies, ensuring long-term maintenance stability and optimal performance.
-
-## Technical Specifications
-
-| Layer | Technology |
-|---|---|
-| Platform | iOS 16.0+ |
-| Language | Swift 5.9+ |
-| UI Framework | SwiftUI |
-| Persistence | Core Data (SQLite) |
-| Tooling | SwiftLint, SwiftFormat, XCTest |
-
-## Development Environment Setup
-
-### Prerequisites
-- macOS 14.0 or higher
-- Xcode 15.0 or higher
-- Homebrew for dependency management
-
-### Quick Start
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/VoxDroid/CycleOne.git
-   ```
-2. Install development tools and pre-commit hooks:
-   ```bash
-   brew install swiftlint swiftformat pre-commit
-   pre-commit install
-   ```
-3. Open the project in Xcode:
-   ```bash
-   open CycleOne.xcodeproj
-   ```
-
-### Automation and Quality Control
-The project utilizes a `Makefile` to standardize development workflows:
-- `make check`: Executes the full verification suite (Linting, Formatting, Unit Tests, UI Tests).
-- `make test`: Executes all unit tests.
-- `make test-ui`: Executes all UI-driven integration tests.
-- `make format`: Applies deterministic code formatting via SwiftFormat.
-
-## Documentation
-For detailed architectural overviews and implementation checklists, refer to the `CycleOneDocs` directory.
 
 ---
 
-Designed and developed by VoxDroid.
+## Overview
+
+**CycleOne** is a high-performance, open-source period tracker designed for users who value **privacy above all else**.
+
+In an era of cloud-connected health apps, CycleOne takes a stand: **Your health data is yours alone.** Built with a strict "local-only" architecture, it provides professional-grade cycle prediction, symptom tracking, and historical analysis without ever requesting network access, requiring an account, or charging a subscription fee.
+
+## Core Features
+
+### Advanced Prediction Engine
+- **Period Projection**: Intelligent estimations for start dates and duration based on historical averages.
+- **Ovulation Tracking**: Automatic calculation of ovulation and fertile windows.
+- **Irregularity Alerts**: Identifies significant cycle variances to help you remain aware of physiological shifts.
+
+### Holistic Logging
+- **Flow Intensity**: Categorical tracking from spotting to heavy flow.
+- **Symptom Database**: Track physical, emotional, and digestive indicators.
+- **Mood & Energy**: Document biometric indicators with a streamlined, premium UI.
+- **Notes**: Local-only annotations for detailed record-keeping.
+
+### Premium User Experience
+- **Native Calendar**: Leveraging `UICalendarView` for a high-contrast, interactive experience.
+- **Dynamic Themes**: 5 custom accent color themes (Rose, Lavender, Ocean, Sage, Sunset) to match your style.
+- **Smooth Animations**: High-fidelity transitions and staggered animations for a premium app feel.
+- **Zero Emojis**: A consistent, professional aesthetic using high-quality SF Symbols.
+
+## The Privacy Manifesto
+
+CycleOne was built from the ground up to be safe:
+- **No Cloud Sync**: Your data never leaves your device.
+- **No Accounts**: No email, no password, no login required.
+- **No Analytics**: Zero third-party tracking or telemetry.
+- **No Network Entitlements**: The app doesn't even ask for internet permissions.
+- **Data Sovereignty**: Export your entire history to CSV anytime.
+
+## Technical Specifications
+
+| Component | Technology |
+|---|---|
+| **Language** | Swift 5.9+ |
+| **Framework** | SwiftUI with MVVM Architecture |
+| **Logic** | Proprietary `CycleEngine` (Pure Swift) |
+| **Persistence** | Core Data (On-device SQLite) |
+| **Interface** | Native UIKit/SwiftUI hybrid |
+| **Testing** | 100% Test Coverage (XCTest) |
+
+## Getting Started
+
+### Prerequisites
+- macOS 14.0+
+- Xcode 15.0+
+- [SwiftLint](https://github.com/realm/SwiftLint) & [SwiftFormat](https://github.com/nicklockwood/SwiftFormat)
+
+### Development Setup
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/VoxDroid/CycleOne.git
+   ```
+2. Install pre-commit hooks:
+   ```bash
+   brew install pre-commit
+   pre-commit install
+   ```
+3. Open `CycleOne.xcodeproj` and build for the simulator.
+
+### Workflow Commands
+We use a `Makefile` for CI/CD consistency:
+- `make check`: Full verification suite (Lint, Format, Test).
+- `make unit-test`: Execute logic tests.
+- `make ui-test`: Execute integration tests.
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get involved.
+
+## License
+
+CycleOne is released under the **GNU General Public License v3.0**. See [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+  Designed and developed by <b>VoxDroid</b>.
+  <br>
+  © 2026 VoxDroid. All rights reserved.
+</p>

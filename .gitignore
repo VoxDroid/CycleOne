@@ -52,4 +52,8 @@ Pods/
 ## Git stuff
 .git/
 
+## Test results
 TestResults.xcresult/
+
+## Logs
+*.log

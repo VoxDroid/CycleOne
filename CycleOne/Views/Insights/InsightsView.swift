@@ -122,6 +122,7 @@ struct InsightsView: View {
                         destination: CycleHistoryList(
                             cycles: viewModel.recentCycles
                         )
+                        .environmentObject(themeManager)
                     ) {
                         HStack {
                             Image(

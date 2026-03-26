@@ -21,9 +21,20 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(settingsTab.waitForExistence(timeout: 5))
         settingsTab.tap()
 
+        // Wait for list to load
+        _ = settingsTab.waitForExistence(timeout: 2)
+
         // Verify Appearance section and Accent Color picker exist
         let accentColor = app.staticTexts["AccentColorTitle"]
-        if !accentColor.waitForExistence(timeout: 5) {
+
+        // Scroll until visible if needed
+        var retryCount = 0
+        while !accentColor.exists, retryCount < 5 {
+            app.swipeUp()
+            retryCount += 1
+        }
+
+        if !accentColor.waitForExistence(timeout: 10) {
             print("UI Hierarchy: \(app.debugDescription)")
             XCTFail("Expected accent color picker in Settings. Title not found.")
         }

@@ -59,6 +59,7 @@ struct CalendarView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Date.self) { date in
                     LogView(date: date, context: context)
+                        .environmentObject(themeManager)
                 }
 
                 if !hasSeenOnboarding {
