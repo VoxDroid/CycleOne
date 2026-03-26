@@ -5,10 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CycleOne Privacy Policy</title>
     <style>
-        body { font-family: -apple-system, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h1 { color: #FF2D55; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; }
-        .privacy-box { background: #f9f9f9; border: 1px solid #ddd; padding: 20px; border-radius: 12px; margin: 20px 0; }
+        :root {
+            --text: #333;
+            --bg: #fff;
+            --accent: #FF6B9D;
+            --card-bg: #f9f9f9;
+            --card-border: #e0e0e0;
+            --muted: #888;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #e0e0e0;
+                --bg: #1c1c1e;
+                --card-bg: #2c2c2e;
+                --card-border: #3a3a3c;
+                --muted: #8e8e93;
+            }
+        }
+        body {
+            font-family: -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        h1 { color: var(--accent); font-size: 1.6em; }
+        h2 {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            margin-top: 28px;
+            font-size: 1.15em;
+        }
+        .privacy-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        .privacy-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+        p { margin: 10px 0; }
+        .footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.8em;
+            color: var(--muted);
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +66,7 @@
 
     <div class="privacy-box">
         <strong>1. Local Storage Only</strong>
-        <p>All your data (dates, symptoms, moods) is stored exclusively on your iPhone. We do not have any servers, and we do not use iCloud sync.</p>
+        <p>All your data (dates, symptoms, moods) is stored exclusively on your iPhone using Core Data. We do not have any servers, and we do not use iCloud sync.</p>
     </div>
 
     <h2>2. No Accounts</h2>
@@ -27,8 +76,23 @@
     <p>We do not use any third-party SDKs, ad-trackers, or analytics tools. We have no idea how often you use the app or what you log.</p>
 
     <h2>4. Your Data, Your Choice</h2>
-    <p>You can export your data as a CSV file or delete it at any time by deleting the app.</p>
+    <p>You can export your data as a CSV file at any time. You can also delete all data from within the app, or by deleting the app from your device.</p>
 
-    <p style="margin-top: 50px; font-size: 0.8em; color: #888;">Updated: March 2026</p>
+    <h2>5. Third-Party Services</h2>
+    <p>CycleOne does not connect to any third-party services. No network requests are made by the app. Zero dependencies on external servers or APIs.</p>
+
+    <h2>6. Data Retention</h2>
+    <p>Your data exists only as long as the app is installed. Uninstalling CycleOne permanently removes all data. We cannot recover it for you.</p>
+
+    <h2>7. Children's Privacy</h2>
+    <p>CycleOne is not directed at children under 13. We do not knowingly collect personal data from children.</p>
+
+    <h2>8. Contact</h2>
+    <p>For questions about this policy, reach us via our GitHub repository: <a href="https://github.com/VoxDroid/CycleOne" style="color: var(--accent)">github.com/VoxDroid/CycleOne</a></p>
+
+    <div class="footer">
+        <p>&copy; 2026 CycleOne by VoxDroid. All rights reserved.</p>
+        <p>Last updated: March 2026</p>
+    </div>
 </body>
 </html>

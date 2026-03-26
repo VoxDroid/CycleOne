@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct PillBadge: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     let text: String
     let color: Color
 

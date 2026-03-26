@@ -30,9 +30,20 @@ final class LogFlowUITests: XCTestCase {
     }
 
     private func dismissOnboarding(app: XCUIApplication) {
-        let gotItButton = app.buttons["Got it!"]
-        if gotItButton.waitForExistence(timeout: 2) {
-            gotItButton.tap()
+        // Wait for splash screen to auto-dismiss
+        sleep(3)
+
+        // Handle multi-page onboarding
+        let skipButton = app.buttons["Skip"]
+        if skipButton.waitForExistence(timeout: 2) {
+            skipButton.tap()
+            return
+        }
+
+        let getStartedButton = app.buttons["Get Started"]
+        if getStartedButton.waitForExistence(timeout: 2) {
+            getStartedButton.tap()
+            return
         }
     }
 }

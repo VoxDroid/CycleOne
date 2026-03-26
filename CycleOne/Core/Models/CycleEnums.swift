@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum FlowLevel: Int16, CaseIterable {
     case none = 0
@@ -17,6 +18,15 @@ enum FlowLevel: Int16, CaseIterable {
         case .light: "Light"
         case .medium: "Medium"
         case .heavy: "Heavy"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .none: "drop"
+        case .light: "drop"
+        case .medium: "drop.fill"
+        case .heavy: "drop.halffull"
         }
     }
 }
@@ -76,6 +86,24 @@ enum SymptomCategory: String, CaseIterable {
     case mood = "Mood & Mental"
     case digestion = "Digestion"
     case other = "Other"
+
+    var icon: String {
+        switch self {
+        case .physical: "figure.walk"
+        case .mood: "brain.head.profile"
+        case .digestion: "leaf.fill"
+        case .other: "ellipsis.circle"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .physical: .themePeriod
+        case .mood: .themeFertile
+        case .digestion: .orange
+        case .other: .secondary
+        }
+    }
 }
 
 struct SymptomType: Identifiable, Hashable {
@@ -84,12 +112,21 @@ struct SymptomType: Identifiable, Hashable {
     let category: SymptomCategory
 
     static let defaults: [SymptomType] = [
+        // Physical
         SymptomType(id: "cramps", name: "Cramps", category: .physical),
         SymptomType(id: "bloating", name: "Bloating", category: .physical),
         SymptomType(id: "headache", name: "Headache", category: .physical),
         SymptomType(id: "acne", name: "Acne", category: .physical),
         SymptomType(id: "breast_tenderness", name: "Breast Tenderness", category: .physical),
+        SymptomType(id: "back_pain", name: "Back Pain", category: .physical),
+        SymptomType(id: "dizziness", name: "Dizziness", category: .physical),
+        // Digestion
         SymptomType(id: "nausea", name: "Nausea", category: .digestion),
+        // Mood & Mental
+        SymptomType(id: "mood_swings", name: "Mood Swings", category: .mood),
+        SymptomType(id: "irritability", name: "Irritability", category: .mood),
+        SymptomType(id: "fatigue", name: "Fatigue", category: .mood),
+        // Other
         SymptomType(id: "cravings", name: "Cravings", category: .other),
         SymptomType(id: "insomnia", name: "Insomnia", category: .other),
     ]

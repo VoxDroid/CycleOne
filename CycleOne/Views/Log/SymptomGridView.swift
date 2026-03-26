@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct SymptomGridView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     @Binding var selectedSymptoms: Set<String>
     let symptoms: [SymptomType]
 
@@ -15,21 +16,29 @@ struct SymptomGridView: View {
 
             ForEach(categories, id: \.self) { category in
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(category.rawValue.capitalized)
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
+                    HStack(spacing: 6) {
+                        Image(systemName: category.icon)
+                            .font(.caption)
+                            .foregroundColor(category.color)
+                        Text(category.rawValue.capitalized)
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(.secondary)
+                    }
 
                     FlowLayout(spacing: 8) {
                         ForEach(symptoms.filter { $0.category == category }) { symptom in
                             SymptomChip(
                                 name: symptom.name,
-                                isSelected: selectedSymptoms.contains(symptom.id)
+                                isSelected: selectedSymptoms.contains(symptom.id),
+                                color: category.color
                             ) {
-                                if selectedSymptoms.contains(symptom.id) {
-                                    selectedSymptoms.remove(symptom.id)
-                                } else {
-                                    selectedSymptoms.insert(symptom.id)
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                    if selectedSymptoms.contains(symptom.id) {
+                                        selectedSymptoms.remove(symptom.id)
+                                    } else {
+                                        selectedSymptoms.insert(symptom.id)
+                                    }
                                 }
                             }
                         }
@@ -43,16 +52,18 @@ struct SymptomGridView: View {
 struct SymptomChip: View {
     let name: String
     let isSelected: Bool
+    var color: Color = .themePeriod
     let action: () -> Void
 
     var body: some View {
         Text(name)
             .font(.subheadline)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .background(isSelected ? Color.themePeriod : Color(.secondarySystemBackground))
+            .background(isSelected ? color : Color(.secondarySystemBackground))
             .foregroundColor(isSelected ? .white : .primary)
             .cornerRadius(20)
+            .scaleEffect(isSelected ? 1.05 : 1.0)
             .onTapGesture {
                 action()
             }

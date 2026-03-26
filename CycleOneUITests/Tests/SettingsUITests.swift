@@ -21,14 +21,29 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(settingsTab.waitForExistence(timeout: 5))
         settingsTab.tap()
 
-        // Verify Theme picker exists
-        XCTAssertTrue(app.staticTexts["Theme"].exists)
+        // Verify Appearance section and Accent Color picker exist
+        let accentColor = app.staticTexts["AccentColorTitle"]
+        if !accentColor.waitForExistence(timeout: 5) {
+            print("UI Hierarchy: \(app.debugDescription)")
+            XCTFail("Expected accent color picker in Settings. Title not found.")
+        }
     }
 
     private func dismissOnboarding(app: XCUIApplication) {
-        let gotItButton = app.buttons["Got it!"]
-        if gotItButton.waitForExistence(timeout: 2) {
-            gotItButton.tap()
+        // Wait for splash screen to auto-dismiss
+        sleep(3)
+
+        // Handle multi-page onboarding
+        let skipButton = app.buttons["Skip"]
+        if skipButton.waitForExistence(timeout: 2) {
+            skipButton.tap()
+            return
+        }
+
+        let getStartedButton = app.buttons["Get Started"]
+        if getStartedButton.waitForExistence(timeout: 2) {
+            getStartedButton.tap()
+            return
         }
     }
 }

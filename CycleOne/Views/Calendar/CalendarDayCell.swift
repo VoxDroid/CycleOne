@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct CalendarDayCell: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     let date: Date
     let status: DayStatus
     let isToday: Bool

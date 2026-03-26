@@ -218,7 +218,7 @@ CycleOne/
 │
 ├── CycleOne/                          # App target
 │   ├── App/
-│   │   ├── CycleOneApp.swift          # @main entry point
+│   │   ├── CycleOneApp.swift          # @main entry point + splash state
 │   │   └── AppDelegate.swift          # Minimal — notification delegate only
 │   │
 │   ├── Core/
@@ -228,7 +228,8 @@ CycleOne/
 │   │   │       └── CycleOne.xcdatamodel/
 │   │   │           └── contents
 │   │   │
-│   │   ├── Models/                    # NSManagedObject subclasses
+│   │   ├── Models/                    # NSManagedObject subclasses + enums
+│   │   │   ├── CycleEnums.swift       # FlowLevel, Mood, Energy, SymptomCategory
 │   │   │   ├── Cycle+CoreDataClass.swift
 │   │   │   ├── Cycle+CoreDataProperties.swift
 │   │   │   ├── DayLog+CoreDataClass.swift
@@ -236,10 +237,14 @@ CycleOne/
 │   │   │   ├── Symptom+CoreDataClass.swift
 │   │   │   └── Symptom+CoreDataProperties.swift
 │   │   │
+│   │   ├── Theming/
+│   │   │   └── ThemeManager.swift     # System/Light/Dark theme switcher
+│   │   │
 │   │   └── Extensions/
 │   │       ├── Date+Extensions.swift
-│   │       ├── Color+Theme.swift
-│   │       └── View+Extensions.swift
+│   │       ├── Color+Theme.swift      # Gradient palette & theme constants
+│   │       ├── Logger+Extensions.swift
+│   │       └── View+Extensions.swift  # Card, animation modifiers
 │   │
 │   ├── Services/
 │   │   ├── CycleEngine.swift          # Prediction logic
@@ -252,57 +257,74 @@ CycleOne/
 │   │   └── InsightsViewModel.swift    # Statistics + averages
 │   │
 │   ├── Views/
+│   │   ├── MainTabView.swift          # Tab bar with 3 tabs
+│   │   │
 │   │   ├── Calendar/
 │   │   │   ├── CalendarView.swift     # Main calendar screen
 │   │   │   ├── CalendarDayCell.swift  # Individual day cell
-│   │   │   └── CycleHeaderView.swift  # "Next period in X days" banner
+│   │   │   ├── CalendarDayDetailView.swift  # Day detail card
+│   │   │   ├── CalendarLegendView.swift     # Color-coded legend
+│   │   │   ├── CycleHeaderView.swift  # Prediction banner
+│   │   │   └── NativeCalendarView.swift     # UICalendarView wrapper
 │   │   │
 │   │   ├── Log/
-│   │   │   ├── LogView.swift          # Daily log entry sheet
-│   │   │   ├── FlowPickerView.swift   # Light/medium/heavy selector
-│   │   │   └── SymptomGridView.swift  # Symptom chip grid
+│   │   │   ├── LogView.swift          # Daily log entry
+│   │   │   ├── FlowPickerView.swift   # Flow level selector with icons
+│   │   │   └── SymptomGridView.swift  # Symptom chip grid with categories
 │   │   │
 │   │   ├── Insights/
-│   │   │   ├── InsightsView.swift     # Stats overview
-│   │   │   └── CycleHistoryList.swift # Past cycles list
+│   │   │   ├── InsightsView.swift     # Gradient stat cards
+│   │   │   └── CycleHistoryList.swift # Timeline-style history
 │   │   │
 │   │   ├── Settings/
-│   │   │   ├── SettingsView.swift
+│   │   │   ├── SettingsView.swift     # Logo header + colored icon rows
+│   │   │   ├── HelpView.swift         # Guide cards + numbered tips
 │   │   │   ├── NotificationSettingsView.swift
 │   │   │   └── ExportView.swift
 │   │   │
 │   │   └── Shared/
+│   │       ├── SplashScreenView.swift # Animated launch screen
+│   │       ├── OnboardingTipView.swift # Multi-page tutorial carousel
 │   │       ├── PillBadge.swift
 │   │       ├── PhaseIndicator.swift
-│   │       └── EmptyStateView.swift
+│   │       ├── EmptyStateView.swift
+│   │       └── PrivacyPolicyView.swift
 │   │
-│   ├── Resources/
-│   │   ├── Assets.xcassets/
-│   │   ├── Localizable.strings        # en only at MVP
-│   │   └── Info.plist
+│   ├── Assets.xcassets/               # App icon, logo, accent color
+│   │   ├── AppIcon.appiconset/
+│   │   ├── AppLogo.imageset/
+│   │   └── AccentColor.colorset/
 │   │
-│   └── Supporting/
-│       └── PrivacyInfo.xcprivacy      # Required for App Store — no data collected
+│   └── Resources/
+│       ├── PrivacyPolicy.html
+│       └── Info.plist
 │
 ├── CycleOneTests/                     # Unit test target
 │   ├── CycleEngineTests.swift
+│   ├── CycleOneTests.swift
 │   ├── NotificationServiceTests.swift
 │   ├── PersistenceControllerTests.swift
 │   └── Helpers/
-│       └── TestPersistenceController.swift  # In-memory Core Data for tests
+│       └── TestPersistenceController.swift
 │
 ├── CycleOneUITests/                   # UI test target
-│   ├── CalendarViewUITests.swift
-│   ├── LogFlowUITests.swift
-│   └── SettingsUITests.swift
+│   ├── CycleOneUITestsLaunchTests.swift
+│   └── Tests/
+│       ├── CalendarViewUITests.swift
+│       ├── LogFlowUITests.swift
+│       └── SettingsUITests.swift
+│
+├── CycleOneDocs/                      # Documentation
+│   ├── project_overview.md
+│   ├── cycleone_checklist.md
+│   └── test_checklist.md
 │
 ├── .swiftlint.yml
 ├── .swiftformat
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── Makefile
-├── README.md
-└── project_overview.md                # This file
+└── README.md
 ```
 
 ---
@@ -333,8 +355,8 @@ A log entry for a single calendar day. One per day maximum.
 |---|---|---|
 | `id` | UUID | Primary key. |
 | `date` | Date | The calendar day. Unique constraint. |
-| `flowLevel` | Int16 | 0 = none, 1 = spotting, 2 = light, 3 = medium, 4 = heavy |
-| `mood` | Int16 | 0 = not set, 1 = happy, 2 = neutral, 3 = sad, 4 = irritable, 5 = anxious |
+| `flowLevel` | Int16 | 0 = none, 1 = light, 2 = medium, 3 = heavy |
+| `mood` | Int16 | 0 = happy, 1 = neutral, 2 = sad, 3 = anxious, 4 = angry |
 | `energyLevel` | Int16 | 0 = not set, 1 = low, 2 = medium, 3 = high |
 | `painLevel` | Int16 | 0–10 scale. 0 = not set. |
 | `notes` | String? | Optional free-text. |
@@ -404,10 +426,10 @@ ContentView (TabView)
 **Purpose:** The home screen. Shows the current month with color-coded days.
 
 **Day states (UICalendarView decorations):**
-- Period day (logged) — rose/red circle decoration
-- Predicted period day — gray dot decoration
-- Ovulation day (estimated) — teal dot decoration
-- Fertile window day — light teal dot decoration
+- Period day (logged) — rose/accent circle decoration
+- Predicted period day — accent dot decoration (lighter)
+- Ovulation day (estimated) — purple dot decoration
+- Fertile window day — light purple dot decoration
 - Today — standard native selection/today outline
 - Logged (symptom/mood only, no flow) — small dot indicator
 - Future days — default, no fill
@@ -429,14 +451,12 @@ ContentView (TabView)
 
 **Sections:**
 1. **Flow** — segmented control: None / Spotting / Light / Medium / Heavy
-2. **Pain** — horizontal slider 0–10 with emoji anchors (😌 at 0, 😣 at 10)
-3. **Mood** — icon picker: happy / neutral / sad / irritable / anxious
+2. **Pain** — horizontal slider 0–10 with SF Symbol anchors (`hand.thumbsup` at 0, `bolt.fill` at 10)
+3. **Mood** — icon picker: happy / neutral / sad / anxious / angry
 4. **Energy** — icon picker: low / medium / high
-5. **Symptoms** — chip grid, multi-select. Preset symptoms:
-   - Physical: Cramps, Headache, Bloating, Tender breasts, Acne, Fatigue, Back pain, Nausea
-   - Emotional: Mood swings, Anxiety, Low libido, Crying
-   - Digestive: Diarrhea, Constipation
+5. **Symptoms** — chip grid, multi-select. Categories: Physical, Mood & Mental, Digestion, Other.
 6. **Notes** — optional text field, plain text, max 500 characters
+7. **Delete Log** — delete existing log and associated symptoms with confirmation.
 
 **Save behavior:**
 - Auto-saves on view dismiss (no explicit "Save" button needed — use `onDisappear` on the ViewModel)
@@ -493,9 +513,10 @@ ContentView (TabView)
 
 **App Info:**
 - Version number
-- "Privacy Policy" — taps open a local HTML file bundled in the app (no external URL needed, no network)
-- "Rate CycleOne" — deep links to App Store review page
-- "Made with ❤️ by [Your Name]"
+- "Privacy Policy" — local HTML file with dark mode support.
+- "Appearance" — System/Light/Dark mode + 5 Accent Colors (Rose, Lavender, Ocean, Sage, Sunset).
+- "Rate CycleOne" — deep links to App Store review page.
+- "© 2026 CycleOne by VoxDroid. All rights reserved."
 
 ---
 

@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct PhaseIndicator: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     let phase: String
     let color: Color
 

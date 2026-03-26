@@ -8,6 +8,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @Environment(\.managedObjectContext) var context
+    @EnvironmentObject private var themeManager: ThemeManager
     @State private var selectedTab = 0
 
     var body: some View {
@@ -33,6 +34,6 @@ struct MainTabView: View {
                 .tag(2)
                 .accessibilityIdentifier("SettingsTab")
         }
-        .accentColor(.themeAccent)
+        .tint(.themeAccent)
     }
 }

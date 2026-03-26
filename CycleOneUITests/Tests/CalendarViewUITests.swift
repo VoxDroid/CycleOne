@@ -40,7 +40,7 @@ final class CalendarViewUITests: XCTestCase {
         // Verify we are on the Log Day screen
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 5))
 
-        // Use standard back button (first button in nav bar usually) or "Dismiss"
+        // Use standard back button or "Dismiss"
         if app.buttons["Dismiss"].exists {
             app.buttons["Dismiss"].tap()
         } else {
@@ -51,9 +51,20 @@ final class CalendarViewUITests: XCTestCase {
     }
 
     private func dismissOnboarding(app: XCUIApplication) {
-        let gotItButton = app.buttons["Got it!"]
-        if gotItButton.waitForExistence(timeout: 2) {
-            gotItButton.tap()
+        // Wait for splash screen to auto-dismiss
+        sleep(3)
+
+        // Handle multi-page onboarding
+        let skipButton = app.buttons["Skip"]
+        if skipButton.waitForExistence(timeout: 2) {
+            skipButton.tap()
+            return
+        }
+
+        let getStartedButton = app.buttons["Get Started"]
+        if getStartedButton.waitForExistence(timeout: 2) {
+            getStartedButton.tap()
+            return
         }
     }
 }

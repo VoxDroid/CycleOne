@@ -6,28 +6,31 @@
 import SwiftUI
 
 struct CalendarLegendView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             Text("Calendar Legend")
-                .font(.subheadline)
+                .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundColor(.secondary)
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 16) {
-                    LegendItem(color: .systemPink, label: "Period", isCustomView: true)
-                    LegendItem(color: .systemGray, label: "Predicted Period")
-                }
-                HStack(spacing: 16) {
-                    LegendItem(color: .systemTeal, label: "Ovulation Day")
-                    LegendItem(color: .systemTeal.withAlphaComponent(0.3), label: "Fertile Window")
-                }
-                LegendItem(color: .secondaryLabel, label: "Logged (Mood/Symptom)")
+            HStack(spacing: 0) {
+                LegendItem(color: .systemPink, label: "Period", isCustomView: true)
+                Spacer()
+                LegendItem(color: .systemGray, label: "Predicted")
+                Spacer()
+                LegendItem(color: .systemTeal, label: "Ovulation")
+                Spacer()
+                LegendItem(color: .systemTeal.withAlphaComponent(0.3), label: "Fertile")
+                Spacer()
+                LegendItem(color: .secondaryLabel, label: "Logged")
             }
         }
-        .padding()
-        .background(Color(.secondarySystemBackground).opacity(0.5))
-        .cornerRadius(12)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color(.secondarySystemBackground).opacity(0.6))
+        )
     }
 }
 
@@ -37,12 +40,12 @@ struct LegendItem: View {
     var isCustomView: Bool = false
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 5) {
             Circle()
                 .fill(Color(color))
-                .frame(width: isCustomView ? 10 : 6, height: isCustomView ? 10 : 6)
+                .frame(width: isCustomView ? 8 : 6, height: isCustomView ? 8 : 6)
             Text(label)
-                .font(.caption)
+                .font(.caption2)
                 .foregroundColor(.primary)
         }
     }

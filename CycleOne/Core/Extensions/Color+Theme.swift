@@ -2,21 +2,25 @@
 //  Color+Theme.swift
 //  CycleOne
 //
-//  Created by Antigravity on 3/23/26.
-//
 
 import SwiftUI
 
 extension Color {
-    static let themePeriod = Color.pink
-    static let themeFertile = Color.purple
-    static let themeOvulation = Color.purple.opacity(0.8)
-    static let themeAccent = Color.pink
+    static let themePeriod = Color(red: 1.0, green: 0.42, blue: 0.62)
+    static let themeFertile = Color(red: 0.69, green: 0.53, blue: 0.87)
+    static let themeOvulation = Color(red: 0.58, green: 0.42, blue: 0.84)
+    static var themeAccent: Color {
+        ThemeManager.shared.selectedAccent.accentColor
+    }
+
     static let themeBackground = Color(.systemGroupedBackground)
     static let themeCard = Color(.systemBackground)
 }
 
 enum Theme {
-    static let cornerRadius: CGFloat = 12
-    static let shadowRadius: CGFloat = 5
+    static let cornerRadius: CGFloat = 16
+    static let shadowRadius: CGFloat = 8
+    static let animationDuration: Double = 0.3
+    static let springDamping: Double = 0.7
+    static let staggerDelay: Double = 0.08
 }

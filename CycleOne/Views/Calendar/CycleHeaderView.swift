@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct CycleHeaderView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     let daysUntilPeriod: Int?
     let daysUntilOvulation: Int?
     let isIrregular: Bool
@@ -13,18 +14,52 @@ struct CycleHeaderView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(predictionText)
-                        .font(.title2)
-                        .fontWeight(.bold)
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "drop.fill")
+                            .foregroundColor(.themeAccent)
+                            .font(.title3)
+
+                        Text(predictionText)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
 
                     Group {
                         if let days = daysUntilPeriod {
-                            Text(days == 0 ? "Expected today" : "In \(days) days")
+                            HStack(spacing: 6) {
+                                Text(
+                                    days == 0 ?
+                                        "Expected today" : "In"
+                                )
+                                if days > 0 {
+                                    Text("\(days)")
+                                        .font(.system(
+                                            .title2,
+                                            design: .rounded
+                                        ))
+                                        .fontWeight(.heavy)
+                                        .foregroundColor(.themeAccent)
+                                        .gentlePulse()
+                                    Text("days")
+                                }
+                            }
                         }
 
-                        if let ovDays = daysUntilOvulation, ovDays >= 0 {
-                            Text("Ovulation window: \(ovDays == 0 ? "starts today" : "in \(ovDays) days")")
+                        if let ovDays = daysUntilOvulation,
+                           ovDays >= 0
+                        {
+                            HStack(spacing: 4) {
+                                Image(systemName: "sparkles")
+                                    .font(.caption)
+                                    .foregroundColor(.themeFertile)
+                                Text(
+                                    "Ovulation: " +
+                                        (ovDays == 0 ?
+                                            "starts today" :
+                                            "in \(ovDays) days")
+                                )
+                            }
                         }
                     }
                     .font(.subheadline)
@@ -33,21 +68,44 @@ struct CycleHeaderView: View {
                 Spacer()
 
                 if isIrregular {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    VStack(spacing: 4) {
+                        Image(
+                            systemName:
+                            "exclamationmark.triangle.fill"
+                        )
                         .foregroundColor(.yellow)
-                        .help("Cycles vary by more than 10 days.")
+                        .font(.title3)
+                        Text("Irregular")
+                            .font(.caption2)
+                            .foregroundColor(.yellow)
+                    }
                 }
             }
 
-            Text("ⓘ Predictions are estimates only. Not medical advice.")
-                .font(.caption2)
-                .foregroundColor(.secondary)
+            HStack(spacing: 4) {
+                Image(systemName: "info.circle")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                Text("Predictions are estimates. Not medical advice.")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 20)
                 .fill(Color(.secondarySystemBackground))
-                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                .shadow(
+                    color: Color.themeAccent.opacity(0.08),
+                    radius: 10, x: 0, y: 4
+                )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(
+                    Color.themeAccent.opacity(0.15),
+                    lineWidth: 1
+                )
         )
         .padding(.horizontal)
         .frame(minHeight: 120, alignment: .top)
@@ -55,7 +113,7 @@ struct CycleHeaderView: View {
 
     private var predictionText: String {
         guard let days = daysUntilPeriod else {
-            return "Log your first period to see predictions"
+            return "Log your first period"
         }
         if days < 0 {
             return "Period is overdue"

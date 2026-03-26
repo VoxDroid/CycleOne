@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct EmptyStateView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
     let icon: String
     let title: String
     let message: String
@@ -14,7 +15,8 @@ struct EmptyStateView: View {
         VStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.system(size: 48))
-                .foregroundColor(.secondary.opacity(0.5))
+                .foregroundColor(.themeAccent)
+                .gentlePulse()
 
             Text(title)
                 .font(.headline)
