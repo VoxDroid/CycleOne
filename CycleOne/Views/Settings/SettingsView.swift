@@ -221,6 +221,7 @@ struct SettingsView: View {
                     .listRowBackground(Color.clear)
                 }
             }
+            .accessibilityIdentifier("SettingsList")
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .alert(
