@@ -15,11 +15,25 @@ struct SplashScreenView: View {
     @State private var titleOpacity: Double = 0
     @State private var taglineOpacity: Double = 0
     @State private var isExiting = false
+    @State private var floatOffset: CGFloat = 0
+    @State private var ringScale: CGFloat = 0.8
+    @State private var ringOpacity: Double = 0
+    @State private var exitOffset: CGFloat = 0
 
     var body: some View {
         ZStack {
             Color(.systemBackground)
                 .ignoresSafeArea()
+
+            // Ring burst effect (on exit)
+            Circle()
+                .stroke(
+                    Color.themeAccent.opacity(0.3),
+                    lineWidth: 3
+                )
+                .frame(width: 160, height: 160)
+                .scaleEffect(ringScale)
+                .opacity(ringOpacity)
 
             VStack(spacing: 24) {
                 Spacer()
@@ -28,25 +42,46 @@ struct SplashScreenView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 120, height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 28))
-                    .shadow(
-                        color: Color.themeAccent.opacity(0.15),
-                        radius: 16, x: 0, y: 8
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 28)
                     )
-                    .scaleEffect(isExiting ? 1.1 : logoScale)
+                    .shadow(
+                        color: Color.themeAccent
+                            .opacity(0.2),
+                        radius: 20, x: 0, y: 10
+                    )
+                    .scaleEffect(
+                        isExiting ? 0.6 : logoScale
+                    )
                     .opacity(isExiting ? 0 : logoOpacity)
+                    .offset(
+                        y: isExiting
+                            ? exitOffset
+                            : floatOffset
+                    )
 
                 VStack(spacing: 8) {
                     Text("CycleOne")
-                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .font(.system(
+                            size: 32, weight: .bold,
+                            design: .rounded
+                        ))
                         .foregroundColor(.themeAccent)
-                        .offset(y: isExiting ? -10 : titleOffset)
-                        .opacity(isExiting ? 0 : titleOpacity)
+                        .offset(
+                            y: isExiting
+                                ? exitOffset * 0.5
+                                : titleOffset
+                        )
+                        .opacity(
+                            isExiting ? 0 : titleOpacity
+                        )
 
                     Text("Privacy-first period tracking")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .opacity(isExiting ? 0 : taglineOpacity)
+                        .opacity(
+                            isExiting ? 0 : taglineOpacity
+                        )
                 }
 
                 Spacer()
@@ -54,7 +89,7 @@ struct SplashScreenView: View {
             }
         }
         .onAppear {
-            // Logo entrance
+            // Logo entrance: spring bounce in
             withAnimation(
                 .spring(response: 0.8, dampingFraction: 0.6)
                     .delay(0.2)
@@ -65,24 +100,60 @@ struct SplashScreenView: View {
 
             // Title slide up
             withAnimation(
-                .spring(response: 0.6, dampingFraction: 0.8)
-                    .delay(0.5)
+                .spring(
+                    response: 0.6,
+                    dampingFraction: 0.8
+                )
+                .delay(0.5)
             ) {
                 titleOffset = 0
                 titleOpacity = 1.0
             }
 
             // Tagline fade in
-            withAnimation(.easeOut(duration: 0.5).delay(0.8)) {
+            withAnimation(
+                .easeOut(duration: 0.5).delay(0.8)
+            ) {
                 taglineOpacity = 1.0
             }
 
-            // Exit animation + dismiss
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                withAnimation(.easeInOut(duration: 0.4)) {
-                    isExiting = true
+            // Floating hover animation (continuous)
+            withAnimation(
+                .easeInOut(duration: 1.5)
+                    .repeatForever(autoreverses: true)
+                    .delay(1.0)
+            ) {
+                floatOffset = -8
+            }
+
+            // Exit sequence
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + 2.2
+            ) {
+                // Ring burst
+                withAnimation(
+                    .easeOut(duration: 0.5)
+                ) {
+                    ringScale = 3.0
+                    ringOpacity = 0.6
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                withAnimation(
+                    .easeOut(duration: 0.3).delay(0.2)
+                ) {
+                    ringOpacity = 0
+                }
+
+                // Fly off and shrink
+                withAnimation(
+                    .easeIn(duration: 0.5)
+                ) {
+                    isExiting = true
+                    exitOffset = -200
+                }
+
+                DispatchQueue.main.asyncAfter(
+                    deadline: .now() + 0.5
+                ) {
                     onFinish()
                 }
             }

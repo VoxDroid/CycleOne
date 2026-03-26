@@ -84,3 +84,10 @@
 - [x] **Copyright**: Updated footer to "© 2026 CycleOne by VoxDroid"
 - [x] **Feature**: Implemented "Delete Log" functionality with confirmation
 - [x] **Symptoms**: Expanded symptom list (Mood swings, Irritability, Fatigue, etc.)
+- [x] **Charts**: Added Cycle Length Trend bar chart to Insights
+- [x] **Analytics**: Added Mood Distribution & Symptom Breakdown visualizations
+- [x] **Metrics**: Added Avg Pain Level & Total Logged Days counters
+- [x] **Bug Fix**: Fixed stale insights data bug with `NSManagedObjectContextDidSave` refresh logic
+- [x] **Splash**: Enhanced with floating animation, ring burst effect, and upward fly-off exit
+- [x] **Feature**: Added `CycleComparisonView` for current vs previous cycle analysis
+- [x] **Feature**: Added `AboutView` with developer info (VoxDroid), email, and GitHub links

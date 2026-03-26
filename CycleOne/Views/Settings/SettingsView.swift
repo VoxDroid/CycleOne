@@ -200,6 +200,19 @@ struct SettingsView: View {
                             )
                         }
                     }
+
+                    NavigationLink(
+                        destination: AboutView()
+                            .environmentObject(
+                                themeManager
+                            )
+                    ) {
+                        SettingsRow(
+                            icon: "info.circle.fill",
+                            title: "About",
+                            color: .gray
+                        )
+                    }
                 }
 
                 Section {

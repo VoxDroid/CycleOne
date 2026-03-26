@@ -34,3 +34,8 @@
 - [x] Delete Log: Verified log and symptom removal from Core Data
 - [x] Emojis: Verified zero emojis in Log, Insights, and Settings views
 - [x] Splash: Verified exit animation transition
+- [x] Insights: Verified reactive refresh on data change
+- [x] Charts: Visual verification of trend bars and distribution widths
+- [x] Comparison: Verified side-by-side logic for current vs previous
+- [x] About: Verified developer links and navigation
+- [x] Splash: Verified improved animation sequence and exit effects
