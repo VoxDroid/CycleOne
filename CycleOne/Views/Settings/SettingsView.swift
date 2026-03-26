@@ -276,23 +276,3 @@ struct SettingsView: View {
         PersistenceController.shared.container.viewContext.reset()
     }
 }
-
-private struct SettingsRow: View {
-    let icon: String
-    let title: String
-    let color: Color
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundColor(.white)
-                .frame(width: 28, height: 28)
-                .background(color)
-                .cornerRadius(6)
-
-            Text(title)
-                .foregroundColor(.primary)
-        }
-    }
-}
