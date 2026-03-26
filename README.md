@@ -22,6 +22,15 @@ In an era of cloud-connected health apps, CycleOne takes a stand: **Your health 
 
 ## Core Features
 
+### Visual Preview
+
+| Light Mode | Dark Mode |
+| --- | --- |
+| <img src="CycleOneAssets/demo-preview/Calendar-light.png" width="400"> | <img src="CycleOneAssets/demo-preview/Calendar-dark.png" width="400"> |
+| <img src="CycleOneAssets/demo-preview/Logview-light.png" width="400"> | <img src="CycleOneAssets/demo-preview/Logview-dark.png" width="400"> |
+| <img src="CycleOneAssets/demo-preview/Insights-light.png" width="400"> | <img src="CycleOneAssets/demo-preview/Insights-dark.png" width="400"> |
+| <img src="CycleOneAssets/demo-preview/Settings-light.png" width="400"> | <img src="CycleOneAssets/demo-preview/Settings-dark.png" width="400"> |
+
 ### Advanced Prediction Engine
 - **Period Projection**: Intelligent estimations for start dates and duration based on historical averages.
 - **Ovulation Tracking**: Automatic calculation of ovulation and fertile windows.
