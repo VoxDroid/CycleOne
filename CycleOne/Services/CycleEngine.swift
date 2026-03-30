@@ -18,7 +18,7 @@ class CycleEngine {
         let averageLength: Int = if validCycles.isEmpty {
             defaultCycleLength
         } else {
-            Int(validCycles.map { Int($0.cycleLength) }.reduce(0, +) / validCycles.count)
+            validCycles.map { Int($0.cycleLength) }.reduce(0, +) / validCycles.count
         }
 
         let lengthToUse = averageLength > 0 ? averageLength : defaultCycleLength

@@ -173,6 +173,14 @@ final class CycleManager {
 
     /// Fully refreshes the cycle repository
     func fullSync(in context: NSManagedObjectContext) {
-        rebuildAllCycles(in: context)
+        // Ensure all Core Data operations execute on the context's queue
+        if Thread.isMainThread {
+            // If already on main thread, run directly to avoid deadlock
+            rebuildAllCycles(in: context)
+        } else {
+            context.performAndWait {
+                rebuildAllCycles(in: context)
+            }
+        }
     }
 }

@@ -21,14 +21,24 @@ final class CycleViewModel: ObservableObject {
     @AppStorage("enablePredictions") var enablePredictions = true
 
     private let context: NSManagedObjectContext
-    private let engine = CycleEngine()
+    private static let sharedEngine = CycleEngine()
+    private let engine = CycleViewModel.sharedEngine
     private var cancellables = Set<AnyCancellable>()
+
+    deinit {
+        // Cancel any active Combine subscriptions to avoid callbacks during deinit
+        for cancellable in cancellables {
+            cancellable.cancel()
+        }
+        cancellables.removeAll()
+    }
 
     init(context: NSManagedObjectContext) {
         self.context = context
 
-        // Refresh when context changes
+        // Refresh when context changes (ensure runs on main thread)
         NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave, object: context)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.refreshData()
             }

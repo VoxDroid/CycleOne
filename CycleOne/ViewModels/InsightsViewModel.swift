@@ -26,10 +26,20 @@ final class InsightsViewModel: ObservableObject {
     private let context: NSManagedObjectContext
     private var cancellables = Set<AnyCancellable>()
 
+    deinit {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+    }
+
     init(context: NSManagedObjectContext) {
         self.context = context
 
+        // Perform a one-time full sync to fix any legacy orphaned cycles
+        CycleManager.shared.fullSync(in: context)
+        calculateStats()
+
         // Auto-refresh when Core Data saves (log created/updated/deleted)
+        // Register after initial sync to avoid re-entrant calculateStats
         NotificationCenter.default.publisher(
             for: .NSManagedObjectContextDidSave, object: context
         )
@@ -38,10 +48,6 @@ final class InsightsViewModel: ObservableObject {
             self?.calculateStats()
         }
         .store(in: &cancellables)
-
-        // Perform a one-time full sync to fix any legacy orphaned cycles
-        CycleManager.shared.fullSync(in: context)
-        calculateStats()
     }
 
     func calculateStats() {
@@ -68,13 +74,18 @@ final class InsightsViewModel: ObservableObject {
     private func calculateCycleStats(from cycles: [Cycle]) {
         let validCycles = cycles.filter { $0.cycleLength > 0 }
         if !validCycles.isEmpty {
-            avgCycleLength = Double(validCycles.map { Int($0.cycleLength) }.reduce(0, +)) / Double(validCycles.count)
-            shortestCycle = validCycles.map { Int($0.cycleLength) }.min() ?? 0
-            longestCycle = validCycles.map { Int($0.cycleLength) }.max() ?? 0
+            let lengths = validCycles.map { Int($0.cycleLength) }
+            avgCycleLength = Double(lengths.reduce(0, +)) / Double(lengths.count)
+            shortestCycle = lengths.min() ?? 0
+            longestCycle = lengths.max() ?? 0
             cycleLengthHistory = validCycles.reversed().compactMap { cycle in
                 guard let date = cycle.startDate else { return nil }
                 return (date: date, length: Int(cycle.cycleLength))
             }
+            // Temporary debug logging for test diagnostics (use Logger)
+            let debugMsg = "DEBUG InsightsViewModel.calculateCycleStats -> lengths=\(lengths) avg=\(avgCycleLength) " +
+                "shortest=\(shortestCycle) longest=\(longestCycle)"
+            Logger.storage.debug("\(debugMsg)")
         } else {
             avgCycleLength = 0
             shortestCycle = 0
