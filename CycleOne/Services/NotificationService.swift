@@ -101,4 +101,40 @@ class NotificationService {
     func cancelAll() {
         center.removeAllPendingNotificationRequests()
     }
+
+    /// Gracefully release external resources and replace the underlying
+    /// `NotificationCenterType` with a no-op implementation. Useful for
+    /// tests and for shutting down the shared service to avoid deinit-time
+    /// race conditions with system objects.
+    func shutdown() {
+        // cancel any scheduled requests first
+        cancelAll()
+        // replace the center with a no-op implementation to avoid holding
+        // references to system notification centre objects during deinit
+        center = NoopNotificationCenter()
+    }
+
+    #if DEBUG
+        /// Test helper to shutdown the shared singleton
+        static func shutdownShared() {
+            NotificationService.shared.shutdown()
+        }
+    #endif
+}
+
+/// A minimal, no-op notification center used to avoid releasing system
+/// notification center internals during teardown.
+private final class NoopNotificationCenter: NSObject, NotificationCenterType {
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void) {
+        completionHandler(true, nil)
+    }
+
+    @objc(addNotificationRequest:withCompletionHandler:)
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+        completionHandler?(nil)
+    }
+
+    func removeAllPendingNotificationRequests() {
+        // no-op
+    }
 }

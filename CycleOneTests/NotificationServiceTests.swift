@@ -10,6 +10,15 @@ import UserNotifications
 import XCTest
 
 final class NotificationServiceTests: XCTestCase {
+    override func tearDown() {
+        // Ensure the shared service has released system references after each test
+        NotificationService.shared.shutdown()
+        #if DEBUG
+            NotificationService.overrideSharedCenter(UNUserNotificationCenter.current())
+        #endif
+        super.tearDown()
+    }
+
     func testTriggerComponentsCalculation() throws {
         let service = NotificationService.shared
 
