@@ -139,4 +139,21 @@ final class NotificationServiceTests: XCTestCase {
 
         XCTAssertTrue(mock.removedAll)
     }
+
+    func testMockAdd_handlesNonCalendarTrigger() {
+        let mock = MockUNUserNotificationCenter()
+
+        let content = UNMutableNotificationContent()
+        content.title = "NonCal"
+        content.body = "body"
+
+        // Use a time interval trigger (not a calendar trigger) to exercise the else branch
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+        let request = UNNotificationRequest(identifier: "noncal_req", content: content, trigger: trigger)
+
+        mock.add(request)
+
+        XCTAssertEqual(mock.addedIdentifiers.last, "noncal_req")
+        XCTAssertEqual(mock.addedTriggerComponents.last as? DateComponents, nil)
+    }
 }
