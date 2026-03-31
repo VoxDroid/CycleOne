@@ -10,8 +10,6 @@ import UserNotifications
 import XCTest
 
 final class NotificationServiceTests: XCTestCase {
-    // Keep service instances alive for the duration of the test run
-    static var leakedServices: [AnyObject] = []
     func testTriggerComponentsCalculation() throws {
         let service = NotificationService.shared
 
@@ -67,8 +65,9 @@ final class NotificationServiceTests: XCTestCase {
 
     func testRequestAuthorization_invokesCenter() {
         let mock = MockUNUserNotificationCenter()
-        let service = NotificationService(center: mock)
-        NotificationServiceTests.leakedServices.append(service)
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
 
         service.requestAuthorization()
 
@@ -96,8 +95,9 @@ final class NotificationServiceTests: XCTestCase {
 
     func testSchedulePeriodAlert_addsRequest() throws {
         let mock = MockUNUserNotificationCenter()
-        let service = NotificationService(center: mock)
-        NotificationServiceTests.leakedServices.append(service)
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
 
         let iso = ISO8601DateFormatter()
         iso.timeZone = TimeZone(secondsFromGMT: 0)
@@ -113,8 +113,9 @@ final class NotificationServiceTests: XCTestCase {
 
     func testScheduleFertileWindowAlert_addsRequest() throws {
         let mock = MockUNUserNotificationCenter()
-        let service = NotificationService(center: mock)
-        NotificationServiceTests.leakedServices.append(service)
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
 
         let iso = ISO8601DateFormatter()
         iso.timeZone = TimeZone(secondsFromGMT: 0)
@@ -130,8 +131,9 @@ final class NotificationServiceTests: XCTestCase {
 
     func testCancelAll_callsRemoveAll() {
         let mock = MockUNUserNotificationCenter()
-        let service = NotificationService(center: mock)
-        NotificationServiceTests.leakedServices.append(service)
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
 
         service.cancelAll()
 

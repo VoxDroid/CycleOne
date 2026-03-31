@@ -20,11 +20,19 @@ extension UNUserNotificationCenter: NotificationCenterType {}
 class NotificationService {
     static let shared = NotificationService()
 
-    private let center: NotificationCenterType
+    private var center: NotificationCenterType
 
     init(center: NotificationCenterType = UNUserNotificationCenter.current()) {
         self.center = center
     }
+
+    // Testing helper: allow tests to swap the shared center to a mock to avoid
+    // creating short-lived instances that can trigger deinit timing issues.
+    #if DEBUG
+        static func overrideSharedCenter(_ center: NotificationCenterType) {
+            NotificationService.shared.center = center
+        }
+    #endif
 
     func requestAuthorization() {
         center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
