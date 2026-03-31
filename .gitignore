@@ -58,3 +58,6 @@ TestResults-run*
 
 ## Logs
 *.log
+
+## Coverage
+coverage.json
