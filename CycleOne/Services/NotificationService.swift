@@ -8,13 +8,26 @@
 import OSLog
 import UserNotifications
 
+@objc protocol NotificationCenterType: AnyObject {
+    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void)
+    @objc(addNotificationRequest:withCompletionHandler:)
+    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?)
+    func removeAllPendingNotificationRequests()
+}
+
+extension UNUserNotificationCenter: NotificationCenterType {}
+
 class NotificationService {
     static let shared = NotificationService()
 
-    private init() {}
+    private let center: NotificationCenterType
+
+    init(center: NotificationCenterType = UNUserNotificationCenter.current()) {
+        self.center = center
+    }
 
     func requestAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
                 Logger.notifications.info("Notification permission granted.")
             } else if let error {
@@ -39,7 +52,7 @@ class NotificationService {
             trigger: trigger
         )
 
-        UNUserNotificationCenter.current().add(request) { error in
+        center.add(request) { error in
             if let error {
                 Logger.notifications.error("Failed to schedule period alert: \(error.localizedDescription)")
             }
@@ -62,7 +75,7 @@ class NotificationService {
             trigger: trigger
         )
 
-        UNUserNotificationCenter.current().add(request) { error in
+        center.add(request) { error in
             if let error {
                 Logger.notifications.error("Failed to schedule fertile alert: \(error.localizedDescription)")
             }
@@ -78,6 +91,6 @@ class NotificationService {
     }
 
     func cancelAll() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        center.removeAllPendingNotificationRequests()
     }
 }

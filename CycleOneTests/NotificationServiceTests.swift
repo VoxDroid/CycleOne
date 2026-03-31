@@ -6,9 +6,12 @@
 //
 
 @testable import CycleOne
+import UserNotifications
 import XCTest
 
 final class NotificationServiceTests: XCTestCase {
+    // Keep service instances alive for the duration of the test run
+    static var leakedServices: [AnyObject] = []
     func testTriggerComponentsCalculation() throws {
         let service = NotificationService.shared
 
@@ -28,5 +31,110 @@ final class NotificationServiceTests: XCTestCase {
         XCTAssertEqual(trigger.day, 24)
         XCTAssertEqual(trigger.hour, 8)
         XCTAssertEqual(trigger.minute, 0)
+    }
+
+    /// Additional tests covering scheduling and cancellation using a mock center
+    class MockUNUserNotificationCenter: NSObject, NotificationCenterType {
+        private(set) var didRequestAuthorization = false
+        private(set) var requestedOptions: UNAuthorizationOptions?
+        // Avoid retaining full UNNotificationRequest objects to reduce cross-runtime allocations
+        private(set) var addedIdentifiers: [String] = []
+        private(set) var addedTriggerComponents: [DateComponents?] = []
+        private(set) var removedAll = false
+
+        func requestAuthorization(options: UNAuthorizationOptions,
+                                  completionHandler: @escaping (Bool, Error?) -> Void)
+        {
+            didRequestAuthorization = true
+            requestedOptions = options
+            completionHandler(true, nil)
+        }
+
+        func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)? = nil) {
+            addedIdentifiers.append(request.identifier)
+            if let trigger = request.trigger as? UNCalendarNotificationTrigger {
+                addedTriggerComponents.append(trigger.dateComponents)
+            } else {
+                addedTriggerComponents.append(nil)
+            }
+            completionHandler?(nil)
+        }
+
+        func removeAllPendingNotificationRequests() {
+            removedAll = true
+        }
+    }
+
+    func testRequestAuthorization_invokesCenter() {
+        let mock = MockUNUserNotificationCenter()
+        let service = NotificationService(center: mock)
+        NotificationServiceTests.leakedServices.append(service)
+
+        service.requestAuthorization()
+
+        XCTAssertTrue(mock.didRequestAuthorization)
+        XCTAssertEqual(mock.requestedOptions, [.alert, .badge, .sound])
+    }
+
+    func testConstructNotificationObjects() {
+        let content = UNMutableNotificationContent()
+        content.title = "Test"
+        content.body = "Body"
+
+        var components = DateComponents()
+        components.year = 2026
+        components.month = 3
+        components.day = 1
+        components.hour = 8
+        components.minute = 0
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "test_req", content: content, trigger: trigger)
+        XCTAssertEqual(request.identifier, "test_req")
+    }
+
+    func testSchedulePeriodAlert_addsRequest() throws {
+        let mock = MockUNUserNotificationCenter()
+        let service = NotificationService(center: mock)
+        NotificationServiceTests.leakedServices.append(service)
+
+        let iso = ISO8601DateFormatter()
+        iso.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = try XCTUnwrap(iso.date(from: "2026-03-31T12:00:00Z"))
+
+        service.schedulePeriodAlert(for: date)
+
+        XCTAssertEqual(mock.addedIdentifiers.count, 1)
+        let identifier = try XCTUnwrap(mock.addedIdentifiers.first)
+        XCTAssertTrue(identifier.starts(with: "period_alert_"))
+        XCTAssertTrue(identifier.contains("2026-03-31"))
+    }
+
+    func testScheduleFertileWindowAlert_addsRequest() throws {
+        let mock = MockUNUserNotificationCenter()
+        let service = NotificationService(center: mock)
+        NotificationServiceTests.leakedServices.append(service)
+
+        let iso = ISO8601DateFormatter()
+        iso.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = try XCTUnwrap(iso.date(from: "2026-04-05T00:00:00Z"))
+
+        service.scheduleFertileWindowAlert(for: date)
+
+        XCTAssertEqual(mock.addedIdentifiers.count, 1)
+        let identifier = try XCTUnwrap(mock.addedIdentifiers.first)
+        XCTAssertTrue(identifier.starts(with: "fertile_alert_"))
+        XCTAssertTrue(identifier.contains("2026-04-05"))
+    }
+
+    func testCancelAll_callsRemoveAll() {
+        let mock = MockUNUserNotificationCenter()
+        let service = NotificationService(center: mock)
+        NotificationServiceTests.leakedServices.append(service)
+
+        service.cancelAll()
+
+        XCTAssertTrue(mock.removedAll)
     }
 }

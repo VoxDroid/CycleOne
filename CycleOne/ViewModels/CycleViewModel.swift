@@ -11,7 +11,7 @@ import SwiftUI
 
 final class CycleViewModel: ObservableObject {
     @Published var selectedDate: Date = .init().startOfDay
-    @Published var currentMonth: Date = .init().startOfDay
+    @Published var currentMonth: Date = .init().startOfMonth
     @Published var daysUntilPeriod: Int?
     @Published var daysUntilOvulation: Int?
     @Published var isIrregular: Bool = false

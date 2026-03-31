@@ -1,0 +1,5 @@
+breakpoint set --name malloc_error_break
+process continue
+bt all
+process continue
+quit
