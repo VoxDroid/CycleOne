@@ -1,0 +1,7 @@
+{
+  "swift.sourcekit-lsp.serverArguments": [
+    "--default-workspace-type",
+    "buildServer"
+  ],
+  "swift.diagnosticsCollection": "onlySourceKit"
+}
