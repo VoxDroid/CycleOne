@@ -1,5 +1,13 @@
 # CycleOne Test Checklist
 
+## Current Automated Status (2026-04-01)
+- Full `CycleOneTests` suite passes: 77 tests, 0 failures (`TestResults-run6.xcresult`)
+- `ThemeManagerTests` pass both in isolation and in the full unit suite
+- Coverage from latest stable unit run:
+	- `CycleOne.app`: 2,381 / 10,196 lines (23.35%)
+	- `CycleOneTests.xctest`: 1,437 / 1,453 lines (98.90%)
+	- `CycleOneUITests.xctest`: 0 / 229 lines in this run (UI tests were not selected)
+
 ## Unit Tests
 - [x] `CycleEngine`: Predict next period start
 - [x] `CycleEngine`: Predict ovulation date

@@ -4,6 +4,7 @@ import UIKit
 import XCTest
 
 final class ThemeManagerTests: XCTestCase {
+    private static var retainedManagers: [ThemeManager] = []
     private var originalTheme: String?
     private var originalAccent: String?
 
@@ -48,7 +49,7 @@ final class ThemeManagerTests: XCTestCase {
         UserDefaults.standard.set(AppTheme.dark.rawValue, forKey: "selected_app_theme")
         UserDefaults.standard.set(AccentTheme.ocean.rawValue, forKey: "selected_accent_theme")
 
-        let manager = ThemeManager()
+        let manager = makeManager()
 
         XCTAssertEqual(manager.selectedTheme, .dark)
         XCTAssertEqual(manager.selectedAccent, .ocean)
@@ -58,14 +59,14 @@ final class ThemeManagerTests: XCTestCase {
         UserDefaults.standard.set("invalid-theme", forKey: "selected_app_theme")
         UserDefaults.standard.set("invalid-accent", forKey: "selected_accent_theme")
 
-        let manager = ThemeManager()
+        let manager = makeManager()
 
         XCTAssertEqual(manager.selectedTheme, .system)
         XCTAssertEqual(manager.selectedAccent, .rose)
     }
 
     func testDidSetPersistsValuesToUserDefaults() {
-        let manager = ThemeManager()
+        let manager = makeManager()
 
         manager.selectedTheme = .light
         manager.selectedAccent = .sunset
@@ -75,12 +76,18 @@ final class ThemeManagerTests: XCTestCase {
     }
 
     func testAccentColorTracksSelectedAccent() {
-        let manager = ThemeManager()
+        let manager = makeManager()
         manager.selectedAccent = .sage
 
         let resolved = UIColor(manager.accentColor)
         let expected = UIColor(AccentTheme.sage.accentColor)
 
         XCTAssertTrue(resolved.isEqual(expected))
+    }
+
+    private func makeManager() -> ThemeManager {
+        let manager = ThemeManager()
+        Self.retainedManagers.append(manager)
+        return manager
     }
 }

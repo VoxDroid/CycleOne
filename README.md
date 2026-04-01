@@ -66,7 +66,7 @@ CycleOne was built from the ground up to be safe:
 | **Logic** | Proprietary `CycleEngine` (Pure Swift) |
 | **Persistence** | Core Data (On-device SQLite) |
 | **Interface** | Native UIKit/SwiftUI hybrid |
-| **Testing** | 100% Test Coverage (XCTest) |
+| **Testing** | XCTest (77 unit tests currently passing in the full suite) |
 
 ## Getting Started
 
@@ -92,6 +92,30 @@ We use a `Makefile` for CI/CD consistency:
 - `make check`: Full verification suite (Lint, Format, Test).
 - `make unit-test`: Execute logic tests.
 - `make ui-test`: Execute integration tests.
+
+### Portable XCTest Command
+
+```bash
+DEST_ID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
+if [ -z "$DEST_ID" ]; then
+  echo "No available iPhone simulator found."
+  exit 1
+fi
+
+xcodebuild test \
+  -project CycleOne.xcodeproj \
+  -scheme CycleOne \
+  -destination "id=${DEST_ID}" \
+  -parallel-testing-enabled NO \
+  -only-testing:CycleOneTests
+```
+
+### Coverage Snapshot
+
+Latest stable local run (`TestResults-run6.xcresult`, 2026-04-01):
+- `CycleOne.app`: 2,381 / 10,196 lines (23.35%)
+- `CycleOneTests.xctest`: 1,437 / 1,453 lines (98.90%)
+- `CycleOneUITests.xctest`: 0 / 229 lines in this run (UI tests not selected)
 
 ## Contributing
 

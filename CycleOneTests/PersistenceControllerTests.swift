@@ -64,4 +64,43 @@ final class PersistenceControllerTests: XCTestCase {
         let fetchedSymptom = try XCTUnwrap(fetchedLog.symptoms?.anyObject() as? Symptom)
         XCTAssertEqual(fetchedSymptom.id, "cramps")
     }
+
+    func testSaveWithoutChangesIsNoOp() {
+        XCTAssertFalse(context.hasChanges)
+
+        controller.save()
+
+        XCTAssertFalse(context.hasChanges)
+    }
+
+    func testSavePersistsPendingChanges() throws {
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = Date().startOfDay
+        log.flowLevel = FlowLevel.light.rawValue
+
+        XCTAssertTrue(context.hasChanges)
+
+        controller.save()
+
+        XCTAssertFalse(context.hasChanges)
+        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        XCTAssertEqual(try context.count(for: request), 1)
+    }
+
+    func testModelContainsExpectedEntities() {
+        let entityNames = Set(PersistenceController.model.entities.compactMap(\.name))
+
+        XCTAssertTrue(entityNames.contains("DayLog"))
+        XCTAssertTrue(entityNames.contains("Cycle"))
+        XCTAssertTrue(entityNames.contains("Symptom"))
+    }
+
+    func testInMemoryStoreUsesDevNullAndExpectedContextFlags() {
+        XCTAssertEqual(
+            controller.container.persistentStoreDescriptions.first?.url?.path,
+            "/dev/null"
+        )
+        XCTAssertTrue(context.automaticallyMergesChangesFromParent)
+    }
 }

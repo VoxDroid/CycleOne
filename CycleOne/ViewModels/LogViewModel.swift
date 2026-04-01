@@ -8,6 +8,7 @@ import CoreData
 import Foundation
 import OSLog
 
+@MainActor
 final class LogViewModel: ObservableObject {
     @Published var flow: FlowLevel = .none
     @Published var mood: Mood = .neutral
@@ -19,7 +20,6 @@ final class LogViewModel: ObservableObject {
 
     private let date: Date
     private let context: NSManagedObjectContext
-    private let persistenceController: PersistenceController
 
     var formattedDate: String {
         date.formatted(.dateTime.weekday(.wide).month(.wide).day().year())
@@ -27,12 +27,10 @@ final class LogViewModel: ObservableObject {
 
     init(
         date: Date,
-        context: NSManagedObjectContext,
-        persistenceController: PersistenceController = .shared
+        context: NSManagedObjectContext
     ) {
         self.date = date.startOfDay
         self.context = context
-        self.persistenceController = persistenceController
         loadExistingLog()
     }
 
@@ -59,7 +57,7 @@ final class LogViewModel: ObservableObject {
             }
         } catch {
             Logger.storage.error(
-                "Failed to load log for \(self.date): \(error.localizedDescription)"
+                "Failed to load log for dayToken=\(self.logDateToken): \(error.localizedDescription)"
             )
         }
     }
@@ -93,7 +91,7 @@ final class LogViewModel: ObservableObject {
             CycleManager.shared.rebuildAllCycles(in: context)
 
             hasExistingLog = true
-            Logger.storage.info("Saved log for \(self.date)")
+            Logger.storage.info("Saved log for dayToken=\(self.logDateToken)")
         } catch {
             Logger.storage.error(
                 "Failed to save log: \(error.localizedDescription)"
@@ -126,13 +124,17 @@ final class LogViewModel: ObservableObject {
             hasExistingLog = false
             resetFields()
             Logger.storage.info(
-                "Deleted log for \(self.date)"
+                "Deleted log for dayToken=\(self.logDateToken)"
             )
         } catch {
             Logger.storage.error(
                 "Failed to delete log: \(error.localizedDescription)"
             )
         }
+    }
+
+    private var logDateToken: String {
+        String(Int(date.timeIntervalSince1970))
     }
 
     /// Whether the form has any user-entered content
