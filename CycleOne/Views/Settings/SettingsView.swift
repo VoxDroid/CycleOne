@@ -62,6 +62,7 @@ struct SettingsView: View {
                             color: .themeFertile
                         )
                     }
+                    .accessibilityIdentifier("Settings_EnablePredictionsToggle")
 
                     NavigationLink(
                         destination: NotificationSettingsView()
@@ -72,6 +73,7 @@ struct SettingsView: View {
                             color: .orange
                         )
                     }
+                    .accessibilityIdentifier("Settings_NotificationsLink")
                 }
 
                 Section("Appearance") {
@@ -146,6 +148,7 @@ struct SettingsView: View {
                             color: .green
                         )
                     }
+                    .accessibilityIdentifier("Settings_ExportLink")
 
                     Button(role: .destructive) {
                         showingDeleteAlert = true
@@ -166,6 +169,7 @@ struct SettingsView: View {
                             color: .blue
                         )
                     }
+                    .accessibilityIdentifier("Settings_HelpLink")
 
                     if let url = URL(
                         string: "https://github.com/VoxDroid/CycleOne"
@@ -188,6 +192,7 @@ struct SettingsView: View {
                             color: .indigo
                         )
                     }
+                    .accessibilityIdentifier("Settings_PrivacyLink")
 
                     if let url = URL(
                         string: "https://apps.apple.com/app/id6742514330?action=write-review"
@@ -213,6 +218,7 @@ struct SettingsView: View {
                             color: .gray
                         )
                     }
+                    .accessibilityIdentifier("Settings_AboutLink")
                 }
 
                 Section {

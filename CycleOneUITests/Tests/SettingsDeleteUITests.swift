@@ -7,13 +7,16 @@ final class SettingsDeleteUITests: XCTestCase {
 
     @MainActor
     func testDeleteAllData_alert_confirms() {
-        let app = XCUIApplication()
-        app.launch()
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
 
         // Ensure consistent orientation
         XCUIDevice.shared.orientation = .portrait
-
-        dismissOnboarding(app: app)
 
         // Open Settings tab (index 2)
         let settingsTab = app.tabBars.buttons.element(boundBy: 2)
@@ -38,22 +41,5 @@ final class SettingsDeleteUITests: XCTestCase {
         let deleteAlertButton = app.alerts.buttons["Delete"]
         XCTAssertTrue(deleteAlertButton.waitForExistence(timeout: 5))
         deleteAlertButton.tap()
-    }
-
-    private func dismissOnboarding(app: XCUIApplication) {
-        // Wait for splash/onboarding to settle
-        sleep(3)
-
-        let skipButton = app.buttons["Skip"]
-        if skipButton.waitForExistence(timeout: 2) {
-            skipButton.tap()
-            return
-        }
-
-        let getStartedButton = app.buttons["Get Started"]
-        if getStartedButton.waitForExistence(timeout: 2) {
-            getStartedButton.tap()
-            return
-        }
     }
 }

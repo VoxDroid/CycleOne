@@ -159,6 +159,7 @@ struct CycleComparisonView: View {
                 .padding(.top, 60)
             }
         }
+        .accessibilityIdentifier("CycleComparisonViewRoot")
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Compare Cycles")
         .navigationBarTitleDisplayMode(.inline)

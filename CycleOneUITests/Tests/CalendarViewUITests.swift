@@ -12,9 +12,13 @@ final class CalendarViewUITests: XCTestCase {
 
     @MainActor
     func testCalendarLayout() {
-        let app = XCUIApplication()
-        app.launch()
-        dismissOnboarding(app: app)
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
 
         // Verify navigation title
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
@@ -27,9 +31,13 @@ final class CalendarViewUITests: XCTestCase {
 
     @MainActor
     func testNavigationToLogView() {
-        let app = XCUIApplication()
-        app.launch()
-        dismissOnboarding(app: app)
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
 
         // Tap the Log Day button
         let logButton = app.buttons
@@ -48,23 +56,5 @@ final class CalendarViewUITests: XCTestCase {
         }
 
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
-    }
-
-    private func dismissOnboarding(app: XCUIApplication) {
-        // Wait for splash screen to auto-dismiss
-        sleep(3)
-
-        // Handle multi-page onboarding
-        let skipButton = app.buttons["Skip"]
-        if skipButton.waitForExistence(timeout: 2) {
-            skipButton.tap()
-            return
-        }
-
-        let getStartedButton = app.buttons["Get Started"]
-        if getStartedButton.waitForExistence(timeout: 2) {
-            getStartedButton.tap()
-            return
-        }
     }
 }

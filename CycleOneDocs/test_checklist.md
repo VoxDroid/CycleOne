@@ -1,12 +1,12 @@
 # CycleOne Test Checklist
 
 ## Current Automated Status (2026-04-01)
-- Full suite passes: 99 tests, 0 failures (`TestResults-run9.xcresult`)
+- Full suite passes: 102 tests, 0 failures (`TestResults.xcresult`)
 - `ThemeManagerTests` pass both in isolation and in the full unit suite
 - Coverage from latest stable full run:
-  - `CycleOne.app`: 5,076 / 10,235 lines (49.59%)
-  - `CycleOneTests.xctest`: 1,799 / 1,817 lines (99.01%)
-  - `CycleOneUITests.xctest`: 201 / 229 lines (87.77%)
+  - `CycleOne.app`: 9,549 / 10,380 lines (91.99%)
+  - `CycleOneTests.xctest`: 1,857 / 1,874 lines (99.09%)
+  - `CycleOneUITests.xctest`: 417 / 429 lines (97.20%)
 
 ## Security and Edge-Case Checks (2026-04-01)
 - [x] CSV export formula injection mitigation verified (`=`, `+`, `-`, `@` leading values are prefixed safely)

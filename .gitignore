@@ -55,6 +55,7 @@ Pods/
 ## Test results
 TestResults.xcresult/
 TestResults-*
+TestResults_*
 
 ## Logs
 *.log

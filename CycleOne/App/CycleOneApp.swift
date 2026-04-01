@@ -13,7 +13,13 @@ struct CycleOneApp: App {
     let persistenceController = PersistenceController.shared
 
     @StateObject private var themeManager = ThemeManager.shared
-    @State private var showSplash = true
+    @State private var showSplash = !ProcessInfo.processInfo.arguments.contains("-ui-testing-skip-splash")
+
+    init() {
+        UITestLaunchConfigurator.configureIfNeeded(
+            context: persistenceController.container.viewContext
+        )
+    }
 
     var body: some Scene {
         WindowGroup {

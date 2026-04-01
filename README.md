@@ -112,10 +112,10 @@ xcodebuild test \
 
 ### Coverage Snapshot
 
-Latest stable local run (`TestResults-run9.xcresult`, 2026-04-01):
-- `CycleOne.app`: 5,076 / 10,235 lines (49.59%)
-- `CycleOneTests.xctest`: 1,799 / 1,817 lines (99.01%)
-- `CycleOneUITests.xctest`: 201 / 229 lines (87.77%)
+Latest stable local run (`TestResults.xcresult`, 2026-04-01):
+- `CycleOne.app`: 9,549 / 10,380 lines (91.99%)
+- `CycleOneTests.xctest`: 1,857 / 1,874 lines (99.09%)
+- `CycleOneUITests.xctest`: 417 / 429 lines (97.20%)
 
 Recent reliability/security improvements in this iteration:
 - CSV export now escapes quotes, preserves commas safely, and mitigates spreadsheet formula injection (`=`, `+`, `-`, `@` prefixes).

@@ -128,6 +128,7 @@ struct AboutView: View {
                 .padding(.vertical, 8)
             }
         }
+        .accessibilityIdentifier("AboutViewRoot")
         .navigationTitle("About")
         .navigationBarTitleDisplayMode(.inline)
     }

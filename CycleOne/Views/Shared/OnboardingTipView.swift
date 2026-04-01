@@ -118,6 +118,7 @@ struct OnboardingTipView: View {
             )
             .padding(.horizontal, 20)
         }
+        .accessibilityIdentifier("OnboardingTipView")
     }
 
     private func onboardingPageView(

@@ -68,6 +68,7 @@ struct CycleHistoryList: View {
                 }
             }
         }
+        .accessibilityIdentifier("CycleHistoryListRoot")
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
     }

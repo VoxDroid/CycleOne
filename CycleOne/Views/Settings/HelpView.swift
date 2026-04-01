@@ -97,6 +97,7 @@ struct HelpView: View {
                 }
             }
         }
+        .accessibilityIdentifier("HelpViewRoot")
         .navigationTitle("Help & Guide")
         .navigationBarTitleDisplayMode(.inline)
     }

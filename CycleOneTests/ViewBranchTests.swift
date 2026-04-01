@@ -127,4 +127,63 @@ final class ViewBranchTests: XCTestCase {
         host(PrivacyPolicyView())
         try host(WebView(url: XCTUnwrap(URL(string: "https://example.com/privacy"))))
     }
+
+    func testCycleHistoryList_emptyAndPopulatedBranches() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        host(CycleHistoryList(cycles: []), context: context)
+
+        let current = Cycle(context: context)
+        current.startDate = Date().startOfDay
+        current.cycleLength = 30
+        current.periodLength = 5
+
+        let previous = Cycle(context: context)
+        previous.startDate = Date().adding(days: -30).startOfDay
+        previous.cycleLength = 28
+        previous.periodLength = 4
+
+        host(CycleHistoryList(cycles: [current, previous]), context: context)
+    }
+
+    func testInsightsAndSettingsViews_withSeededData_buildDeeperBranches() throws {
+        let context = TestPersistenceController.empty().container.viewContext
+        try seedInsightsData(in: context)
+
+        host(InsightsView(context: context), context: context)
+        host(SettingsView(), context: context)
+        host(HelpView(), context: context)
+        host(AboutView(), context: context)
+    }
+
+    private func seedInsightsData(in context: NSManagedObjectContext) throws {
+        let baseDate = Date().startOfDay
+        let dates = [
+            baseDate.adding(days: -56),
+            baseDate.adding(days: -28),
+            baseDate,
+        ]
+
+        for (index, date) in dates.enumerated() {
+            let log = DayLog(context: context)
+            log.id = UUID()
+            log.date = date
+            log.flowLevel = FlowLevel(rawValue: Int16(index % 3 + 1))?.rawValue ?? FlowLevel.light.rawValue
+            log.mood = Mood.allCases[index % Mood.allCases.count].rawValue
+            log.energyLevel = EnergyLevel.allCases[index % EnergyLevel.allCases.count].rawValue
+            log.painLevel = Int16(index + 1)
+            log.notes = "seed \(index)"
+
+            let symptomType = SymptomType.defaults[index % SymptomType.defaults.count]
+            let symptom = Symptom(context: context)
+            symptom.id = symptomType.id
+            symptom.name = symptomType.name
+            symptom.category = symptomType.category.rawValue
+            symptom.dayLog = log
+            log.addToSymptoms(symptom)
+        }
+
+        try context.save()
+        CycleManager.shared.fullSync(in: context)
+    }
 }

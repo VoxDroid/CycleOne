@@ -163,6 +163,7 @@ struct InsightsView: View {
                             .cornerRadius(Theme.cornerRadius)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("Insights_CompareCyclesLink")
                         .padding(.horizontal)
                         .fadeSlideIn(delay: 0.42)
                     }
@@ -196,6 +197,7 @@ struct InsightsView: View {
                         .cornerRadius(Theme.cornerRadius)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("Insights_HistoryLink")
                     .padding(.horizontal)
                     .fadeSlideIn(delay: 0.45)
                 }

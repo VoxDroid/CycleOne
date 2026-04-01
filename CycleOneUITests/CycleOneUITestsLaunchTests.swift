@@ -18,11 +18,13 @@ final class CycleOneUITestsLaunchTests: XCTestCase {
 
     @MainActor
     func testLaunch() {
-        let app = XCUIApplication()
-        app.launch()
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
 
-        // Wait for splash screen to auto-dismiss
-        sleep(3)
+        UITestAppHarness.waitForMainTabs(in: app)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Launch Screen"
