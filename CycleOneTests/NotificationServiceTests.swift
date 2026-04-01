@@ -72,8 +72,41 @@ final class NotificationServiceTests: XCTestCase {
         }
     }
 
+    class DenyingMockUNUserNotificationCenter: NSObject, NotificationCenterType {
+        struct AuthorizationDeniedError: Error {}
+
+        private(set) var didRequestAuthorization = false
+        private(set) var requestedOptions: UNAuthorizationOptions?
+
+        func requestAuthorization(options: UNAuthorizationOptions,
+                                  completionHandler: @escaping (Bool, Error?) -> Void)
+        {
+            didRequestAuthorization = true
+            requestedOptions = options
+            completionHandler(false, AuthorizationDeniedError())
+        }
+
+        func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+            completionHandler?(nil)
+        }
+
+        func removeAllPendingNotificationRequests() {}
+    }
+
     func testRequestAuthorization_invokesCenter() {
         let mock = MockUNUserNotificationCenter()
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
+
+        service.requestAuthorization()
+
+        XCTAssertTrue(mock.didRequestAuthorization)
+        XCTAssertEqual(mock.requestedOptions, [.alert, .badge, .sound])
+    }
+
+    func testRequestAuthorization_handlesDeniedErrorPath() {
+        let mock = DenyingMockUNUserNotificationCenter()
         NotificationService.overrideSharedCenter(mock)
         defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
         let service = NotificationService.shared
@@ -165,4 +198,23 @@ final class NotificationServiceTests: XCTestCase {
         XCTAssertEqual(mock.addedIdentifiers.last, "noncal_req")
         XCTAssertEqual(mock.addedTriggerComponents.last as? DateComponents, nil)
     }
+
+    #if DEBUG
+        func testShutdownShared_usesNoopCenterAndRemainsCallable() throws {
+            NotificationService.shutdownShared()
+            let service = NotificationService.shared
+
+            service.requestAuthorization()
+
+            let iso = ISO8601DateFormatter()
+            iso.timeZone = TimeZone(secondsFromGMT: 0)
+            let date = try XCTUnwrap(iso.date(from: "2026-05-01T00:00:00Z"))
+
+            service.schedulePeriodAlert(for: date)
+            service.scheduleFertileWindowAlert(for: date)
+            service.cancelAll()
+
+            XCTAssertTrue(true)
+        }
+    #endif
 }
