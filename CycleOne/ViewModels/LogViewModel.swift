@@ -81,7 +81,8 @@ final class LogViewModel: ObservableObject {
             log.mood = mood.rawValue
             log.energyLevel = energy.rawValue
             log.painLevel = Int16(painLevel)
-            log.notes = notes
+            // Keep note length within DayLog.notes model constraint.
+            log.notes = String(notes.prefix(500))
 
             // Sync Symptoms
             updateSymptoms(for: log)

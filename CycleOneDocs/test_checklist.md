@@ -1,17 +1,18 @@
 # CycleOne Test Checklist
 
 ## Current Automated Status (2026-04-01)
-- Full `CycleOneTests` suite passes: 84 tests, 0 failures (`TestResults-run8.xcresult`)
+- Full suite passes: 99 tests, 0 failures (`TestResults-run9.xcresult`)
 - `ThemeManagerTests` pass both in isolation and in the full unit suite
-- Coverage from latest stable unit run:
-  - `CycleOne.app`: 2,380 / 10,234 lines (23.26%)
-  - `CycleOneTests.xctest`: 1,564 / 1,580 lines (98.99%)
-  - `CycleOneUITests.xctest`: 0 / 229 lines in this run (UI tests were not selected)
+- Coverage from latest stable full run:
+  - `CycleOne.app`: 5,076 / 10,235 lines (49.59%)
+  - `CycleOneTests.xctest`: 1,799 / 1,817 lines (99.01%)
+  - `CycleOneUITests.xctest`: 201 / 229 lines (87.77%)
 
 ## Security and Edge-Case Checks (2026-04-01)
 - [x] CSV export formula injection mitigation verified (`=`, `+`, `-`, `@` leading values are prefixed safely)
 - [x] CSV export quote escaping verified (embedded quotes are doubled per CSV rules)
 - [x] Cycle rebuild persistence paths now log Core Data fetch/save errors instead of failing silently
+- [x] Log notes are truncated to Core Data max length (500) before save to avoid validation failures
 
 ## Unit Tests
 - [x] `CycleEngine`: Predict next period start
