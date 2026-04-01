@@ -46,14 +46,7 @@ final class ExportServiceTests: XCTestCase {
             let content = try String(contentsOf: url)
             XCTAssertTrue(content.contains("Date,Flow,Pain,Mood,Energy,Symptoms,Notes"))
             XCTAssertTrue(content.contains("bloating"))
-            // evaluate all variants to ensure coverage of implicit closures
-            let variant1 = content.contains("Test, notes")
-            let variant2 = content.contains("Test notes")
-            let variant3 = content.contains("Test  notes")
-            XCTAssertTrue(variant1 || variant2 || variant3)
-            _ = variant1
-            _ = variant2
-            _ = variant3
+            XCTAssertTrue(content.contains("\"Test, notes new line\""))
         }
     }
 
@@ -78,7 +71,7 @@ final class ExportServiceTests: XCTestCase {
             let content = try String(contentsOf: url)
             XCTAssertTrue(content.contains("Date,Flow,Pain,Mood,Energy,Symptoms,Notes"))
             // Should include the flow description for `none`
-            XCTAssertTrue(content.contains("None"))
+            XCTAssertTrue(content.contains("\"None\""))
         }
     }
 
@@ -113,8 +106,7 @@ final class ExportServiceTests: XCTestCase {
 
         if let url {
             let content = try String(contentsOf: url)
-            XCTAssertTrue(content.contains("sym1"))
-            XCTAssertTrue(content.contains("sym2"))
+            XCTAssertTrue(content.contains("\"sym1;sym2\"") || content.contains("\"sym2;sym1\""))
             // symptoms should be joined by ';'
             let order1 = content.contains("sym1;sym2")
             let order2 = content.contains("sym2;sym1")
@@ -122,6 +114,59 @@ final class ExportServiceTests: XCTestCase {
             _ = order1
             _ = order2
             XCTAssertTrue(order1 || order2)
+        }
+    }
+
+    func testGenerateCSV_mitigatesFormulaInjectionInNotesAndSymptoms() throws {
+        let date = Date().startOfDay
+
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = date
+        log.flowLevel = FlowLevel.medium.rawValue
+        log.painLevel = 2
+        log.mood = Mood.neutral.rawValue
+        log.energyLevel = EnergyLevel.medium.rawValue
+        log.notes = "=SUM(A1:A2)"
+
+        let symptom = Symptom(context: context)
+        symptom.id = UUID().uuidString
+        symptom.name = "@risk"
+        symptom.category = "Other"
+        log.symptoms = NSSet(array: [symptom])
+
+        try context.save()
+
+        let url = ExportService.shared.generateCSV(context: context)
+        XCTAssertNotNil(url)
+
+        if let url {
+            let content = try String(contentsOf: url)
+            XCTAssertTrue(content.contains("\"'=SUM(A1:A2)\""))
+            XCTAssertTrue(content.contains("\"'@risk\""))
+        }
+    }
+
+    func testGenerateCSV_escapesEmbeddedQuotes() throws {
+        let date = Date().startOfDay
+
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = date
+        log.flowLevel = FlowLevel.light.rawValue
+        log.painLevel = 1
+        log.mood = Mood.happy.rawValue
+        log.energyLevel = EnergyLevel.high.rawValue
+        log.notes = "She said \"hello\""
+
+        try context.save()
+
+        let url = ExportService.shared.generateCSV(context: context)
+        XCTAssertNotNil(url)
+
+        if let url {
+            let content = try String(contentsOf: url)
+            XCTAssertTrue(content.contains("\"She said \"\"hello\"\"\""))
         }
     }
 }

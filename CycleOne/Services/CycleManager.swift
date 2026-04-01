@@ -15,18 +15,31 @@ final class CycleManager {
     func rebuildAllCycles(in context: NSManagedObjectContext) {
         // 1. Delete all existing cycles
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cycle")
-        if let cycles = try? context.fetch(fetchRequest) {
+        do {
+            let cycles = try context.fetch(fetchRequest)
             for cycle in cycles {
                 context.delete(cycle)
             }
+        } catch {
+            Logger.storage.error("Cycle cleanup fetch failed: \(error.localizedDescription)")
         }
-        try? context.save()
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                Logger.storage.error("Cycle cleanup save failed: \(error.localizedDescription)")
+            }
+        }
 
         // 2. Fetch all flow logs sorted by date
         let logRequest = NSFetchRequest<NSManagedObject>(entityName: "DayLog")
         logRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
 
-        guard let allLogs = try? context.fetch(logRequest) else {
+        let allLogs: [NSManagedObject]
+        do {
+            allLogs = try context.fetch(logRequest)
+        } catch {
+            Logger.storage.error("Cycle rebuild log fetch failed: \(error.localizedDescription)")
             return
         }
 
@@ -66,7 +79,13 @@ final class CycleManager {
 
         // 4. Update metrics for the newly created cycles
         updateCycleMetrics(in: context)
-        try? context.save()
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                Logger.storage.error("Cycle rebuild save failed: \(error.localizedDescription)")
+            }
+        }
     }
 
     private func createCycle(at date: Date, in context: NSManagedObjectContext) {

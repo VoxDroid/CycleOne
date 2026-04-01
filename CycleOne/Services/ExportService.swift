@@ -14,6 +14,21 @@ class ExportService {
 
     private init() {}
 
+    private func csvField(_ value: String) -> String {
+        var normalized = value
+            .replacingOccurrences(of: "\r\n", with: " ")
+            .replacingOccurrences(of: "\n", with: " ")
+            .replacingOccurrences(of: "\r", with: " ")
+
+        // Prevent CSV formula injection in spreadsheet apps.
+        if let first = normalized.first, "=+-@".contains(first) {
+            normalized = "'" + normalized
+        }
+
+        let escaped = normalized.replacingOccurrences(of: "\"", with: "\"\"")
+        return "\"\(escaped)\""
+    }
+
     func generateCSV(context: NSManagedObjectContext) -> URL? {
         let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \DayLog.date, ascending: false)]
@@ -33,12 +48,12 @@ class ExportService {
                 let energyStr = EnergyLevel(rawValue: log.energyLevel)?.description ?? ""
 
                 let symptoms = (log.symptoms as? Set<Symptom>)?.compactMap(\.name).joined(separator: ";") ?? ""
-                let notes = log.notes?.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(
-                    of: ",",
-                    with: " "
-                ) ?? ""
+                let notes = log.notes ?? ""
 
-                csvString += "\(dateStr),\(flowStr),\(painStr),\(moodStr),\(energyStr),\(symptoms),\(notes)\n"
+                let row = [dateStr, flowStr, painStr, moodStr, energyStr, symptoms, notes]
+                    .map(csvField)
+                    .joined(separator: ",")
+                csvString += row + "\n"
             }
 
             let fileDateFormatter = DateFormatter()

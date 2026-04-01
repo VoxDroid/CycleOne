@@ -15,4 +15,18 @@ final class AppDelegateTests: XCTestCase {
         XCTAssertTrue(didFinish)
         XCTAssertTrue(center.delegate === appDelegate)
     }
+
+    func testWillPresentUsesBannerAndSound() {
+        let appDelegate = AppDelegate()
+        let center = UNUserNotificationCenter.current()
+
+        let fakeNotification = unsafeBitCast(NSObject(), to: UNNotification.self)
+        var captured: UNNotificationPresentationOptions?
+
+        appDelegate.userNotificationCenter(center, willPresent: fakeNotification) { options in
+            captured = options
+        }
+
+        XCTAssertEqual(captured, [.banner, .sound])
+    }
 }

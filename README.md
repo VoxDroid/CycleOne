@@ -66,7 +66,7 @@ CycleOne was built from the ground up to be safe:
 | **Logic** | Proprietary `CycleEngine` (Pure Swift) |
 | **Persistence** | Core Data (On-device SQLite) |
 | **Interface** | Native UIKit/SwiftUI hybrid |
-| **Testing** | XCTest (77 unit tests currently passing in the full suite) |
+| **Testing** | XCTest (84 unit tests currently passing in the full suite) |
 
 ## Getting Started
 
@@ -112,10 +112,14 @@ xcodebuild test \
 
 ### Coverage Snapshot
 
-Latest stable local run (`TestResults-run6.xcresult`, 2026-04-01):
-- `CycleOne.app`: 2,381 / 10,196 lines (23.35%)
-- `CycleOneTests.xctest`: 1,437 / 1,453 lines (98.90%)
+Latest stable local run (`TestResults-run8.xcresult`, 2026-04-01):
+- `CycleOne.app`: 2,380 / 10,234 lines (23.26%)
+- `CycleOneTests.xctest`: 1,564 / 1,580 lines (98.99%)
 - `CycleOneUITests.xctest`: 0 / 229 lines in this run (UI tests not selected)
+
+Recent reliability/security improvements in this iteration:
+- CSV export now escapes quotes, preserves commas safely, and mitigates spreadsheet formula injection (`=`, `+`, `-`, `@` prefixes).
+- Cycle rebuild now logs Core Data fetch/save failures instead of silently swallowing errors.
 
 ## Contributing
 

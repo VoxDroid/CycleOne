@@ -13,8 +13,11 @@ func host(_ view: some View, context: NSManagedObjectContext? = nil) {
 
     let instantiate = {
         let vc = UIHostingController(rootView: wrapped)
-        // Force view to load on main thread to exercise SwiftUI body
-        _ = vc.view
+        // Force view load and layout so conditional SwiftUI branches are materialized.
+        let hostView = vc.view
+        hostView?.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+        hostView?.setNeedsLayout()
+        hostView?.layoutIfNeeded()
     }
 
     if Thread.isMainThread {
