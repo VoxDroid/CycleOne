@@ -225,7 +225,7 @@ struct LogView: View {
         }
     }
 
-    static func cancelAlertAction() {}
+    nonisolated static func cancelAlertAction() {}
 
     static func clampedNotes(
         from value: String,

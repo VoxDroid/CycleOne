@@ -17,7 +17,8 @@ struct PersistenceController {
 
     private nonisolated static func fatalModelHandler(_ message: String) -> NSManagedObjectModel {
         #if DEBUG
-            Logger.storage.error("Persistence model load fallback: \(message)")
+            Logger(subsystem: "com.drei.CycleOne", category: "storage")
+                .error("Persistence model load fallback: \(message)")
             return NSManagedObjectModel()
         #else
             fatalError(message)
@@ -26,7 +27,8 @@ struct PersistenceController {
 
     private nonisolated static func fatalFailureHandler(_ message: String) {
         #if DEBUG
-            Logger.storage.error("Persistence store load fallback: \(message)")
+            Logger(subsystem: "com.drei.CycleOne", category: "storage")
+                .error("Persistence store load fallback: \(message)")
         #else
             fatalError(message)
         #endif
