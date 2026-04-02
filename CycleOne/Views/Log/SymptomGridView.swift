@@ -64,6 +64,7 @@ struct SymptomChip: View {
             .foregroundColor(isSelected ? .white : .primary)
             .cornerRadius(20)
             .scaleEffect(isSelected ? 1.05 : 1.0)
+            .accessibilityIdentifier("Symptom_\(name)")
             .onTapGesture {
                 action()
             }

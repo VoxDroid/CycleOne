@@ -50,14 +50,17 @@ final class NotificationServiceTests: XCTestCase {
         private(set) var removedAll = false
 
         func requestAuthorization(options: UNAuthorizationOptions,
-                                  completionHandler: @escaping (Bool, Error?) -> Void)
+                                  completionHandler: @escaping @Sendable (Bool, Error?) -> Void)
         {
             didRequestAuthorization = true
             requestedOptions = options
             completionHandler(true, nil)
         }
 
-        func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)? = nil) {
+        func add(
+            _ request: UNNotificationRequest,
+            withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)? = nil
+        ) {
             addedIdentifiers.append(request.identifier)
             if let trigger = request.trigger as? UNCalendarNotificationTrigger {
                 addedTriggerComponents.append(trigger.dateComponents)
@@ -79,14 +82,17 @@ final class NotificationServiceTests: XCTestCase {
         private(set) var requestedOptions: UNAuthorizationOptions?
 
         func requestAuthorization(options: UNAuthorizationOptions,
-                                  completionHandler: @escaping (Bool, Error?) -> Void)
+                                  completionHandler: @escaping @Sendable (Bool, Error?) -> Void)
         {
             didRequestAuthorization = true
             requestedOptions = options
             completionHandler(false, AuthorizationDeniedError())
         }
 
-        func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+        func add(
+            _ request: UNNotificationRequest,
+            withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?
+        ) {
             completionHandler?(nil)
         }
 

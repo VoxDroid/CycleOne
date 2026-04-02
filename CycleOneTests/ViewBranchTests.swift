@@ -92,6 +92,13 @@ final class ViewBranchTests: XCTestCase {
         host(SettingsRow(icon: "bell", title: "Row B", subtitle: "Subtitle", color: .themeAccent, showChevron: true))
     }
 
+    func testCycleHeaderView_predictionAndIrregularBranches() {
+        host(CycleHeaderView(daysUntilPeriod: nil, daysUntilOvulation: nil, isIrregular: false))
+        host(CycleHeaderView(daysUntilPeriod: -2, daysUntilOvulation: nil, isIrregular: true))
+        host(CycleHeaderView(daysUntilPeriod: 0, daysUntilOvulation: 0, isIrregular: false))
+        host(CycleHeaderView(daysUntilPeriod: 5, daysUntilOvulation: 2, isIrregular: true))
+    }
+
     func testNotificationSettingsView_periodPickerBranch() {
         let defaults = UserDefaults.standard
         let previousPeriod = defaults.object(forKey: "remindBeforePeriod")

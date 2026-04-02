@@ -117,7 +117,6 @@
 				35B9FFC32F7136200074EB22 /* CycleOne */,
 			);
 			name = CycleOne;
-
 			productName = CycleOne;
 			productReference = 35B9FFC12F7136200074EB22 /* CycleOne.app */;
 			productType = "com.apple.product-type.application";
@@ -139,7 +138,6 @@
 				35B9FFD12F7136210074EB22 /* CycleOneTests */,
 			);
 			name = CycleOneTests;
-
 			productName = CycleOneTests;
 			productReference = 35B9FFCE2F7136210074EB22 /* CycleOneTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -161,7 +159,6 @@
 				35B9FFDB2F7136210074EB22 /* CycleOneUITests */,
 			);
 			name = CycleOneUITests;
-
 			productName = CycleOneUITests;
 			productReference = 35B9FFD82F7136210074EB22 /* CycleOneUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -197,7 +194,6 @@
 				Base,
 			);
 			mainGroup = 35B9FFB82F7136200074EB22;
-
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 35B9FFC22F7136200074EB22 /* Products */;
@@ -582,10 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-	/* End XCConfigurationList section */
-
-
-
+/* End XCConfigurationList section */
 	};
 	rootObject = 35B9FFB92F7136200074EB22 /* Project object */;
 }

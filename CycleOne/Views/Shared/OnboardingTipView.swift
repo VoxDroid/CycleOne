@@ -8,7 +8,7 @@ import SwiftUI
 struct OnboardingTipView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     let onDismiss: () -> Void
-    @State private var currentPage = 0
+    @State private var currentPage: Int
 
     private let pages: [OnboardingPage] = [
         OnboardingPage(
@@ -36,6 +36,11 @@ struct OnboardingTipView: View {
             color: .green
         ),
     ]
+
+    init(onDismiss: @escaping () -> Void, initialPage: Int = 0) {
+        self.onDismiss = onDismiss
+        _currentPage = State(initialValue: initialPage)
+    }
 
     var body: some View {
         ZStack {

@@ -9,9 +9,15 @@ import OSLog
 import UserNotifications
 
 @objc protocol NotificationCenterType: AnyObject {
-    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void)
+    func requestAuthorization(
+        options: UNAuthorizationOptions,
+        completionHandler: @escaping @Sendable (Bool, Error?) -> Void
+    )
     @objc(addNotificationRequest:withCompletionHandler:)
-    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?)
+    func add(
+        _ request: UNNotificationRequest,
+        withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?
+    )
     func removeAllPendingNotificationRequests()
 }
 
@@ -125,12 +131,18 @@ class NotificationService {
 /// A minimal, no-op notification center used to avoid releasing system
 /// notification center internals during teardown.
 private final class NoopNotificationCenter: NSObject, NotificationCenterType {
-    func requestAuthorization(options: UNAuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void) {
+    func requestAuthorization(
+        options: UNAuthorizationOptions,
+        completionHandler: @escaping @Sendable (Bool, Error?) -> Void
+    ) {
         completionHandler(true, nil)
     }
 
     @objc(addNotificationRequest:withCompletionHandler:)
-    func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+    func add(
+        _ request: UNNotificationRequest,
+        withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?
+    ) {
         completionHandler?(nil)
     }
 

@@ -8,6 +8,15 @@ import CoreData
 import XCTest
 
 final class CycleManagerTests: XCTestCase {
+    private final class ThrowingSaveManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        private(set) var saveCallCount = 0
+
+        override func save() throws {
+            saveCallCount += 1
+            throw NSError(domain: "CycleManagerTests", code: 1)
+        }
+    }
+
     var controller: PersistenceController!
     var context: NSManagedObjectContext {
         controller.container.viewContext
@@ -68,5 +77,92 @@ final class CycleManagerTests: XCTestCase {
         let cyclesAfterDelete = try context.fetch(request)
         XCTAssertEqual(cyclesAfterDelete.count, 1)
         XCTAssertEqual(cyclesAfterDelete.first?.startDate?.startOfDay, date2.startOfDay)
+    }
+
+    func testRebuildAllCycles_handlesSaveFailuresWithoutCrashing() throws {
+        let coordinator = try makeInMemoryCoordinator()
+
+        let seedContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        seedContext.persistentStoreCoordinator = coordinator
+
+        let existingCycle = Cycle(context: seedContext)
+        existingCycle.id = UUID()
+        existingCycle.startDate = Date().adding(days: -80).startOfDay
+        existingCycle.createdAt = Date()
+
+        let baseDate = Date().adding(days: -30).startOfDay
+
+        let firstLog = DayLog(context: seedContext)
+        firstLog.id = UUID()
+        firstLog.date = baseDate
+        firstLog.flowLevel = FlowLevel.light.rawValue
+
+        let secondLog = DayLog(context: seedContext)
+        secondLog.id = UUID()
+        secondLog.date = baseDate.adding(days: 1)
+        secondLog.flowLevel = FlowLevel.none.rawValue
+
+        let thirdLog = DayLog(context: seedContext)
+        thirdLog.id = UUID()
+        thirdLog.date = baseDate.adding(days: 30)
+        thirdLog.flowLevel = FlowLevel.heavy.rawValue
+
+        try seedContext.save()
+
+        let throwingContext = ThrowingSaveManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = coordinator
+
+        CycleManager.shared.rebuildAllCycles(in: throwingContext)
+
+        XCTAssertGreaterThanOrEqual(throwingContext.saveCallCount, 2)
+    }
+
+    func testUpdateCycleMetrics_periodLengthStopsAtNonFlowDay() throws {
+        let startDate = Date().adding(days: -6).startOfDay
+
+        let cycle = Cycle(context: context)
+        cycle.id = UUID()
+        cycle.startDate = startDate
+        cycle.createdAt = Date()
+
+        let flowLog = DayLog(context: context)
+        flowLog.id = UUID()
+        flowLog.date = startDate
+        flowLog.flowLevel = FlowLevel.medium.rawValue
+
+        let noFlowLog = DayLog(context: context)
+        noFlowLog.id = UUID()
+        noFlowLog.date = startDate.adding(days: 1)
+        noFlowLog.flowLevel = FlowLevel.none.rawValue
+
+        try context.save()
+
+        CycleManager.shared.updateCycleMetrics(in: context)
+
+        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        let cycles = try context.fetch(request)
+        XCTAssertEqual(cycles.first?.periodLength, 1)
+    }
+
+    func testFullSync_runsFromBackgroundQueue() {
+        let expectation = expectation(description: "fullSync completes")
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            CycleManager.shared.fullSync(in: self.context)
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 5)
+    }
+
+    private func makeInMemoryCoordinator() throws -> NSPersistentStoreCoordinator {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistenceController.model)
+        try coordinator.addPersistentStore(
+            ofType: NSInMemoryStoreType,
+            configurationName: nil,
+            at: nil,
+            options: nil
+        )
+        return coordinator
     }
 }

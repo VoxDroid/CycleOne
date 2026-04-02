@@ -32,6 +32,7 @@ struct ExportView: View {
 
             if isGenerating {
                 ProgressView("Generating CSV...")
+                    .accessibilityIdentifier("Export_GeneratingProgress")
             } else if let url = exportURL {
                 ShareLink(item: url) {
                     Label("Share CSV File", systemImage: "square.and.arrow.up")
@@ -42,11 +43,13 @@ struct ExportView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
+                .accessibilityIdentifier("Export_ShareLink")
                 .padding(.horizontal)
 
                 Button("Regenerate") {
                     generateExport()
                 }
+                .accessibilityIdentifier("Export_RegenerateButton")
                 .foregroundColor(.themeAccent)
             } else {
                 Button(action: generateExport) {
@@ -58,6 +61,7 @@ struct ExportView: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
+                .accessibilityIdentifier("Export_GenerateButton")
                 .padding(.horizontal)
             }
 
@@ -66,6 +70,7 @@ struct ExportView: View {
                 .foregroundColor(.secondary)
                 .padding(.bottom, 20)
         }
+        .accessibilityIdentifier("ExportViewRoot")
         .navigationTitle("Export")
         .navigationBarTitleDisplayMode(.inline)
     }

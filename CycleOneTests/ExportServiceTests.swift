@@ -3,6 +3,12 @@ import CoreData
 import XCTest
 
 final class ExportServiceTests: XCTestCase {
+    private final class ThrowingExecuteContext: NSManagedObjectContext, @unchecked Sendable {
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            throw NSError(domain: "ExportServiceTests", code: 99)
+        }
+    }
+
     var controller: PersistenceController!
     var context: NSManagedObjectContext {
         controller.container.viewContext
@@ -168,5 +174,25 @@ final class ExportServiceTests: XCTestCase {
             let content = try String(contentsOf: url)
             XCTAssertTrue(content.contains("\"She said \"\"hello\"\"\""))
         }
+    }
+
+    func testGenerateCSV_returnsNilWhenFetchThrows() throws {
+        let throwingContext = ThrowingExecuteContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = try makeInMemoryCoordinator()
+
+        let url = ExportService.shared.generateCSV(context: throwingContext)
+
+        XCTAssertNil(url)
+    }
+
+    private func makeInMemoryCoordinator() throws -> NSPersistentStoreCoordinator {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistenceController.model)
+        try coordinator.addPersistentStore(
+            ofType: NSInMemoryStoreType,
+            configurationName: nil,
+            at: nil,
+            options: nil
+        )
+        return coordinator
     }
 }

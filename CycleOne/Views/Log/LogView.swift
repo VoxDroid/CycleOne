@@ -74,6 +74,7 @@ struct LogView: View {
                                 )
                         }
                         .frame(maxWidth: .infinity)
+                        .accessibilityIdentifier("Log_Mood_\(mood.description)")
                         .onTapGesture {
                             withAnimation(.spring(response: 0.3)) {
                                 viewModel.mood = mood
@@ -112,6 +113,7 @@ struct LogView: View {
                                 )
                         }
                         .frame(maxWidth: .infinity)
+                        .accessibilityIdentifier("Log_Energy_\(energy.description)")
                         .onTapGesture {
                             withAnimation(.spring(response: 0.3)) {
                                 viewModel.energy = energy
@@ -132,6 +134,7 @@ struct LogView: View {
                         value: $viewModel.painLevel,
                         in: 0 ... 10, step: 1
                     )
+                    .accessibilityIdentifier("Log_PainSlider")
                     .tint(.themePeriod)
                     Image(systemName: "bolt.fill")
                         .foregroundColor(.orange)
@@ -158,6 +161,7 @@ struct LogView: View {
                     }
 
                     TextEditor(text: $viewModel.notes)
+                        .accessibilityIdentifier("Log_NotesEditor")
                         .frame(minHeight: 100)
                         .onChange(of: viewModel.notes) { _, newValue in
                             if newValue.count > 500 {

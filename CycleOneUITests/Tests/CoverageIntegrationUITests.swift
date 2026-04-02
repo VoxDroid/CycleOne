@@ -6,6 +6,28 @@ final class CoverageIntegrationUITests: XCTestCase {
     }
 
     @MainActor
+    private func dismissNotificationPromptIfPresent() {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let denyLabels = ["Don\u{2019}t Allow", "Don't Allow"]
+        for label in denyLabels {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 1.0) {
+                button.tap()
+                return
+            }
+        }
+
+        let fallbackLabels = ["Allow", "Allow While Using App", "OK"]
+        for label in fallbackLabels {
+            let button = springboard.buttons[label]
+            if button.waitForExistence(timeout: 1.0) {
+                button.tap()
+                return
+            }
+        }
+    }
+
+    @MainActor
     func testOnboardingFlowAdvancesAndDismisses() {
         let app = UITestAppHarness.launch(
             skipOnboarding: false,
@@ -34,11 +56,37 @@ final class CoverageIntegrationUITests: XCTestCase {
     }
 
     @MainActor
+    func testOnboardingSkipDismissesImmediately() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: false,
+            clearData: true,
+            seedInsights: false
+        )
+
+        let onboardingRoot = UITestAppHarness.element(
+            withIdentifier: "OnboardingTipView",
+            in: app
+        )
+        XCTAssertTrue(onboardingRoot.waitForExistence(timeout: 12))
+
+        let skipButton = app.buttons["Skip"]
+        XCTAssertTrue(skipButton.waitForExistence(timeout: 5))
+        skipButton.tap()
+
+        UITestAppHarness.waitForMainTabs(in: app)
+    }
+
+    @MainActor
     func testSettingsHelpPrivacyAndAboutNavigation() {
         let app = UITestAppHarness.launch(
             skipOnboarding: true,
             clearData: true,
-            seedInsights: false
+            seedInsights: false,
+            extraLaunchArguments: [
+                "-remindBeforePeriod", "YES",
+                "-remindBeforeFertile", "YES",
+                "-daysBeforePeriod", "5",
+            ]
         )
 
         UITestAppHarness.waitForMainTabs(in: app)
@@ -138,6 +186,81 @@ final class CoverageIntegrationUITests: XCTestCase {
     }
 
     @MainActor
+    func testInsightsHistoryShowsEmptyStateWithoutData() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
+        UITestAppHarness.openTab(at: 1, in: app)
+
+        let insightsScrollView = app.scrollViews.firstMatch
+        XCTAssertTrue(insightsScrollView.waitForExistence(timeout: 10))
+
+        let historyLink = UITestAppHarness.element(
+            withIdentifier: "Insights_HistoryLink",
+            in: app
+        )
+        UITestAppHarness.scrollToElement(historyLink, in: insightsScrollView)
+        XCTAssertTrue(historyLink.waitForExistence(timeout: 8))
+        historyLink.tap()
+
+        XCTAssertTrue(
+            UITestAppHarness
+                .element(withIdentifier: "CycleHistoryListRoot", in: app)
+                .waitForExistence(timeout: 8)
+        )
+        XCTAssertTrue(app.staticTexts["No data yet"].waitForExistence(timeout: 8))
+    }
+
+    @MainActor
+    func testSettingsExportGenerateAndRegenerateFlow() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
+        UITestAppHarness.openTab(at: 2, in: app)
+
+        let settingsList = UITestAppHarness.element(
+            withIdentifier: "SettingsList",
+            in: app
+        )
+        XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
+
+        let exportLink = UITestAppHarness.element(
+            withIdentifier: "Settings_ExportLink",
+            in: app
+        )
+        UITestAppHarness.scrollToElement(exportLink, in: settingsList)
+        XCTAssertTrue(exportLink.waitForExistence(timeout: 8))
+        exportLink.tap()
+
+        XCTAssertTrue(
+            UITestAppHarness
+                .element(withIdentifier: "ExportViewRoot", in: app)
+                .waitForExistence(timeout: 8)
+        )
+
+        let generateButton = app.buttons["Generate CSV"]
+        XCTAssertTrue(generateButton.waitForExistence(timeout: 8))
+        generateButton.tap()
+
+        let shareLink = app.buttons["Share CSV File"]
+        XCTAssertTrue(shareLink.waitForExistence(timeout: 12))
+
+        let regenerateButton = app.buttons["Regenerate"]
+        XCTAssertTrue(regenerateButton.waitForExistence(timeout: 8))
+        regenerateButton.tap()
+
+        XCTAssertTrue(shareLink.waitForExistence(timeout: 12))
+    }
+
+    @MainActor
     func testSettingsPredictionsAndNotificationsFlow() {
         let app = UITestAppHarness.launch(
             skipOnboarding: true,
@@ -170,7 +293,58 @@ final class CoverageIntegrationUITests: XCTestCase {
         notificationsLink.tap()
 
         XCTAssertTrue(app.navigationBars["Notifications"].waitForExistence(timeout: 8))
-        XCTAssertTrue(app.switches["Remind me before period"].exists)
-        XCTAssertTrue(app.switches["Fertile window alerts"].exists)
+
+        let periodToggle = UITestAppHarness.element(
+            withIdentifier: "Notifications_PeriodToggle",
+            in: app
+        )
+        XCTAssertTrue(periodToggle.waitForExistence(timeout: 8))
+        periodToggle.tap()
+        dismissNotificationPromptIfPresent()
+
+        var isDaysPickerVisible = daysBeforePickerVisible(in: app, picker: nil)
+
+        let daysBeforePicker = UITestAppHarness.element(
+            withIdentifier: "Notifications_DaysBeforePicker",
+            in: app
+        )
+        if !isDaysPickerVisible {
+            isDaysPickerVisible = daysBeforePickerVisible(in: app, picker: daysBeforePicker)
+        }
+
+        let fiveDaysOption = app.staticTexts["5 days"]
+        if isDaysPickerVisible, fiveDaysOption.waitForExistence(timeout: 2) {
+            fiveDaysOption.tap()
+        }
+
+        // Toggle off and back on to cover both period toggle change paths.
+        periodToggle.tap()
+        periodToggle.tap()
+        dismissNotificationPromptIfPresent()
+
+        let fertileToggle = UITestAppHarness.element(
+            withIdentifier: "Notifications_FertileToggle",
+            in: app
+        )
+        XCTAssertTrue(fertileToggle.waitForExistence(timeout: 8))
+        fertileToggle.tap()
+        dismissNotificationPromptIfPresent()
+        fertileToggle.tap()
+    }
+
+    @MainActor
+    private func daysBeforePickerVisible(in app: XCUIApplication, picker: XCUIElement?) -> Bool {
+        if let picker, picker.waitForExistence(timeout: 2) {
+            return true
+        }
+
+        if app.staticTexts["Days before"].waitForExistence(timeout: 2) {
+            return true
+        }
+
+        return app.staticTexts["1 day"].exists ||
+            app.staticTexts["2 days"].exists ||
+            app.staticTexts["3 days"].exists ||
+            app.staticTexts["5 days"].exists
     }
 }

@@ -5,13 +5,16 @@ enum UITestAppHarness {
     static func launch(
         skipOnboarding: Bool,
         clearData: Bool,
-        seedInsights: Bool
+        seedInsights: Bool,
+        skipSplash: Bool = true,
+        extraLaunchArguments: [String] = []
     ) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments += [
-            "-ui-testing",
-            "-ui-testing-skip-splash",
-        ]
+        app.launchArguments += ["-ui-testing"]
+
+        if skipSplash {
+            app.launchArguments += ["-ui-testing-skip-splash"]
+        }
 
         if skipOnboarding {
             app.launchArguments += [
@@ -30,6 +33,10 @@ enum UITestAppHarness {
 
         if seedInsights {
             app.launchArguments += ["-ui-testing-seed-insights"]
+        }
+
+        if !extraLaunchArguments.isEmpty {
+            app.launchArguments += extraLaunchArguments
         }
 
         app.launch()

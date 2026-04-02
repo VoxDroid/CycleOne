@@ -15,6 +15,12 @@ enum UITestLaunchConfigurator {
 
     private static var hasApplied = false
 
+    #if DEBUG
+        static func resetForTests() {
+            hasApplied = false
+        }
+    #endif
+
     static func configureIfNeeded(
         context: NSManagedObjectContext,
         arguments: [String] = ProcessInfo.processInfo.arguments,

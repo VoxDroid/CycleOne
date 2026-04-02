@@ -4,6 +4,16 @@
 //
 
 import SwiftUI
+import UserNotifications
+
+protocol NotificationAuthorizationCenter {
+    func requestAuthorization(
+        options: UNAuthorizationOptions,
+        completionHandler: @escaping @Sendable (Bool, Error?) -> Void
+    )
+}
+
+extension UNUserNotificationCenter: NotificationAuthorizationCenter {}
 
 struct NotificationSettingsView: View {
     @AppStorage("remindBeforePeriod") private var remindBeforePeriod = false
@@ -14,10 +24,8 @@ struct NotificationSettingsView: View {
         List {
             Section(header: Text("Period Reminders")) {
                 Toggle("Remind me before period", isOn: $remindBeforePeriod)
-                    .onChange(of: remindBeforePeriod) { _, newValue in
-                        if newValue { requestPermission() }
-                        updateNotifications()
-                    }
+                    .accessibilityIdentifier("Notifications_PeriodToggle")
+                    .onChange(of: remindBeforePeriod, initial: false, handlePeriodReminderChange)
 
                 if remindBeforePeriod {
                     Picker("Days before", selection: $daysBeforePeriod) {
@@ -25,36 +33,68 @@ struct NotificationSettingsView: View {
                             Text("\(day) day\(day > 1 ? "s" : "")").tag(day)
                         }
                     }
-                    .onChange(of: daysBeforePeriod) { _, _ in
-                        updateNotifications()
-                    }
+                    .accessibilityIdentifier("Notifications_DaysBeforePicker")
+                    .onChange(of: daysBeforePeriod, initial: false, handleDaysBeforePeriodChange)
                 }
             }
 
             Section(header: Text("Fertile Window")) {
                 Toggle("Fertile window alerts", isOn: $remindBeforeFertile)
-                    .onChange(of: remindBeforeFertile) { _, newValue in
-                        if newValue { requestPermission() }
-                        updateNotifications()
-                    }
+                    .accessibilityIdentifier("Notifications_FertileToggle")
+                    .onChange(of: remindBeforeFertile, initial: false, handleFertileReminderChange)
             }
 
             Section(footer: Text("Notifications are scheduled locally on your device at 8:00 AM.")) {
                 EmptyView()
             }
         }
+        .accessibilityIdentifier("NotificationSettingsViewRoot")
         .navigationTitle("Notifications")
     }
 
-    private func requestPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+    func onPeriodReminderChanged(
+        _ newValue: Bool,
+        permissionRequester: (() -> Void)? = nil
+    ) {
+        if newValue { (permissionRequester ?? { requestPermission() })() }
+        updateNotifications()
+    }
+
+    func handlePeriodReminderChange(_ oldValue: Bool, _ newValue: Bool) {
+        onPeriodReminderChanged(newValue)
+    }
+
+    func onDaysBeforePeriodChanged() {
+        updateNotifications()
+    }
+
+    func handleDaysBeforePeriodChange(_ oldValue: Int, _ newValue: Int) {
+        onDaysBeforePeriodChanged()
+    }
+
+    func onFertileReminderChanged(
+        _ newValue: Bool,
+        permissionRequester: (() -> Void)? = nil
+    ) {
+        if newValue { (permissionRequester ?? { requestPermission() })() }
+        updateNotifications()
+    }
+
+    func handleFertileReminderChange(_ oldValue: Bool, _ newValue: Bool) {
+        onFertileReminderChanged(newValue)
+    }
+
+    func requestPermission(
+        center: NotificationAuthorizationCenter = UNUserNotificationCenter.current()
+    ) {
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
             if !granted {
                 // Handle denied permission
             }
         }
     }
 
-    private func updateNotifications() {
+    func updateNotifications() {
         // This should trigger the NotificationService via a ViewModel
         // For now, I'll rely on CycleViewModel to reschedule on changes.
     }
