@@ -20,6 +20,8 @@ struct SplashScreenView: View {
     @State private var ringOpacity: Double
     @State private var exitOffset: CGFloat
 
+    private static let defaultExitDelay: TimeInterval = 2.2
+
     init(onFinish: @escaping () -> Void) {
         self.onFinish = onFinish
         _logoScale = State(initialValue: 0.5)
@@ -32,6 +34,20 @@ struct SplashScreenView: View {
         _ringScale = State(initialValue: 0.8)
         _ringOpacity = State(initialValue: 0)
         _exitOffset = State(initialValue: 0)
+    }
+
+    private static func configuredExitDelay(
+        arguments: [String] = ProcessInfo.processInfo.arguments
+    ) -> TimeInterval {
+        guard let index = arguments.firstIndex(of: "-ui-testing-splash-delay"),
+              arguments.indices.contains(index + 1),
+              let delay = TimeInterval(arguments[index + 1]),
+              delay >= 0
+        else {
+            return defaultExitDelay
+        }
+
+        return delay
     }
 
     var body: some View {
@@ -142,7 +158,7 @@ struct SplashScreenView: View {
 
             // Exit sequence
             DispatchQueue.main.asyncAfter(
-                deadline: .now() + 2.2
+                deadline: .now() + Self.configuredExitDelay()
             ) {
                 // Ring burst
                 withAnimation(
@@ -172,6 +188,7 @@ struct SplashScreenView: View {
                 }
             }
         }
+        .accessibilityIdentifier("SplashScreenView")
     }
 }
 

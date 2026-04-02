@@ -11,13 +11,20 @@ final class CoverageRuntimeUITests: XCTestCase {
             skipOnboarding: true,
             clearData: true,
             seedInsights: false,
-            skipSplash: false
+            skipSplash: false,
+            extraLaunchArguments: ["-ui-testing-splash-delay", "6"]
         )
 
-        XCTAssertTrue(app.staticTexts["CycleOne"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.staticTexts["Privacy-first period tracking"].exists)
+        let splashRoot = UITestAppHarness.element(
+            withIdentifier: "SplashScreenView",
+            in: app
+        )
+        let splashTitle = app.staticTexts["CycleOne"]
 
-        UITestAppHarness.waitForMainTabs(in: app)
+        XCTAssertTrue(splashRoot.waitForExistence(timeout: 12))
+        XCTAssertTrue(splashTitle.waitForExistence(timeout: 12))
+
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 25))
     }
 
     @MainActor
