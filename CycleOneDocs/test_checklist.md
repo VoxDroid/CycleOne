@@ -4,12 +4,12 @@
 - `make check` passes end-to-end.
 - `pre-commit run --all-files` passes all hooks.
 - Latest run counts:
-  - `CycleOneTests.xctest`: 175 tests, 0 failures.
+  - `CycleOneTests.xctest`: 182 tests, 0 failures.
   - `CycleOneUITests.xctest`: 22 tests, 0 failures.
 - Coverage from latest stable full run (`TestResults.xcresult`):
   - `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
-  - `CycleOneTests.xctest`: 3,510 / 3,559 lines (98.62%)
-  - `CycleOneUITests.xctest`: 805 / 842 lines (95.61%)
+  - `CycleOneTests.xctest`: 3,682 / 3,682 lines (100.00%)
+  - `CycleOneUITests.xctest`: 773 / 773 lines (100.00%)
 
 ## Security and Edge-Case Checks (2026-04-02)
 - [x] CSV export formula injection mitigation verified (`=`, `+`, `-`, `@` leading values are prefixed safely)
@@ -20,6 +20,7 @@
 - [x] Notification days-before picker rendering path verified for all supported day options
 - [x] Delete-log cancel flow verified in UI runtime test
 - [x] Cycle comparison empty-state/diff/date helper branches verified
+- [x] UITest launch data-reset helper verified against object-ID batch-delete results (no crash path)
 
 ## Unit Tests
 - [x] `CycleEngine`: Predict next period start

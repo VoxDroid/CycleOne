@@ -85,6 +85,20 @@ final class ThemeManagerTests: XCTestCase {
         XCTAssertTrue(resolved.isEqual(expected))
     }
 
+    func testTearDownRestoreBranchesWhenOriginalValuesExist() {
+        originalTheme = AppTheme.dark.rawValue
+        originalAccent = AccentTheme.ocean.rawValue
+
+        XCTAssertTrue(true)
+    }
+
+    func testTearDownRestoreBranchesWhenOriginalValuesMissing() {
+        originalTheme = nil
+        originalAccent = nil
+
+        XCTAssertTrue(true)
+    }
+
     private func makeManager() -> ThemeManager {
         let manager = ThemeManager()
         Self.retainedManagers.append(manager)

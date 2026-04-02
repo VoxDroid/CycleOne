@@ -119,8 +119,7 @@ final class PersistenceControllerTests: XCTestCase {
 
         let model = PersistenceController.loadModel(
             modelURL: nil,
-            missingResourceHandler: { _ in fallback },
-            invalidModelHandler: { _ in NSManagedObjectModel() }
+            missingResourceHandler: { _ in fallback }
         )
 
         XCTAssertTrue(model === fallback)
@@ -137,7 +136,6 @@ final class PersistenceControllerTests: XCTestCase {
 
         let model = PersistenceController.loadModel(
             modelURL: invalidURL,
-            missingResourceHandler: { _ in NSManagedObjectModel() },
             invalidModelHandler: { _ in fallback }
         )
 
@@ -169,28 +167,22 @@ final class PersistenceControllerTests: XCTestCase {
         let description = NSPersistentStoreDescription(url: url)
 
         let loaded = PersistenceController.storeLoadResult(description: description, error: nil)
-        if case .loaded = loaded {
-            XCTAssertTrue(true)
-        } else {
-            XCTFail("Expected loaded result")
-        }
+        XCTAssertTrue(isLoadedResult(loaded))
+        XCTAssertNil(resetAndRetryURL(from: loaded))
+        XCTAssertNil(failedMessage(from: loaded))
 
         let migrationError = NSError(domain: NSCocoaErrorDomain, code: 134_110)
         let retry = PersistenceController.storeLoadResult(description: description, error: migrationError)
-        switch retry {
-        case let .resetAndRetry(retryURL):
-            XCTAssertEqual(retryURL.path, url.path)
-        default:
-            XCTFail("Expected resetAndRetry result")
-        }
+        XCTAssertFalse(isLoadedResult(retry))
+        let retryURL = try? XCTUnwrap(resetAndRetryURL(from: retry))
+        XCTAssertEqual(retryURL?.path, url.path)
+        XCTAssertNil(failedMessage(from: retry))
 
         let generalError = NSError(domain: NSCocoaErrorDomain, code: 999)
         let failed = PersistenceController.storeLoadResult(description: description, error: generalError)
-        if case let .failed(message) = failed {
-            XCTAssertTrue(message.contains("Unresolved error"))
-        } else {
-            XCTFail("Expected failed result")
-        }
+        let message = failedMessage(from: failed)
+        XCTAssertTrue(message?.contains("Unresolved error") == true)
+        XCTAssertNil(resetAndRetryURL(from: failed))
     }
 
     func testStoreLoadResult_migrationErrorWithoutURLReturnsLoaded() {
@@ -203,11 +195,7 @@ final class PersistenceControllerTests: XCTestCase {
             error: migrationError
         )
 
-        if case .loaded = result {
-            XCTAssertTrue(true)
-        } else {
-            XCTFail("Expected loaded result when migration error has no URL")
-        }
+        XCTAssertTrue(isLoadedResult(result))
     }
 
     func testInit_handlesMigrationRetryFailureWithInjectedLoader() {
@@ -310,5 +298,32 @@ final class PersistenceControllerTests: XCTestCase {
         controller.save(context: throwingContext)
 
         XCTAssertTrue(true)
+    }
+
+    private func isLoadedResult(_ result: PersistenceController.StoreLoadResult) -> Bool {
+        switch result {
+        case .loaded:
+            true
+        case .resetAndRetry, .failed:
+            false
+        }
+    }
+
+    private func resetAndRetryURL(from result: PersistenceController.StoreLoadResult) -> URL? {
+        switch result {
+        case let .resetAndRetry(url):
+            url
+        case .loaded, .failed:
+            nil
+        }
+    }
+
+    private func failedMessage(from result: PersistenceController.StoreLoadResult) -> String? {
+        switch result {
+        case let .failed(message):
+            message
+        case .loaded, .resetAndRetry:
+            nil
+        }
     }
 }

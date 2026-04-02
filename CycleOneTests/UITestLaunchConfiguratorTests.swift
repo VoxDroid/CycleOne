@@ -33,9 +33,13 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
         override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
             executeCalls += 1
             if let deleteRequest = request as? NSBatchDeleteRequest {
-                let matches = try fetch(deleteRequest.fetchRequest)
-                for case let object as NSManagedObject in matches {
-                    delete(object)
+                let entityName = deleteRequest.fetchRequest.entityName!
+                let objectIDRequest = NSFetchRequest<NSManagedObjectID>(entityName: entityName)
+                objectIDRequest.predicate = deleteRequest.fetchRequest.predicate
+                objectIDRequest.resultType = .managedObjectIDResultType
+                let objectIDs = try fetch(objectIDRequest)
+                for objectID in objectIDs {
+                    delete(object(with: objectID))
                 }
                 return NSBatchDeleteResult()
             }
@@ -143,7 +147,17 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
 
     func testConfigureIfNeeded_clearDataSuccessPathSavesWhenChangesPresent() throws {
         let context = SaveTrackingManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.persistentStoreCoordinator = try makeInMemoryCoordinator()
+        let coordinator = try makeInMemoryCoordinator()
+        context.persistentStoreCoordinator = coordinator
+
+        let seedContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        seedContext.persistentStoreCoordinator = coordinator
+
+        let staleLog = DayLog(context: seedContext)
+        staleLog.id = UUID()
+        staleLog.date = Date().startOfDay
+        staleLog.flowLevel = FlowLevel.light.rawValue
+        try seedContext.save()
 
         UITestLaunchConfigurator.configureIfNeeded(
             context: context,

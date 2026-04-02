@@ -19,48 +19,48 @@ final class NotificationSettingsViewLogicTests: XCTestCase {
         }
     }
 
-    func testPeriodReminderChange_callsPermissionWhenEnabled() {
-        let view = NotificationSettingsView()
-        var requested = false
+    private final class PermissionRequestSpy {
+        private(set) var requested = false
 
-        view.onPeriodReminderChanged(true) {
+        func request() {
             requested = true
         }
+    }
 
-        XCTAssertTrue(requested)
+    func testPeriodReminderChange_callsPermissionWhenEnabled() {
+        let view = NotificationSettingsView()
+        let spy = PermissionRequestSpy()
+
+        view.onPeriodReminderChanged(true, permissionRequester: spy.request)
+
+        XCTAssertTrue(spy.requested)
     }
 
     func testPeriodReminderChange_skipsPermissionWhenDisabled() {
         let view = NotificationSettingsView()
-        var requested = false
+        let spy = PermissionRequestSpy()
 
-        view.onPeriodReminderChanged(false) {
-            requested = true
-        }
+        view.onPeriodReminderChanged(false, permissionRequester: spy.request)
 
-        XCTAssertFalse(requested)
+        XCTAssertFalse(spy.requested)
     }
 
     func testFertileReminderChange_callsPermissionWhenEnabled() {
         let view = NotificationSettingsView()
-        var requested = false
+        let spy = PermissionRequestSpy()
 
-        view.onFertileReminderChanged(true) {
-            requested = true
-        }
+        view.onFertileReminderChanged(true, permissionRequester: spy.request)
 
-        XCTAssertTrue(requested)
+        XCTAssertTrue(spy.requested)
     }
 
     func testFertileReminderChange_skipsPermissionWhenDisabled() {
         let view = NotificationSettingsView()
-        var requested = false
+        let spy = PermissionRequestSpy()
 
-        view.onFertileReminderChanged(false) {
-            requested = true
-        }
+        view.onFertileReminderChanged(false, permissionRequester: spy.request)
 
-        XCTAssertFalse(requested)
+        XCTAssertFalse(spy.requested)
     }
 
     func testRequestPermission_usesInjectedCenter() {

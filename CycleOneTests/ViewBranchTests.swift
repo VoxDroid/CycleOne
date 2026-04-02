@@ -23,6 +23,14 @@ final class ViewBranchTests: XCTestCase {
         }
     }
 
+    func testThrowingDeleteManagedObjectContext_hasChangesAndSaveFailure() {
+        let context = ThrowingDeleteManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+
+        XCTAssertTrue(context.hasChanges)
+        XCTAssertThrowsError(try context.save())
+        XCTAssertEqual(context.saveCalls, 1)
+    }
+
     func testCycleComparisonView_showsEmptyStateWhenNotEnoughCycles() {
         host(CycleComparisonView(cycles: []))
     }
@@ -381,7 +389,7 @@ final class ViewBranchTests: XCTestCase {
             let log = DayLog(context: context)
             log.id = UUID()
             log.date = date
-            log.flowLevel = FlowLevel(rawValue: Int16(index % 3 + 1))?.rawValue ?? FlowLevel.light.rawValue
+            log.flowLevel = FlowLevel(rawValue: Int16(index % 3 + 1))!.rawValue
             log.mood = Mood.allCases[index % Mood.allCases.count].rawValue
             log.energyLevel = EnergyLevel.allCases[index % EnergyLevel.allCases.count].rawValue
             log.painLevel = Int16(index + 1)

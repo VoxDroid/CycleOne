@@ -114,8 +114,12 @@ xcodebuild test \
 
 Latest stable local run (`TestResults.xcresult`, 2026-04-02):
 - `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
-- `CycleOneTests.xctest`: 3,510 / 3,559 lines (98.62%)
-- `CycleOneUITests.xctest`: 805 / 842 lines (95.61%)
+- `CycleOneTests.xctest`: 3,682 / 3,682 lines (100.00%)
+- `CycleOneUITests.xctest`: 773 / 773 lines (100.00%)
+
+Latest run counts:
+- `CycleOneTests.xctest`: 182 tests, 0 failures.
+- `CycleOneUITests.xctest`: 22 tests, 0 failures.
 
 Validation commands executed for this snapshot:
 - `make check`

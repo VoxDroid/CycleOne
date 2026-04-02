@@ -35,16 +35,8 @@ final class SettingsUITests: XCTestCase {
         // Verify Appearance section and Accent Color picker exist
         let accentColor = app.staticTexts["AccentColorTitle"]
 
-        // Scroll list specifically until visible
-        var retryCount = 0
-        while !accentColor.isHittable, retryCount < 5 {
-            settingsList.swipeUp()
-            retryCount += 1
-        }
-
-        if !accentColor.waitForExistence(timeout: 15) {
-            XCTFail("Expected accent color picker in Settings. Title not found.")
-        }
+        UITestAppHarness.scrollToElement(accentColor, in: settingsList)
+        XCTAssertTrue(accentColor.waitForExistence(timeout: 15))
     }
 
     @MainActor
@@ -65,11 +57,7 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
 
         let lavenderAccent = app.buttons["Settings_Accent_Lavender"]
-        var attempts = 0
-        while !lavenderAccent.isHittable, attempts < 5 {
-            settingsList.swipeUp()
-            attempts += 1
-        }
+        UITestAppHarness.scrollToElement(lavenderAccent, in: settingsList)
 
         XCTAssertTrue(lavenderAccent.waitForExistence(timeout: 8))
         lavenderAccent.tap()

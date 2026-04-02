@@ -70,7 +70,7 @@ final class CycleManagerTests: XCTestCase {
         try context.save()
 
         let initialLogs = try context.fetch(DayLog.fetchRequest())
-        XCTAssertEqual(initialLogs.count, 2, "Failed to persist 2 logs before rebuild")
+        XCTAssertEqual(initialLogs.count, 2)
 
         // 2. Rebuild
         CycleManager.shared.rebuildAllCycles(in: context)
@@ -80,7 +80,7 @@ final class CycleManagerTests: XCTestCase {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Cycle.startDate, ascending: true)]
         let cycles = try context.fetch(request)
 
-        XCTAssertEqual(cycles.count, 2, "Expected 2 cycles but found \(cycles.count)")
+        XCTAssertEqual(cycles.count, 2)
         XCTAssertEqual(cycles[0].startDate?.startOfDay, date1.startOfDay)
         XCTAssertEqual(cycles[1].startDate?.startOfDay, date2.startOfDay)
 

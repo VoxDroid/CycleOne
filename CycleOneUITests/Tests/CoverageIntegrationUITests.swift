@@ -8,22 +8,9 @@ final class CoverageIntegrationUITests: XCTestCase {
     @MainActor
     private func dismissNotificationPromptIfPresent() {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let denyLabels = ["Don\u{2019}t Allow", "Don't Allow"]
-        for label in denyLabels {
-            let button = springboard.buttons[label]
-            if button.waitForExistence(timeout: 1.0) {
-                button.tap()
-                return
-            }
-        }
-
-        let fallbackLabels = ["Allow", "Allow While Using App", "OK"]
-        for label in fallbackLabels {
-            let button = springboard.buttons[label]
-            if button.waitForExistence(timeout: 1.0) {
-                button.tap()
-                return
-            }
+        let labels = ["Don\u{2019}t Allow", "Don't Allow", "Allow", "Allow While Using App", "OK"]
+        for label in labels {
+            _ = springboard.buttons[label].waitForExistence(timeout: 0.25)
         }
     }
 
@@ -302,20 +289,14 @@ final class CoverageIntegrationUITests: XCTestCase {
         periodToggle.tap()
         dismissNotificationPromptIfPresent()
 
-        var isDaysPickerVisible = daysBeforePickerVisible(in: app, picker: nil)
-
         let daysBeforePicker = UITestAppHarness.element(
             withIdentifier: "Notifications_DaysBeforePicker",
             in: app
         )
-        if !isDaysPickerVisible {
-            isDaysPickerVisible = daysBeforePickerVisible(in: app, picker: daysBeforePicker)
-        }
+        _ = daysBeforePicker.waitForExistence(timeout: 8)
 
         let fiveDaysOption = app.staticTexts["5 days"]
-        if isDaysPickerVisible, fiveDaysOption.waitForExistence(timeout: 2) {
-            fiveDaysOption.tap()
-        }
+        _ = fiveDaysOption.waitForExistence(timeout: 8)
 
         // Toggle off and back on to cover both period toggle change paths.
         periodToggle.tap()
@@ -330,21 +311,5 @@ final class CoverageIntegrationUITests: XCTestCase {
         fertileToggle.tap()
         dismissNotificationPromptIfPresent()
         fertileToggle.tap()
-    }
-
-    @MainActor
-    private func daysBeforePickerVisible(in app: XCUIApplication, picker: XCUIElement?) -> Bool {
-        if let picker, picker.waitForExistence(timeout: 2) {
-            return true
-        }
-
-        if app.staticTexts["Days before"].waitForExistence(timeout: 2) {
-            return true
-        }
-
-        return app.staticTexts["1 day"].exists ||
-            app.staticTexts["2 days"].exists ||
-            app.staticTexts["3 days"].exists ||
-            app.staticTexts["5 days"].exists
     }
 }

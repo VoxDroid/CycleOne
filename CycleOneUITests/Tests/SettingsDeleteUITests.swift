@@ -26,16 +26,10 @@ final class SettingsDeleteUITests: XCTestCase {
         let settingsList = app.collectionViews["SettingsList"]
         XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
 
-        // Try tapping the Delete All Data button
         let deleteButton = app.buttons["Delete All Data"]
-        if deleteButton.waitForExistence(timeout: 5) {
-            deleteButton.tap()
-        } else if let cell = app.staticTexts["Delete All Data"].firstMatch as XCUIElement? {
-            XCTAssertTrue(cell.waitForExistence(timeout: 5))
-            cell.tap()
-        } else {
-            XCTFail("Couldn't find Delete All Data control")
-        }
+        UITestAppHarness.scrollToElement(deleteButton, in: settingsList)
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
+        deleteButton.tap()
 
         // Confirm alert and tap Delete
         let deleteAlertButton = app.alerts.buttons["Delete"]
@@ -62,13 +56,9 @@ final class SettingsDeleteUITests: XCTestCase {
         XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
 
         let deleteButton = app.buttons["Delete All Data"]
-        if deleteButton.waitForExistence(timeout: 5) {
-            deleteButton.tap()
-        } else {
-            let cell = app.staticTexts["Delete All Data"]
-            XCTAssertTrue(cell.waitForExistence(timeout: 5))
-            cell.tap()
-        }
+        UITestAppHarness.scrollToElement(deleteButton, in: settingsList)
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
+        deleteButton.tap()
 
         let cancelButton = app.alerts.buttons["Cancel"]
         XCTAssertTrue(cancelButton.waitForExistence(timeout: 5))

@@ -48,12 +48,9 @@ final class CalendarViewUITests: XCTestCase {
         // Verify we are on the Log Day screen
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 5))
 
-        // Use standard back button or "Dismiss"
-        if app.buttons["Dismiss"].exists {
-            app.buttons["Dismiss"].tap()
-        } else {
-            app.navigationBars.buttons.element(boundBy: 0).tap()
-        }
+        let dismissButton = app.buttons["Dismiss"]
+        XCTAssertTrue(dismissButton.waitForExistence(timeout: 5))
+        dismissButton.tap()
 
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
     }

@@ -8,7 +8,8 @@ final class ViewInstantiationTests: XCTestCase {
     // Use the shared `host(_:context:)` helper from CycleOneTests/Helpers/ViewTestHelpers.swift
 
     func testOnboardingTipView_body_builds() {
-        let view = OnboardingTipView(onDismiss: {})
+        let view = OnboardingTipView(onDismiss: Self.noopAction)
+        view.onDismiss()
         host(view)
     }
 
@@ -103,7 +104,9 @@ final class ViewInstantiationTests: XCTestCase {
         host(FlowPickerView(selection: .constant(.medium)))
 
         host(SymptomGridView(selectedSymptoms: .constant([]), symptoms: SymptomType.defaults))
-        host(SymptomChip(name: "sym", isSelected: false, action: {}))
+        let chip = SymptomChip(name: "sym", isSelected: false, action: Self.noopAction)
+        chip.action()
+        host(chip)
 
         let date = Date().startOfDay
         host(LogView(date: date, context: context), context: context)
@@ -129,4 +132,6 @@ final class ViewInstantiationTests: XCTestCase {
         host(CalendarDayDetailView(date: Date(), log: log), context: context)
         host(CalendarDayDetailView(date: Date(), log: nil), context: context)
     }
+
+    private static func noopAction() {}
 }

@@ -111,6 +111,22 @@ final class CycleViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.dayStatuses.isEmpty)
     }
 
+    func testRefreshData_throwingContextPassThroughWhenNoEntityFails() throws {
+        let throwingContext = try makeThrowingContext(failingEntities: [])
+
+        let cycle = Cycle(context: throwingContext)
+        cycle.id = UUID()
+        cycle.startDate = Date().startOfDay
+        cycle.createdAt = Date()
+        cycle.cycleLength = 28
+        try throwingContext.save()
+
+        let viewModel = CycleViewModel(context: throwingContext)
+        viewModel.refreshData()
+
+        XCTAssertFalse(viewModel.dayStatuses.isEmpty)
+    }
+
     func testGoTo_updatesCurrentMonthAndRefreshes() {
         let viewModel = CycleViewModel(context: context)
         let targetDate = Date().adding(days: 45).startOfDay

@@ -70,22 +70,11 @@ final class CoverageRuntimeUITests: XCTestCase {
         notesEditor.tap()
         notesEditor.typeText("integration coverage note")
 
+        app.tap()
         let dismissButton = app.buttons["Dismiss"]
-        if !dismissButton.waitForExistence(timeout: 2) {
-            let returnKey = app.keyboards.buttons["return"]
-            let doneKey = app.keyboards.buttons["Done"]
-            if returnKey.waitForExistence(timeout: 1) {
-                returnKey.tap()
-            } else if doneKey.waitForExistence(timeout: 1) {
-                doneKey.tap()
-            } else {
-                app.tap()
-            }
-        }
-        if dismissButton.waitForExistence(timeout: 3) {
-            dismissButton.tap()
-            XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 8))
-        }
+        XCTAssertTrue(dismissButton.waitForExistence(timeout: 6))
+        dismissButton.tap()
+        XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 8))
     }
 
     @MainActor

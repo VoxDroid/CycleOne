@@ -153,7 +153,8 @@ final class LogViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.hasExistingLog)
 
         var log = try XCTUnwrap(results.first)
-        var symptomIDs = Set((log.symptoms as? Set<Symptom>)?.compactMap(\.id) ?? [])
+        let firstSymptoms = try XCTUnwrap(log.symptoms as? Set<Symptom>)
+        var symptomIDs = try Set(firstSymptoms.map { try XCTUnwrap($0.id) })
         XCTAssertEqual(symptomIDs, ["cramps"])
 
         viewModel.flow = .medium
@@ -170,7 +171,8 @@ final class LogViewModelTests: XCTestCase {
         XCTAssertEqual(log.flowLevel, FlowLevel.medium.rawValue)
         XCTAssertEqual(log.notes, "second")
 
-        symptomIDs = Set((log.symptoms as? Set<Symptom>)?.compactMap(\.id) ?? [])
+        let updatedSymptoms = try XCTUnwrap(log.symptoms as? Set<Symptom>)
+        symptomIDs = try Set(updatedSymptoms.map { try XCTUnwrap($0.id) })
         XCTAssertEqual(symptomIDs, ["fatigue"])
     }
 
@@ -243,6 +245,24 @@ final class LogViewModelTests: XCTestCase {
         viewModel.save()
 
         XCTAssertFalse(viewModel.hasExistingLog)
+    }
+
+    func testSave_withThrowingContextPassThroughSavesWhenNotThrowing() throws {
+        let date = Date().startOfDay
+        let throwingContext = try makeThrowingContext()
+
+        let viewModel = LogViewModel(date: date, context: throwingContext)
+        viewModel.flow = .light
+        viewModel.notes = "saved"
+
+        viewModel.save()
+
+        let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
+        request.predicate = NSPredicate(format: "date == %@", date as NSDate)
+        let results = try throwingContext.fetch(request)
+
+        XCTAssertEqual(results.count, 1)
+        XCTAssertTrue(viewModel.hasExistingLog)
     }
 
     func testDeleteLog_handlesFetchFailure() throws {

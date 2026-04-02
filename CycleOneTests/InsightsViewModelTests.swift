@@ -78,7 +78,8 @@ final class InsightsViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.topSymptoms.contains("cramps"))
 
         // Mood distribution must contain counts for moods we set
-        XCTAssertEqual(viewModel.moodDistribution[Mood(rawValue: log1.mood)?.description ?? ""], 1)
+        let moodDescription = try XCTUnwrap(Mood(rawValue: log1.mood)?.description)
+        XCTAssertEqual(viewModel.moodDistribution[moodDescription], 1)
 
         // Pain average should be computed (only pain logs are considered)
         XCTAssertEqual(viewModel.avgPainLevel, 3.0, accuracy: 0.001)

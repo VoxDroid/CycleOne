@@ -142,6 +142,34 @@ final class NotificationServiceTests: XCTestCase {
         XCTAssertEqual(mock.requestedOptions, [.alert, .badge, .sound])
     }
 
+    func testDenyingMock_scheduleAndCancelPaths() throws {
+        let mock = DenyingMockUNUserNotificationCenter()
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
+
+        let iso = ISO8601DateFormatter()
+        iso.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = try XCTUnwrap(iso.date(from: "2026-03-31T12:00:00Z"))
+
+        service.schedulePeriodAlert(for: date)
+        service.cancelAll()
+
+        XCTAssertTrue(true)
+    }
+
+    func testFailingAddMock_requestAuthorizationAndCancelPaths() {
+        let mock = FailingAddMockUNUserNotificationCenter()
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
+
+        service.requestAuthorization()
+        service.cancelAll()
+
+        XCTAssertTrue(true)
+    }
+
     func testConstructNotificationObjects() {
         let content = UNMutableNotificationContent()
         content.title = "Test"

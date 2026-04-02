@@ -13,12 +13,16 @@ final class CoverageViewComputationTests: XCTestCase {
 
     @MainActor
     func testOnboardingTipView_bodyComputation() {
-        _ = OnboardingTipView(onDismiss: {}).body
+        let view = OnboardingTipView(onDismiss: Self.noopDismiss)
+        view.onDismiss()
+        _ = view.body
     }
 
     @MainActor
     func testOnboardingTipView_lastPageBodyComputation() {
-        _ = OnboardingTipView(onDismiss: {}, initialPage: 3).body
+        let view = OnboardingTipView(onDismiss: Self.noopDismiss, initialPage: 3)
+        view.onDismiss()
+        _ = view.body
     }
 
     @MainActor
@@ -119,4 +123,6 @@ final class CoverageViewComputationTests: XCTestCase {
 
         run()
     }
+
+    private static func noopDismiss() {}
 }
