@@ -4,6 +4,33 @@ import XCTest
 
 @MainActor
 final class LogViewModelTests: XCTestCase {
+    private final class SelectiveThrowManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        var shouldThrowOnFetch = false
+        var shouldThrowOnSave = false
+
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            if shouldThrowOnFetch, request is NSFetchRequest<NSFetchRequestResult> {
+                throw NSError(
+                    domain: "LogViewModelTests",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "Forced fetch failure"]
+                )
+            }
+            return try super.execute(request)
+        }
+
+        override func save() throws {
+            if shouldThrowOnSave {
+                throw NSError(
+                    domain: "LogViewModelTests",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "Forced save failure"]
+                )
+            }
+            try super.save()
+        }
+    }
+
     private var context: NSManagedObjectContext!
 
     override func setUp() {
@@ -71,6 +98,25 @@ final class LogViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.flow, .none)
         XCTAssertEqual(viewModel.mood, .neutral)
         XCTAssertEqual(viewModel.energy, .medium)
+        XCTAssertTrue(viewModel.hasExistingLog)
+    }
+
+    func testInitUsesEmptyNotesWhenStoredNotesAreNil() throws {
+        let date = Date().startOfDay
+
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = date
+        log.flowLevel = FlowLevel.light.rawValue
+        log.mood = Mood.happy.rawValue
+        log.energyLevel = EnergyLevel.high.rawValue
+        log.notes = nil
+
+        try context.save()
+
+        let viewModel = LogViewModel(date: date, context: context)
+
+        XCTAssertEqual(viewModel.notes, "")
         XCTAssertTrue(viewModel.hasExistingLog)
     }
 
@@ -173,5 +219,71 @@ final class LogViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.painLevel, 0)
         XCTAssertEqual(viewModel.notes, "")
         XCTAssertEqual(viewModel.selectedSymptoms, [])
+    }
+
+    func testLoadExistingLog_handlesFetchFailure() throws {
+        let throwingContext = try makeThrowingContext()
+        throwingContext.shouldThrowOnFetch = true
+
+        let viewModel = LogViewModel(date: Date().startOfDay, context: throwingContext)
+
+        XCTAssertFalse(viewModel.hasExistingLog)
+        XCTAssertEqual(viewModel.flow, .none)
+    }
+
+    func testSave_handlesContextSaveFailure() throws {
+        let date = Date().startOfDay
+        let throwingContext = try makeThrowingContext()
+        throwingContext.shouldThrowOnSave = true
+
+        let viewModel = LogViewModel(date: date, context: throwingContext)
+        viewModel.flow = .light
+        viewModel.notes = "will fail to save"
+
+        viewModel.save()
+
+        XCTAssertFalse(viewModel.hasExistingLog)
+    }
+
+    func testDeleteLog_handlesFetchFailure() throws {
+        let date = Date().startOfDay
+        let throwingContext = try makeThrowingContext()
+
+        let viewModel = LogViewModel(date: date, context: throwingContext)
+        throwingContext.shouldThrowOnFetch = true
+
+        viewModel.deleteLog()
+
+        XCTAssertFalse(viewModel.hasExistingLog)
+    }
+
+    func testClampedNotes_returnsOriginalWhenWithinLimit() {
+        let input = "short note"
+
+        let output = LogView.clampedNotes(from: input)
+
+        XCTAssertEqual(output, input)
+    }
+
+    func testClampedNotes_truncatesWhenOverLimit() {
+        let input = String(repeating: "n", count: 800)
+
+        let output = LogView.clampedNotes(from: input)
+
+        XCTAssertEqual(output.count, 500)
+    }
+
+    private func makeThrowingContext() throws -> SelectiveThrowManagedObjectContext {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistenceController.model)
+        try coordinator.addPersistentStore(
+            ofType: NSInMemoryStoreType,
+            configurationName: nil,
+            at: nil,
+            options: nil
+        )
+
+        let context = SelectiveThrowManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = coordinator
+        return context
     }
 }

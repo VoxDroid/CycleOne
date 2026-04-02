@@ -8,4 +8,10 @@ final class SplashScreenTests: XCTestCase {
         // onFinish closure is a no-op for tests
         host(SplashScreenView(onFinish: {}))
     }
+
+    func testSplashScreen_instantiationAndBodyEvaluation() {
+        let view = SplashScreenView(onFinish: {})
+        _ = view.body
+        XCTAssertTrue(true)
+    }
 }

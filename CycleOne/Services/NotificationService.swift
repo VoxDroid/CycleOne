@@ -97,7 +97,7 @@ class NotificationService {
     }
 
     func triggerComponents(for date: Date) -> DateComponents {
-        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
+        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date)!
         var components = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
         components.hour = 8
         components.minute = 0

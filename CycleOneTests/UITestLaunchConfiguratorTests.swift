@@ -22,6 +22,32 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
         }
     }
 
+    private final class SaveTrackingManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        private(set) var executeCalls = 0
+        private(set) var saveCalls = 0
+
+        override var hasChanges: Bool {
+            true
+        }
+
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            executeCalls += 1
+            if let deleteRequest = request as? NSBatchDeleteRequest {
+                let matches = try fetch(deleteRequest.fetchRequest)
+                for case let object as NSManagedObject in matches {
+                    delete(object)
+                }
+                return NSBatchDeleteResult()
+            }
+            return try super.execute(request)
+        }
+
+        override func save() throws {
+            saveCalls += 1
+            try super.save()
+        }
+    }
+
     override func setUp() {
         super.setUp()
         UITestLaunchConfigurator.resetForTests()
@@ -112,6 +138,20 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
             retryCount: 20
         )
 
+        XCTAssertEqual(context.saveCalls, 1)
+    }
+
+    func testConfigureIfNeeded_clearDataSuccessPathSavesWhenChangesPresent() throws {
+        let context = SaveTrackingManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = try makeInMemoryCoordinator()
+
+        UITestLaunchConfigurator.configureIfNeeded(
+            context: context,
+            arguments: ["-ui-testing", "-ui-testing-clear-data"],
+            retryCount: 20
+        )
+
+        XCTAssertEqual(context.executeCalls, 6)
         XCTAssertEqual(context.saveCalls, 1)
     }
 

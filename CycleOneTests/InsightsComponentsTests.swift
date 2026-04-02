@@ -27,4 +27,28 @@ final class InsightsComponentsTests: XCTestCase {
         // Also test with fewer than 3 items to hit other branches
         host(SymptomBreakdownView(symptoms: [("Cramps", 1), ("Bloating", 1)]))
     }
+
+    func testInsightsComponentHelpers_coverFallbackBranches() {
+        XCTAssertEqual(CycleLengthChartView.maxLength(for: []), 35)
+        XCTAssertEqual(
+            MoodDistributionView.moodBarWidth(
+                total: 0,
+                value: 3,
+                availableWidth: 200
+            ),
+            0
+        )
+        XCTAssertEqual(
+            MoodDistributionView.moodBarWidth(
+                total: 4,
+                value: 2,
+                availableWidth: 200
+            ),
+            100
+        )
+
+        XCTAssertEqual(SymptomBreakdownView.maxCount(for: []), 1)
+        XCTAssertEqual(SymptomBreakdownView.medalIcon(for: 4), "circle.fill")
+        _ = SymptomBreakdownView.medalColor(for: 4)
+    }
 }

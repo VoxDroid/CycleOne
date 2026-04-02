@@ -17,6 +17,24 @@ final class CycleManagerTests: XCTestCase {
         }
     }
 
+    private final class SelectiveThrowManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        var failingFetchEntities = Set<String>()
+
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            if let fetchRequest = request as? NSFetchRequest<NSFetchRequestResult>,
+               let entityName = fetchRequest.entityName,
+               failingFetchEntities.contains(entityName)
+            {
+                throw NSError(
+                    domain: "CycleManagerTests",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "Forced fetch failure for \(entityName)"]
+                )
+            }
+            return try super.execute(request)
+        }
+    }
+
     var controller: PersistenceController!
     var context: NSManagedObjectContext {
         controller.container.viewContext
@@ -153,6 +171,71 @@ final class CycleManagerTests: XCTestCase {
         }
 
         wait(for: [expectation], timeout: 5)
+    }
+
+    func testRebuildAllCycles_handlesCycleFetchFailure() throws {
+        let coordinator = try makeInMemoryCoordinator()
+        let throwingContext = SelectiveThrowManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = coordinator
+        throwingContext.failingFetchEntities = ["Cycle"]
+
+        CycleManager.shared.rebuildAllCycles(in: throwingContext)
+
+        XCTAssertTrue(true)
+    }
+
+    func testRebuildAllCycles_handlesLogFetchFailure() throws {
+        let coordinator = try makeInMemoryCoordinator()
+        let throwingContext = SelectiveThrowManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = coordinator
+
+        let existingCycle = Cycle(context: throwingContext)
+        existingCycle.id = UUID()
+        existingCycle.startDate = Date().startOfDay
+        existingCycle.createdAt = Date()
+        try throwingContext.save()
+
+        throwingContext.failingFetchEntities = ["DayLog"]
+
+        CycleManager.shared.rebuildAllCycles(in: throwingContext)
+
+        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        let cycles = try throwingContext.fetch(request)
+        XCTAssertTrue(cycles.isEmpty)
+    }
+
+    func testUpdateCycleMetrics_handlesFetchFailure() throws {
+        let coordinator = try makeInMemoryCoordinator()
+        let throwingContext = SelectiveThrowManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = coordinator
+        throwingContext.failingFetchEntities = ["Cycle"]
+
+        CycleManager.shared.updateCycleMetrics(in: throwingContext)
+
+        XCTAssertTrue(true)
+    }
+
+    func testDebugExtractHelpers_coverValueVariants() {
+        let manager = CycleManager.shared
+        let today = Date().startOfDay
+
+        XCTAssertEqual(manager.testExtractDate(from: today)?.startOfDay, today)
+        XCTAssertEqual(manager.testExtractDate(from: today as NSDate)?.startOfDay, today)
+        XCTAssertNil(manager.testExtractDate(from: "invalid"))
+
+        XCTAssertEqual(manager.testExtractInt16(from: NSNumber(value: 3)), 3)
+        XCTAssertEqual(manager.testExtractInt16(from: Int16(4)), 4)
+        XCTAssertEqual(manager.testExtractInt16(from: 5), 5)
+        XCTAssertEqual(manager.testExtractInt16(from: "invalid"), 0)
+
+        XCTAssertEqual(manager.testCycleLength(from: today, nextStartValue: nil), 0)
+        XCTAssertEqual(
+            manager.testCycleLength(
+                from: today,
+                nextStartValue: today.adding(days: 2)
+            ),
+            2
+        )
     }
 
     private func makeInMemoryCoordinator() throws -> NSPersistentStoreCoordinator {

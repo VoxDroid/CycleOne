@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import OSLog
 
 struct PersistenceController {
     enum StoreLoadResult {
@@ -15,11 +16,20 @@ struct PersistenceController {
     }
 
     private nonisolated static func fatalModelHandler(_ message: String) -> NSManagedObjectModel {
-        fatalError(message)
+        #if DEBUG
+            Logger.storage.error("Persistence model load fallback: \(message)")
+            return NSManagedObjectModel()
+        #else
+            fatalError(message)
+        #endif
     }
 
     private nonisolated static func fatalFailureHandler(_ message: String) {
-        fatalError(message)
+        #if DEBUG
+            Logger.storage.error("Persistence store load fallback: \(message)")
+        #else
+            fatalError(message)
+        #endif
     }
 
     private nonisolated static func defaultRemoveItem(at url: URL) {

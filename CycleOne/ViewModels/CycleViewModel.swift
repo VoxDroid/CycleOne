@@ -156,6 +156,6 @@ final class CycleViewModel: ObservableObject {
 
 extension Date {
     var startOfMonth: Date {
-        Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self)) ?? self
+        Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
     }
 }

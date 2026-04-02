@@ -3,6 +3,24 @@ import CoreData
 import XCTest
 
 final class InsightsViewModelTests: XCTestCase {
+    private final class SelectiveThrowManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        var failingFetchEntities = Set<String>()
+
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            if let fetchRequest = request as? NSFetchRequest<NSFetchRequestResult>,
+               let entityName = fetchRequest.entityName,
+               failingFetchEntities.contains(entityName)
+            {
+                throw NSError(
+                    domain: "InsightsViewModelTests",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "Forced fetch failure for \(entityName)"]
+                )
+            }
+            return try super.execute(request)
+        }
+    }
+
     var controller: PersistenceController!
     var context: NSManagedObjectContext {
         controller.container.viewContext
@@ -64,5 +82,90 @@ final class InsightsViewModelTests: XCTestCase {
 
         // Pain average should be computed (only pain logs are considered)
         XCTAssertEqual(viewModel.avgPainLevel, 3.0, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testInit_refreshesWhenContextSaves() throws {
+        let viewModel = InsightsViewModel(context: context)
+        XCTAssertEqual(viewModel.totalCycles, 0)
+
+        let cycle = Cycle(context: context)
+        cycle.id = UUID()
+        cycle.startDate = Date().startOfDay
+        cycle.createdAt = Date()
+        cycle.cycleLength = 28
+        cycle.periodLength = 5
+        try context.save()
+
+        let expectation = expectation(description: "view model refreshed after save notification")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if viewModel.totalCycles == 1 {
+                expectation.fulfill()
+            }
+        }
+
+        wait(for: [expectation], timeout: 2)
+    }
+
+    func testCalculateStats_handlesCycleFetchFailure() throws {
+        let throwingContext = try makeThrowingContext(failingEntities: ["Cycle"])
+
+        let viewModel = InsightsViewModel(context: throwingContext)
+        viewModel.calculateStats()
+
+        XCTAssertEqual(viewModel.totalCycles, 0)
+    }
+
+    func testCalculateStats_handlesSymptomFetchFailure() throws {
+        let throwingContext = try makeThrowingContext(failingEntities: ["Symptom"])
+
+        let viewModel = InsightsViewModel(context: throwingContext)
+        viewModel.calculateStats()
+
+        XCTAssertTrue(viewModel.topSymptoms.isEmpty)
+    }
+
+    func testCalculateStats_handlesMoodAndPainFetchFailure() throws {
+        let throwingContext = try makeThrowingContext(failingEntities: ["DayLog"])
+
+        let viewModel = InsightsViewModel(context: throwingContext)
+        viewModel.calculateStats()
+
+        XCTAssertTrue(viewModel.moodDistribution.isEmpty)
+        XCTAssertEqual(viewModel.totalLogsCount, 0)
+        XCTAssertEqual(viewModel.avgPainLevel, 0)
+    }
+
+    func testCalculateStats_invalidMoodFallsBackToNeutral() throws {
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = Date().startOfDay
+        log.flowLevel = FlowLevel.light.rawValue
+        log.mood = 99
+        log.energyLevel = EnergyLevel.medium.rawValue
+        log.painLevel = 1
+
+        try context.save()
+
+        let viewModel = InsightsViewModel(context: context)
+
+        XCTAssertEqual(viewModel.moodDistribution[Mood.neutral.description], 1)
+    }
+
+    private func makeThrowingContext(
+        failingEntities: Set<String>
+    ) throws -> NSManagedObjectContext {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistenceController.model)
+        try coordinator.addPersistentStore(
+            ofType: NSInMemoryStoreType,
+            configurationName: nil,
+            at: nil,
+            options: nil
+        )
+
+        let context = SelectiveThrowManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = coordinator
+        context.failingFetchEntities = failingEntities
+        return context
     }
 }

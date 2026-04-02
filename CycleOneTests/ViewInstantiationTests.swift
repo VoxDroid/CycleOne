@@ -22,6 +22,11 @@ final class ViewInstantiationTests: XCTestCase {
         host(view)
     }
 
+    func testViewExtensions_modifierPaths_build() {
+        host(Text("Fade").fadeSlideIn(delay: 0))
+        host(Text("Pulse").gentlePulse())
+    }
+
     func testPhaseIndicator_body_builds() {
         let view = PhaseIndicator(phase: "Fertile", color: .green)
         host(view)
@@ -121,7 +126,7 @@ final class ViewInstantiationTests: XCTestCase {
         log.flowLevel = FlowLevel.light.rawValue
         log.mood = Mood.happy.rawValue
 
-        host(CalendarDayDetailView(date: Date(), log: log, onLog: {}), context: context)
-        host(CalendarDayDetailView(date: Date(), log: nil, onLog: {}), context: context)
+        host(CalendarDayDetailView(date: Date(), log: log), context: context)
+        host(CalendarDayDetailView(date: Date(), log: nil), context: context)
     }
 }

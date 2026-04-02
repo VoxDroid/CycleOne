@@ -46,7 +46,12 @@ extension View {
 
 struct FadeSlideModifier: ViewModifier {
     let delay: Double
-    @State private var isVisible = false
+    @State private var isVisible: Bool
+
+    init(delay: Double) {
+        self.delay = delay
+        _isVisible = State(initialValue: false)
+    }
 
     func body(content: Content) -> some View {
         content

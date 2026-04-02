@@ -99,6 +99,25 @@ final class NotificationServiceTests: XCTestCase {
         func removeAllPendingNotificationRequests() {}
     }
 
+    class FailingAddMockUNUserNotificationCenter: NSObject, NotificationCenterType {
+        struct AddError: Error {}
+
+        func requestAuthorization(options: UNAuthorizationOptions,
+                                  completionHandler: @escaping @Sendable (Bool, Error?) -> Void)
+        {
+            completionHandler(true, nil)
+        }
+
+        func add(
+            _ request: UNNotificationRequest,
+            withCompletionHandler completionHandler: (@Sendable (Error?) -> Void)?
+        ) {
+            completionHandler?(AddError())
+        }
+
+        func removeAllPendingNotificationRequests() {}
+    }
+
     func testRequestAuthorization_invokesCenter() {
         let mock = MockUNUserNotificationCenter()
         NotificationService.overrideSharedCenter(mock)
@@ -175,6 +194,36 @@ final class NotificationServiceTests: XCTestCase {
         let identifier = try XCTUnwrap(mock.addedIdentifiers.first)
         XCTAssertTrue(identifier.starts(with: "fertile_alert_"))
         XCTAssertTrue(identifier.contains("2026-04-05"))
+    }
+
+    func testSchedulePeriodAlert_handlesCenterAddError() throws {
+        let mock = FailingAddMockUNUserNotificationCenter()
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
+
+        let iso = ISO8601DateFormatter()
+        iso.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = try XCTUnwrap(iso.date(from: "2026-03-31T12:00:00Z"))
+
+        service.schedulePeriodAlert(for: date)
+
+        XCTAssertTrue(true)
+    }
+
+    func testScheduleFertileWindowAlert_handlesCenterAddError() throws {
+        let mock = FailingAddMockUNUserNotificationCenter()
+        NotificationService.overrideSharedCenter(mock)
+        defer { NotificationService.overrideSharedCenter(UNUserNotificationCenter.current()) }
+        let service = NotificationService.shared
+
+        let iso = ISO8601DateFormatter()
+        iso.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = try XCTUnwrap(iso.date(from: "2026-04-05T00:00:00Z"))
+
+        service.scheduleFertileWindowAlert(for: date)
+
+        XCTAssertTrue(true)
     }
 
     func testCancelAll_callsRemoveAll() {

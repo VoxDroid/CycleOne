@@ -4,6 +4,25 @@ import SwiftUI
 import XCTest
 
 final class ViewBranchTests: XCTestCase {
+    private final class ThrowingDeleteManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+        private(set) var executeCalls = 0
+        private(set) var saveCalls = 0
+
+        override var hasChanges: Bool {
+            true
+        }
+
+        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+            executeCalls += 1
+            throw NSError(domain: "ViewBranchTests", code: 1)
+        }
+
+        override func save() throws {
+            saveCalls += 1
+            throw NSError(domain: "ViewBranchTests", code: 2)
+        }
+    }
+
     func testCycleComparisonView_showsEmptyStateWhenNotEnoughCycles() {
         host(CycleComparisonView(cycles: []))
     }
@@ -55,6 +74,55 @@ final class ViewBranchTests: XCTestCase {
         host(CycleComparisonView(cycles: [c1, c2]), context: context)
     }
 
+    func testCycleComparisonView_singleCycleStillShowsEmptyState() {
+        let context = TestPersistenceController.empty().container.viewContext
+        let cycle = Cycle(context: context)
+        cycle.startDate = Date().startOfDay
+        cycle.cycleLength = 28
+        cycle.periodLength = 5
+
+        host(CycleComparisonView(cycles: [cycle]), context: context)
+    }
+
+    func testCycleComparisonView_missingStartDateFallsBackToNA() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        let c1 = Cycle(context: context)
+        c1.startDate = nil
+        c1.cycleLength = 30
+        c1.periodLength = 5
+
+        let c2 = Cycle(context: context)
+        c2.startDate = Date().adding(days: -30).startOfDay
+        c2.cycleLength = 28
+        c2.periodLength = 4
+
+        host(CycleComparisonView(cycles: [c1, c2]), context: context)
+    }
+
+    func testCycleComparisonView_debugHelpers_coverLatestTwoAndEmptyState() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        let single = Cycle(context: context)
+        single.id = UUID()
+        single.startDate = Date().startOfDay
+        single.cycleLength = 28
+        single.periodLength = 5
+
+        let singleView = CycleComparisonView(cycles: [single])
+        XCTAssertFalse(singleView.testHasLatestTwo)
+        host(singleView.testEmptyStateView(), context: context)
+
+        let previous = Cycle(context: context)
+        previous.id = UUID()
+        previous.startDate = Date().adding(days: -28).startOfDay
+        previous.cycleLength = 28
+        previous.periodLength = 5
+
+        let pairedView = CycleComparisonView(cycles: [single, previous])
+        XCTAssertTrue(pairedView.testHasLatestTwo)
+    }
+
     func testCalendarDayCell_branchVariants() {
         // Fill + today ring path
         let periodStatus = DayStatus(
@@ -87,9 +155,123 @@ final class ViewBranchTests: XCTestCase {
         host(CalendarDayCell(date: Date().startOfDay, status: predictedStatus, isToday: false, isSelected: false))
     }
 
+    func testCalendarDayDetailView_symptomSortingAndFallbacks() {
+        let context = TestPersistenceController.empty().container.viewContext
+        let date = Date().startOfDay
+
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = date
+        log.flowLevel = FlowLevel.light.rawValue
+        log.mood = 99
+        log.energyLevel = 99
+        log.painLevel = 4
+        log.notes = "Detail note"
+
+        let symptomA = Symptom(context: context)
+        symptomA.id = "sA"
+        symptomA.name = "zzz"
+        symptomA.category = SymptomCategory.physical.rawValue
+
+        let symptomB = Symptom(context: context)
+        symptomB.id = "sB"
+        symptomB.name = "aaa"
+        symptomB.category = SymptomCategory.mood.rawValue
+
+        let symptomC = Symptom(context: context)
+        symptomC.id = "sC"
+        symptomC.name = "mmm"
+        symptomC.category = SymptomCategory.digestion.rawValue
+
+        let symptomD = Symptom(context: context)
+        symptomD.id = "sD"
+        symptomD.name = "nnn"
+        symptomD.category = SymptomCategory.other.rawValue
+
+        let symptomUnknown = Symptom(context: context)
+        symptomUnknown.id = "sU"
+        symptomUnknown.name = nil
+        symptomUnknown.category = nil
+
+        log.addToSymptoms(symptomA)
+        log.addToSymptoms(symptomB)
+        log.addToSymptoms(symptomC)
+        log.addToSymptoms(symptomD)
+        log.addToSymptoms(symptomUnknown)
+
+        host(CalendarDayDetailView(date: date, log: log), context: context)
+    }
+
     func testSettingsRow_branchVariants() {
         host(SettingsRow(icon: "gear", title: "Row A", subtitle: nil, color: .themeAccent, showChevron: false))
         host(SettingsRow(icon: "bell", title: "Row B", subtitle: "Subtitle", color: .themeAccent, showChevron: true))
+    }
+
+    func testSymptomGrid_toggleHelper_addsAndRemovesSelections() {
+        let added = SymptomGridView.toggledSymptoms(current: [], symptomID: "cramps")
+        XCTAssertEqual(added, ["cramps"])
+
+        let removed = SymptomGridView.toggledSymptoms(current: ["cramps"], symptomID: "cramps")
+        XCTAssertTrue(removed.isEmpty)
+    }
+
+    func testSymptomGrid_flowLayoutWrapsOnNarrowWidth() {
+        host(
+            SymptomGridView(
+                selectedSymptoms: .constant([]),
+                symptoms: SymptomType.defaults
+            )
+            .frame(width: 96)
+        )
+    }
+
+    func testSettingsView_applyAccent_updatesThemeManager() {
+        let manager = ThemeManager()
+        let previousAccent = manager.selectedAccent
+        defer { manager.selectedAccent = previousAccent }
+
+        SettingsView.applyAccent(.sage, themeManager: manager)
+
+        XCTAssertEqual(manager.selectedAccent, .sage)
+    }
+
+    func testSettingsView_deleteAllData_clearsPersistedEntities() throws {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        let cycle = Cycle(context: context)
+        cycle.id = UUID()
+        cycle.startDate = Date().startOfDay
+        cycle.createdAt = Date()
+
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = Date().startOfDay
+        log.flowLevel = FlowLevel.light.rawValue
+
+        let symptom = Symptom(context: context)
+        symptom.id = UUID().uuidString
+        symptom.name = "Cramps"
+        symptom.category = "Physical"
+        symptom.dayLog = log
+        log.addToSymptoms(symptom)
+
+        try context.save()
+
+        SettingsView.deleteAllData(in: context)
+
+        XCTAssertEqual(try context.count(for: Cycle.fetchRequest()), 0)
+        XCTAssertEqual(try context.count(for: DayLog.fetchRequest()), 0)
+        XCTAssertEqual(try context.count(for: Symptom.fetchRequest()), 0)
+    }
+
+    func testSettingsView_deleteAllData_handlesDeleteFailures() throws {
+        let throwingContext = ThrowingDeleteManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        throwingContext.persistentStoreCoordinator = try makeInMemoryCoordinator()
+
+        SettingsView.deleteAllData(in: throwingContext)
+
+        XCTAssertEqual(throwingContext.executeCalls, 3)
+        XCTAssertEqual(throwingContext.saveCalls, 0)
     }
 
     func testCycleHeaderView_predictionAndIrregularBranches() {
@@ -132,7 +314,17 @@ final class ViewBranchTests: XCTestCase {
 
     func testPrivacyPolicyAndWebView_buildPaths() throws {
         host(PrivacyPolicyView())
-        try host(WebView(url: XCTUnwrap(URL(string: "https://example.com/privacy"))))
+        host(PrivacyPolicyView(policyURL: nil))
+        let url = try XCTUnwrap(URL(string: "https://example.com/privacy"))
+        try host(WebView(url: url))
+
+        XCTAssertNotNil(WebView.makeBaseWebView())
+        XCTAssertEqual(WebView.makeRequest(for: url).url, url)
+        XCTAssertNil(PrivacyPolicyView.fallbackMessage(for: url))
+        XCTAssertEqual(
+            PrivacyPolicyView.fallbackMessage(for: nil),
+            "Privacy Policy not found."
+        )
     }
 
     func testCycleHistoryList_emptyAndPopulatedBranches() {
@@ -151,6 +343,20 @@ final class ViewBranchTests: XCTestCase {
         previous.periodLength = 4
 
         host(CycleHistoryList(cycles: [current, previous]), context: context)
+    }
+
+    func testCycleHistoryList_missingStartDateFallback() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        let cycle = Cycle(context: context)
+        cycle.id = UUID()
+        cycle.startDate = nil
+        cycle.cycleLength = 0
+        cycle.periodLength = 4
+
+        host(CycleHistoryList(cycles: [cycle]), context: context)
+        XCTAssertEqual(CycleHistoryList.formattedStartDate(nil), "Unknown")
+        XCTAssertNotEqual(CycleHistoryList.formattedStartDate(Date().startOfDay), "Unknown")
     }
 
     func testInsightsAndSettingsViews_withSeededData_buildDeeperBranches() throws {
@@ -192,5 +398,16 @@ final class ViewBranchTests: XCTestCase {
 
         try context.save()
         CycleManager.shared.fullSync(in: context)
+    }
+
+    private func makeInMemoryCoordinator() throws -> NSPersistentStoreCoordinator {
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistenceController.model)
+        try coordinator.addPersistentStore(
+            ofType: NSInMemoryStoreType,
+            configurationName: nil,
+            at: nil,
+            options: nil
+        )
+        return coordinator
     }
 }

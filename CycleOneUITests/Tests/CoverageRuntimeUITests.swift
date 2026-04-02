@@ -114,4 +114,36 @@ final class CoverageRuntimeUITests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 8))
     }
+
+    @MainActor
+    func testCalendarEditLogDeleteCancelFlow() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: true
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
+        let editButton = app.buttons["Edit Log"]
+        XCTAssertTrue(editButton.waitForExistence(timeout: 8))
+        editButton.tap()
+
+        let deleteLogButton = app.buttons["Delete This Log"]
+        for _ in 0 ..< 3 where !deleteLogButton.exists {
+            app.swipeUp()
+        }
+        XCTAssertTrue(deleteLogButton.waitForExistence(timeout: 6))
+        deleteLogButton.tap()
+
+        let cancelDeleteButton = app.buttons["Cancel"]
+        XCTAssertTrue(cancelDeleteButton.waitForExistence(timeout: 6))
+        cancelDeleteButton.tap()
+
+        XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 6))
+        let dismissButton = app.buttons["Dismiss"]
+        XCTAssertTrue(dismissButton.waitForExistence(timeout: 6))
+        dismissButton.tap()
+
+        XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 8))
+    }
 }

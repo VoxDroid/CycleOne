@@ -39,8 +39,7 @@ struct CycleHistoryList: View {
 
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text(cycle.startDate?.formatted(.dateTime.month(.wide).day().year()) ??
-                                        "Unknown")
+                                    Text(Self.formattedStartDate(cycle.startDate))
                                         .font(.headline)
                                     Spacer()
                                     if cycle.cycleLength > 0 {
@@ -71,5 +70,10 @@ struct CycleHistoryList: View {
         .accessibilityIdentifier("CycleHistoryListRoot")
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    static func formattedStartDate(_ date: Date?) -> String {
+        guard let date else { return "Unknown" }
+        return date.formatted(.dateTime.month(.wide).day().year())
     }
 }

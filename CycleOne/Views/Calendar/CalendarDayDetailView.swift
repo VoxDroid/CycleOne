@@ -9,7 +9,6 @@ struct CalendarDayDetailView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     let date: Date
     let log: DayLog?
-    let onLog: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -26,13 +25,9 @@ struct CalendarDayDetailView: View {
                             Image(systemName: "drop.fill")
                                 .font(.caption)
                                 .foregroundColor(.themePeriod)
-                            Text(
-                                FlowLevel(
-                                    rawValue: log.flowLevel
-                                )?.description ?? "Flow"
-                            )
-                            .font(.headline)
-                            .foregroundColor(.themePeriod)
+                            Text(Self.flowDescription(for: log.flowLevel))
+                                .font(.headline)
+                                .foregroundColor(.themePeriod)
                         }
                     } else {
                         Text("No Period Logged")
@@ -69,19 +64,14 @@ struct CalendarDayDetailView: View {
                 HStack(spacing: 12) {
                     if log.mood > 0 {
                         DetailChip(
-                            icon: Mood(rawValue: log.mood)?.icon
-                                ?? "face.smiling",
-                            label: Mood(
-                                rawValue: log.mood
-                            )?.description ?? "",
+                            icon: Self.moodIcon(for: log.mood),
+                            label: Self.moodDescription(for: log.mood),
                             color: .themeAccent
                         )
                     }
                     if log.energyLevel > 0 {
                         EnergyHighlight(
-                            level: EnergyLevel(
-                                rawValue: log.energyLevel
-                            ) ?? .medium
+                            level: Self.energyLevel(for: log.energyLevel)
                         )
                     }
                     if log.painLevel > 0 {
@@ -98,27 +88,19 @@ struct CalendarDayDetailView: View {
                 {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 6) {
-                            ForEach(
-                                Array(symptoms).sorted(by: {
-                                    ($0.name ?? "") < ($1.name ?? "")
-                                }),
-                                id: \.id
-                            ) { symptom in
-                                let category = SymptomCategory(
-                                    rawValue: symptom.category
-                                        ?? "Physical"
-                                )
-                                Text(symptom.name ?? "")
+                            ForEach(Self.sortedSymptoms(symptoms), id: \.id) { symptom in
+                                let category = Self.symptomCategory(from: symptom.category)
+                                Text(Self.symptomName(symptom))
                                     .font(.caption2)
                                     .fontWeight(.medium)
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 5)
                                     .background(
-                                        categoryColor(category)
+                                        Self.categoryColor(category)
                                             .opacity(0.12)
                                     )
                                     .foregroundColor(
-                                        categoryColor(category)
+                                        Self.categoryColor(category)
                                     )
                                     .cornerRadius(10)
                             }
@@ -162,15 +144,50 @@ struct CalendarDayDetailView: View {
         .frame(minHeight: 140, alignment: .top)
     }
 
-    private func categoryColor(
-        _ category: SymptomCategory?
-    ) -> Color {
+    static func flowDescription(for flowLevel: Int16) -> String {
+        FlowLevel(rawValue: flowLevel)?.description ?? "Flow"
+    }
+
+    static func moodIcon(for mood: Int16) -> String {
+        Mood(rawValue: mood)?.icon ?? "face.smiling"
+    }
+
+    static func moodDescription(for mood: Int16) -> String {
+        Mood(rawValue: mood)?.description ?? ""
+    }
+
+    static func energyLevel(for rawValue: Int16) -> EnergyLevel {
+        EnergyLevel(rawValue: rawValue) ?? .medium
+    }
+
+    static func symptomCategory(from rawValue: String?) -> SymptomCategory? {
+        SymptomCategory(rawValue: rawValue ?? "Physical")
+    }
+
+    static func symptomName(_ symptom: Symptom) -> String {
+        symptom.name ?? ""
+    }
+
+    static func sortedSymptoms(_ symptoms: Set<Symptom>) -> [Symptom] {
+        Array(symptoms).sorted(by: {
+            symptomName($0) < symptomName($1)
+        })
+    }
+
+    static func categoryColor(_ category: SymptomCategory?) -> Color {
         switch category {
         case .physical: .themePeriod
         case .mood: .themeFertile
         case .digestion: .orange
-        case .other: .secondary
-        case .none: .secondary
+        default: .secondary
+        }
+    }
+
+    static func energyColor(for level: EnergyLevel) -> Color {
+        switch level {
+        case .low: .orange
+        case .high: .green
+        case .medium: .themeAccent
         }
     }
 }
@@ -215,10 +232,6 @@ private struct EnergyHighlight: View {
     }
 
     private var backgroundColor: Color {
-        switch level {
-        case .low: .orange
-        case .medium: .themeAccent
-        case .high: .green
-        }
+        CalendarDayDetailView.energyColor(for: level)
     }
 }

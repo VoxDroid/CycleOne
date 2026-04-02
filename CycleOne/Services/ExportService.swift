@@ -29,6 +29,10 @@ class ExportService {
         return "\"\(escaped)\""
     }
 
+    static func symptomsText(from symptoms: NSSet?) -> String {
+        (symptoms as? Set<Symptom>)?.compactMap(\.name).joined(separator: ";") ?? ""
+    }
+
     func generateCSV(context: NSManagedObjectContext) -> URL? {
         let request: NSFetchRequest<DayLog> = DayLog.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \DayLog.date, ascending: false)]
@@ -41,13 +45,13 @@ class ExportService {
             dateFormatter.dateStyle = .short
 
             for log in logs {
-                let dateStr = log.date.map { dateFormatter.string(from: $0) } ?? ""
+                let dateStr = dateFormatter.string(from: log.date!)
                 let flowStr = FlowLevel(rawValue: log.flowLevel)?.description ?? ""
                 let painStr = "\(log.painLevel)"
                 let moodStr = Mood(rawValue: log.mood)?.description ?? ""
                 let energyStr = EnergyLevel(rawValue: log.energyLevel)?.description ?? ""
 
-                let symptoms = (log.symptoms as? Set<Symptom>)?.compactMap(\.name).joined(separator: ";") ?? ""
+                let symptoms = Self.symptomsText(from: log.symptoms)
                 let notes = log.notes ?? ""
 
                 let row = [dateStr, flowStr, painStr, moodStr, energyStr, symptoms, notes]

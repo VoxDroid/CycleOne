@@ -34,11 +34,10 @@ struct SymptomGridView: View {
                                 color: category.color
                             ) {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                    if selectedSymptoms.contains(symptom.id) {
-                                        selectedSymptoms.remove(symptom.id)
-                                    } else {
-                                        selectedSymptoms.insert(symptom.id)
-                                    }
+                                    selectedSymptoms = Self.toggledSymptoms(
+                                        current: selectedSymptoms,
+                                        symptomID: symptom.id
+                                    )
                                 }
                             }
                         }
@@ -46,6 +45,19 @@ struct SymptomGridView: View {
                 }
             }
         }
+    }
+
+    static func toggledSymptoms(
+        current: Set<String>,
+        symptomID: String
+    ) -> Set<String> {
+        var updated = current
+        if updated.contains(symptomID) {
+            updated.remove(symptomID)
+        } else {
+            updated.insert(symptomID)
+        }
+        return updated
     }
 }
 
@@ -73,10 +85,10 @@ struct SymptomChip: View {
 
 /// Simple FlowLayout for chips
 struct FlowLayout: Layout {
-    var spacing: CGFloat = 8
+    var spacing: CGFloat
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let width = proposal.width ?? .infinity
+        let width = Self.resolvedWidth(for: proposal)
         var currentX: CGFloat = 0
         var currentY: CGFloat = 0
         var lineHeight: CGFloat = 0
@@ -112,5 +124,9 @@ struct FlowLayout: Layout {
             currentX += size.width + spacing
             lineHeight = max(lineHeight, size.height)
         }
+    }
+
+    static func resolvedWidth(for proposal: ProposedViewSize) -> CGFloat {
+        proposal.width ?? .infinity
     }
 }

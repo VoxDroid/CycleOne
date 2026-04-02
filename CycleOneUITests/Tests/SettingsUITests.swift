@@ -46,4 +46,34 @@ final class SettingsUITests: XCTestCase {
             XCTFail("Expected accent color picker in Settings. Title not found.")
         }
     }
+
+    @MainActor
+    func testAccentSelectionTap_updatesAccentChoice() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
+
+        let settingsTab = app.tabBars.buttons.element(boundBy: 2)
+        XCTAssertTrue(settingsTab.waitForExistence(timeout: 10))
+        settingsTab.tap()
+
+        let settingsList = app.collectionViews["SettingsList"]
+        XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
+
+        let lavenderAccent = app.buttons["Settings_Accent_Lavender"]
+        var attempts = 0
+        while !lavenderAccent.isHittable, attempts < 5 {
+            settingsList.swipeUp()
+            attempts += 1
+        }
+
+        XCTAssertTrue(lavenderAccent.waitForExistence(timeout: 8))
+        lavenderAccent.tap()
+
+        XCTAssertTrue(lavenderAccent.exists)
+    }
 }

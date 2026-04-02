@@ -89,9 +89,9 @@ CycleOne was built from the ground up to be safe:
 
 ### Workflow Commands
 We use a `Makefile` for CI/CD consistency:
-- `make check`: Full verification suite (Lint, Format, Test).
-- `make unit-test`: Execute logic tests.
-- `make ui-test`: Execute integration tests.
+- `make check`: Full verification suite (Lint, Format, Test, UI Test).
+- `make test`: Execute the main test suite and produce `TestResults.xcresult` coverage output.
+- `make test-ui`: Execute UI tests only.
 
 ### Portable XCTest Command
 
@@ -112,10 +112,14 @@ xcodebuild test \
 
 ### Coverage Snapshot
 
-Latest stable local run (`TestResults.xcresult`, 2026-04-01):
-- `CycleOne.app`: 9,549 / 10,380 lines (91.99%)
-- `CycleOneTests.xctest`: 1,857 / 1,874 lines (99.09%)
-- `CycleOneUITests.xctest`: 417 / 429 lines (97.20%)
+Latest stable local run (`TestResults.xcresult`, 2026-04-02):
+- `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
+- `CycleOneTests.xctest`: 3,510 / 3,559 lines (98.62%)
+- `CycleOneUITests.xctest`: 805 / 842 lines (95.61%)
+
+Validation commands executed for this snapshot:
+- `make check`
+- `pre-commit run --all-files`
 
 Recent reliability/security improvements in this iteration:
 - CSV export now escapes quotes, preserves commas safely, and mitigates spreadsheet formula injection (`=`, `+`, `-`, `@` prefixes).

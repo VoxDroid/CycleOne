@@ -11,7 +11,7 @@ struct CycleLengthChartView: View {
     let data: [(date: Date, length: Int)]
 
     private var maxLength: Int {
-        data.map(\.length).max() ?? 35
+        Self.maxLength(for: data)
     }
 
     var body: some View {
@@ -62,6 +62,10 @@ struct CycleLengthChartView: View {
             RoundedRectangle(cornerRadius: Theme.cornerRadius)
                 .fill(Color(.secondarySystemBackground))
         )
+    }
+
+    static func maxLength(for data: [(date: Date, length: Int)]) -> Int {
+        data.map(\.length).max() ?? 35
     }
 }
 
@@ -169,10 +173,11 @@ struct MoodDistributionView: View {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color.themeAccent.opacity(0.7))
                             .frame(
-                                width: total > 0
-                                    ? geometry.size.width
-                                    * CGFloat(mood.value)
-                                    / CGFloat(total) : 0
+                                width: Self.moodBarWidth(
+                                    total: total,
+                                    value: mood.value,
+                                    availableWidth: geometry.size.width
+                                )
                             )
                     }
                     .frame(height: 16)
@@ -191,6 +196,15 @@ struct MoodDistributionView: View {
                 .fill(Color(.secondarySystemBackground))
         )
     }
+
+    static func moodBarWidth(
+        total: Int,
+        value: Int,
+        availableWidth: CGFloat
+    ) -> CGFloat {
+        guard total > 0 else { return 0 }
+        return availableWidth * CGFloat(value) / CGFloat(total)
+    }
 }
 
 // MARK: - Symptom Breakdown
@@ -199,7 +213,7 @@ struct SymptomBreakdownView: View {
     let symptoms: [(name: String, count: Int)]
 
     private var maxCount: Int {
-        symptoms.map(\.count).max() ?? 1
+        Self.maxCount(for: symptoms)
     }
 
     var body: some View {
@@ -215,11 +229,11 @@ struct SymptomBreakdownView: View {
             ) { index, symptom in
                 HStack(spacing: 8) {
                     Image(
-                        systemName: medalIcon(for: index)
+                        systemName: Self.medalIcon(for: index)
                     )
                     .font(.caption)
                     .foregroundColor(
-                        medalColor(for: index)
+                        Self.medalColor(for: index)
                     )
                     .frame(width: 20)
 
@@ -234,7 +248,7 @@ struct SymptomBreakdownView: View {
                     GeometryReader { geometry in
                         RoundedRectangle(cornerRadius: 4)
                             .fill(
-                                medalColor(for: index)
+                                Self.medalColor(for: index)
                                     .opacity(0.6)
                             )
                             .frame(
@@ -263,7 +277,11 @@ struct SymptomBreakdownView: View {
         )
     }
 
-    private func medalIcon(for index: Int) -> String {
+    static func maxCount(for symptoms: [(name: String, count: Int)]) -> Int {
+        symptoms.map(\.count).max() ?? 1
+    }
+
+    static func medalIcon(for index: Int) -> String {
         switch index {
         case 0: "1.circle.fill"
         case 1: "2.circle.fill"
@@ -272,7 +290,7 @@ struct SymptomBreakdownView: View {
         }
     }
 
-    private func medalColor(for index: Int) -> Color {
+    static func medalColor(for index: Int) -> Color {
         switch index {
         case 0: .themeAccent
         case 1: .themeFertile

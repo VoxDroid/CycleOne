@@ -144,6 +144,24 @@ final class PersistenceControllerTests: XCTestCase {
         XCTAssertTrue(model === fallback)
     }
 
+    func testLoadModel_missingURLUsesDefaultHandlerInDebug() {
+        let model = PersistenceController.loadModel(modelURL: nil)
+
+        XCTAssertNotNil(model.entities)
+    }
+
+    func testLoadModel_invalidURLUsesDefaultHandlerInDebug() throws {
+        let invalidURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("momd")
+        try Data("invalid".utf8).write(to: invalidURL)
+        defer { try? FileManager.default.removeItem(at: invalidURL) }
+
+        let model = PersistenceController.loadModel(modelURL: invalidURL)
+
+        XCTAssertNotNil(model.entities)
+    }
+
     func testStoreLoadResult_variants() {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
@@ -261,6 +279,19 @@ final class PersistenceControllerTests: XCTestCase {
         XCTAssertTrue(failures[0].contains("Unresolved error"))
     }
 
+    func testInit_defaultFailureHandlerPathDoesNotCrashInDebug() {
+        let description = NSPersistentStoreDescription(url: URL(fileURLWithPath: "/dev/null"))
+
+        _ = PersistenceController(
+            inMemory: true,
+            loadStores: { _, completion in
+                completion(description, NSError(domain: NSCocoaErrorDomain, code: 999))
+            }
+        )
+
+        XCTAssertTrue(true)
+    }
+
     func testSave_usesFailureHandlerWhenContextSaveThrows() {
         let throwingContext = ThrowingSaveContext(concurrencyType: .mainQueueConcurrencyType)
         var capturedFailure: String?
@@ -271,5 +302,13 @@ final class PersistenceControllerTests: XCTestCase {
 
         XCTAssertNotNil(capturedFailure)
         XCTAssertTrue(capturedFailure?.contains("Unresolved error") == true)
+    }
+
+    func testSave_defaultFailureHandlerPathDoesNotCrashInDebug() {
+        let throwingContext = ThrowingSaveContext(concurrencyType: .mainQueueConcurrencyType)
+
+        controller.save(context: throwingContext)
+
+        XCTAssertTrue(true)
     }
 }

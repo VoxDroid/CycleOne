@@ -76,16 +76,14 @@ final class InsightsViewModel: ObservableObject {
         if !validCycles.isEmpty {
             let lengths = validCycles.map { Int($0.cycleLength) }
             avgCycleLength = Double(lengths.reduce(0, +)) / Double(lengths.count)
-            shortestCycle = lengths.min() ?? 0
-            longestCycle = lengths.max() ?? 0
-            cycleLengthHistory = validCycles.reversed().compactMap { cycle in
-                guard let date = cycle.startDate else { return nil }
-                return (date: date, length: Int(cycle.cycleLength))
+            shortestCycle = lengths.min()!
+            longestCycle = lengths.max()!
+            cycleLengthHistory = validCycles.reversed().map { cycle in
+                (date: cycle.startDate!, length: Int(cycle.cycleLength))
             }
-            // Temporary debug logging for test diagnostics (use Logger)
-            let debugMsg = "DEBUG InsightsViewModel.calculateCycleStats -> lengths=\(lengths) avg=\(avgCycleLength) " +
-                "shortest=\(shortestCycle) longest=\(longestCycle)"
-            Logger.storage.debug("\(debugMsg)")
+            Logger.storage.debug(
+                "DEBUG InsightsViewModel.calculateCycleStats completed"
+            )
         } else {
             avgCycleLength = 0
             shortestCycle = 0

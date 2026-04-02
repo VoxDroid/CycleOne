@@ -42,4 +42,36 @@ final class SettingsDeleteUITests: XCTestCase {
         XCTAssertTrue(deleteAlertButton.waitForExistence(timeout: 5))
         deleteAlertButton.tap()
     }
+
+    @MainActor
+    func testDeleteAllData_alert_cancels() {
+        let app = UITestAppHarness.launch(
+            skipOnboarding: true,
+            clearData: true,
+            seedInsights: false
+        )
+
+        UITestAppHarness.waitForMainTabs(in: app)
+        XCUIDevice.shared.orientation = .portrait
+
+        let settingsTab = app.tabBars.buttons.element(boundBy: 2)
+        XCTAssertTrue(settingsTab.waitForExistence(timeout: 10))
+        settingsTab.tap()
+
+        let settingsList = app.collectionViews["SettingsList"]
+        XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
+
+        let deleteButton = app.buttons["Delete All Data"]
+        if deleteButton.waitForExistence(timeout: 5) {
+            deleteButton.tap()
+        } else {
+            let cell = app.staticTexts["Delete All Data"]
+            XCTAssertTrue(cell.waitForExistence(timeout: 5))
+            cell.tap()
+        }
+
+        let cancelButton = app.alerts.buttons["Cancel"]
+        XCTAssertTrue(cancelButton.waitForExistence(timeout: 5))
+        cancelButton.tap()
+    }
 }

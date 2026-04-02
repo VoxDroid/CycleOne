@@ -1,4 +1,5 @@
 @testable import CycleOne
+import SwiftUI
 import UserNotifications
 import XCTest
 
@@ -99,5 +100,17 @@ final class NotificationSettingsViewLogicTests: XCTestCase {
         view.handleFertileReminderChange(false, true)
 
         XCTAssertTrue(true)
+    }
+
+    func testDaysLabel_handlesSingularAndPlural() {
+        XCTAssertEqual(NotificationSettingsView.daysLabel(for: 1), "1 day")
+        XCTAssertEqual(NotificationSettingsView.daysLabel(for: 2), "2 days")
+    }
+
+    @MainActor
+    func testDayPickerRow_buildsForCommonValues() {
+        host(NotificationSettingsView.dayPickerRow(for: 1))
+        host(NotificationSettingsView.dayPickerRow(for: 5))
+        host(NotificationSettingsView.daysBeforePicker(selection: .constant(2)))
     }
 }

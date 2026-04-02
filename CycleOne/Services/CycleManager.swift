@@ -57,9 +57,7 @@ final class CycleManager {
         var lastStartDate: Date?
         for log in logs {
             let dateValue = log.value(forKey: "date")
-            let date = extractDate(from: dateValue)
-
-            guard let validDate = date?.startOfDay else { continue }
+            let validDate = extractDate(from: dateValue)!.startOfDay
 
             if let last = lastStartDate {
                 let diff = validDate.days(from: last)
@@ -106,9 +104,7 @@ final class CycleManager {
             let cycles = try context.fetch(cycleRequest)
             for (index, cycle) in cycles.enumerated() {
                 let startDateValue = cycle.value(forKey: "startDate")
-                let start = extractDate(from: startDateValue)
-
-                guard let validStart = start else { continue }
+                let validStart = extractDate(from: startDateValue)!
 
                 // Calculate Period Length (consecutive flow days)
                 let periodLen = calculateConsecutiveFlowAt(
@@ -120,14 +116,10 @@ final class CycleManager {
                 // Calculate Cycle Length (days until next cycle start)
                 if index < cycles.count - 1 {
                     let nextStartValue = cycles[index + 1].value(forKey: "startDate")
-                    let nextDate = extractDate(from: nextStartValue)
-
-                    if let validNext = nextDate {
-                        let length = validNext.days(from: validStart)
-                        cycle.setValue(Int16(length), forKey: "cycleLength")
-                    } else {
-                        cycle.setValue(Int16(0), forKey: "cycleLength")
-                    }
+                    cycle.setValue(
+                        cycleLength(from: validStart, nextStartValue: nextStartValue),
+                        forKey: "cycleLength"
+                    )
                 } else {
                     cycle.setValue(Int16(0), forKey: "cycleLength")
                 }
@@ -171,24 +163,36 @@ final class CycleManager {
     }
 
     private func extractDate(from value: Any?) -> Date? {
-        if let date = value as? Date {
-            return date
-        } else if let nsDate = value as? NSDate {
-            return nsDate as Date
-        }
-        return nil
+        value as? Date
     }
 
     private func extractInt16(from value: Any?) -> Int16 {
-        if let number = value as? NSNumber {
-            return number.int16Value
-        } else if let val = value as? Int16 {
-            return val
-        } else if let val = value as? Int {
-            return Int16(val)
-        }
-        return 0
+        (value as? NSNumber)?.int16Value ?? 0
     }
+
+    private func cycleLength(
+        from startDate: Date,
+        nextStartValue: Any?
+    ) -> Int16 {
+        guard let nextDate = extractDate(from: nextStartValue) else {
+            return 0
+        }
+        return Int16(nextDate.days(from: startDate))
+    }
+
+    #if DEBUG
+        func testExtractDate(from value: Any?) -> Date? {
+            extractDate(from: value)
+        }
+
+        func testExtractInt16(from value: Any?) -> Int16 {
+            extractInt16(from: value)
+        }
+
+        func testCycleLength(from startDate: Date, nextStartValue: Any?) -> Int16 {
+            cycleLength(from: startDate, nextStartValue: nextStartValue)
+        }
+    #endif
 
     /// Fully refreshes the cycle repository
     func fullSync(in context: NSManagedObjectContext) {

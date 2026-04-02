@@ -104,9 +104,10 @@ struct SettingsView: View {
                         HStack(spacing: 12) {
                             ForEach(AccentTheme.allCases) { accent in
                                 Button(action: {
-                                    withAnimation(.spring(response: 0.3)) {
-                                        themeManager.selectedAccent = accent
-                                    }
+                                    SettingsView.applyAccent(
+                                        accent,
+                                        themeManager: themeManager
+                                    )
                                 }, label: {
                                     VStack(spacing: 4) {
                                         Circle()
@@ -134,6 +135,7 @@ struct SettingsView: View {
                                     }
                                 })
                                 .buttonStyle(.plain)
+                                .accessibilityIdentifier("Settings_Accent_\(accent.rawValue)")
                             }
                         }
                     }
@@ -253,15 +255,22 @@ struct SettingsView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text(
-                    "This action cannot be undone. All your " +
-                        "logged cycles and symptoms will be " +
-                        "permanently removed."
+                    "This action cannot be undone. All your logged cycles and symptoms will be permanently removed."
                 )
             }
         }
     }
 
-    private func deleteAllData() {
+    static func applyAccent(
+        _ accent: AccentTheme,
+        themeManager: ThemeManager
+    ) {
+        withAnimation(.spring(response: 0.3)) {
+            themeManager.selectedAccent = accent
+        }
+    }
+
+    static func deleteAllData(in context: NSManagedObjectContext) {
         let entities = ["Cycle", "DayLog", "Symptom"]
         for entity in entities {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(
@@ -280,5 +289,9 @@ struct SettingsView: View {
             }
         }
         PersistenceController.shared.container.viewContext.reset()
+    }
+
+    private func deleteAllData() {
+        Self.deleteAllData(in: context)
     }
 }

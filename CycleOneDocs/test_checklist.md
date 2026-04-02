@@ -1,18 +1,25 @@
 # CycleOne Test Checklist
 
-## Current Automated Status (2026-04-01)
-- Full suite passes: 102 tests, 0 failures (`TestResults.xcresult`)
-- `ThemeManagerTests` pass both in isolation and in the full unit suite
-- Coverage from latest stable full run:
-  - `CycleOne.app`: 9,549 / 10,380 lines (91.99%)
-  - `CycleOneTests.xctest`: 1,857 / 1,874 lines (99.09%)
-  - `CycleOneUITests.xctest`: 417 / 429 lines (97.20%)
+## Current Automated Status (2026-04-02)
+- `make check` passes end-to-end.
+- `pre-commit run --all-files` passes all hooks.
+- Latest run counts:
+  - `CycleOneTests.xctest`: 175 tests, 0 failures.
+  - `CycleOneUITests.xctest`: 22 tests, 0 failures.
+- Coverage from latest stable full run (`TestResults.xcresult`):
+  - `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
+  - `CycleOneTests.xctest`: 3,510 / 3,559 lines (98.62%)
+  - `CycleOneUITests.xctest`: 805 / 842 lines (95.61%)
 
-## Security and Edge-Case Checks (2026-04-01)
+## Security and Edge-Case Checks (2026-04-02)
 - [x] CSV export formula injection mitigation verified (`=`, `+`, `-`, `@` leading values are prefixed safely)
 - [x] CSV export quote escaping verified (embedded quotes are doubled per CSV rules)
 - [x] Cycle rebuild persistence paths now log Core Data fetch/save errors instead of failing silently
 - [x] Log notes are truncated to Core Data max length (500) before save to avoid validation failures
+- [x] Privacy policy fallback message path verified for missing bundled HTML resource
+- [x] Notification days-before picker rendering path verified for all supported day options
+- [x] Delete-log cancel flow verified in UI runtime test
+- [x] Cycle comparison empty-state/diff/date helper branches verified
 
 ## Unit Tests
 - [x] `CycleEngine`: Predict next period start

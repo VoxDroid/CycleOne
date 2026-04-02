@@ -9,16 +9,30 @@ struct SplashScreenView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     let onFinish: () -> Void
 
-    @State private var logoScale: CGFloat = 0.5
-    @State private var logoOpacity: Double = 0
-    @State private var titleOffset: CGFloat = 20
-    @State private var titleOpacity: Double = 0
-    @State private var taglineOpacity: Double = 0
-    @State private var isExiting = false
-    @State private var floatOffset: CGFloat = 0
-    @State private var ringScale: CGFloat = 0.8
-    @State private var ringOpacity: Double = 0
-    @State private var exitOffset: CGFloat = 0
+    @State private var logoScale: CGFloat
+    @State private var logoOpacity: Double
+    @State private var titleOffset: CGFloat
+    @State private var titleOpacity: Double
+    @State private var taglineOpacity: Double
+    @State private var isExiting: Bool
+    @State private var floatOffset: CGFloat
+    @State private var ringScale: CGFloat
+    @State private var ringOpacity: Double
+    @State private var exitOffset: CGFloat
+
+    init(onFinish: @escaping () -> Void) {
+        self.onFinish = onFinish
+        _logoScale = State(initialValue: 0.5)
+        _logoOpacity = State(initialValue: 0)
+        _titleOffset = State(initialValue: 20)
+        _titleOpacity = State(initialValue: 0)
+        _taglineOpacity = State(initialValue: 0)
+        _isExiting = State(initialValue: false)
+        _floatOffset = State(initialValue: 0)
+        _ringScale = State(initialValue: 0.8)
+        _ringOpacity = State(initialValue: 0)
+        _exitOffset = State(initialValue: 0)
+    }
 
     var body: some View {
         ZStack {

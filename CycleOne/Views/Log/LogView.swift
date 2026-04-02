@@ -164,11 +164,9 @@ struct LogView: View {
                         .accessibilityIdentifier("Log_NotesEditor")
                         .frame(minHeight: 100)
                         .onChange(of: viewModel.notes) { _, newValue in
-                            if newValue.count > 500 {
-                                viewModel.notes = String(
-                                    newValue.prefix(500)
-                                )
-                            }
+                            viewModel.notes = Self.clampedNotes(
+                                from: newValue
+                            )
                         }
                 }
             } header: {
@@ -215,7 +213,7 @@ struct LogView: View {
                 viewModel.deleteLog()
                 dismiss()
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel, action: Self.cancelAlertAction)
         } message: {
             Text(
                 "This will permanently remove this day's log " +
@@ -225,5 +223,17 @@ struct LogView: View {
         .onDisappear {
             viewModel.save()
         }
+    }
+
+    static func cancelAlertAction() {}
+
+    static func clampedNotes(
+        from value: String,
+        maximumLength: Int = 500
+    ) -> String {
+        if value.count > maximumLength {
+            return String(value.prefix(maximumLength))
+        }
+        return value
     }
 }

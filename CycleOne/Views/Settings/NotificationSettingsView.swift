@@ -28,13 +28,9 @@ struct NotificationSettingsView: View {
                     .onChange(of: remindBeforePeriod, initial: false, handlePeriodReminderChange)
 
                 if remindBeforePeriod {
-                    Picker("Days before", selection: $daysBeforePeriod) {
-                        ForEach([1, 2, 3, 5], id: \.self) { day in
-                            Text("\(day) day\(day > 1 ? "s" : "")").tag(day)
-                        }
-                    }
-                    .accessibilityIdentifier("Notifications_DaysBeforePicker")
-                    .onChange(of: daysBeforePeriod, initial: false, handleDaysBeforePeriodChange)
+                    Self.daysBeforePicker(selection: $daysBeforePeriod)
+                        .accessibilityIdentifier("Notifications_DaysBeforePicker")
+                        .onChange(of: daysBeforePeriod, initial: false, handleDaysBeforePeriodChange)
                 }
             }
 
@@ -50,6 +46,25 @@ struct NotificationSettingsView: View {
         }
         .accessibilityIdentifier("NotificationSettingsViewRoot")
         .navigationTitle("Notifications")
+    }
+
+    static func daysLabel(for day: Int) -> String {
+        "\(day) day\(day > 1 ? "s" : "")"
+    }
+
+    @MainActor
+    static func dayPickerRow(for day: Int) -> some View {
+        Text(daysLabel(for: day)).tag(day)
+    }
+
+    @MainActor
+    static func daysBeforePicker(selection: Binding<Int>) -> some View {
+        Picker("Days before", selection: selection) {
+            dayPickerRow(for: 1)
+            dayPickerRow(for: 2)
+            dayPickerRow(for: 3)
+            dayPickerRow(for: 5)
+        }
     }
 
     func onPeriodReminderChanged(

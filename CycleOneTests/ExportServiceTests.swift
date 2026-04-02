@@ -81,6 +81,56 @@ final class ExportServiceTests: XCTestCase {
         }
     }
 
+    func testGenerateCSV_usesFallbacksForMissingAndInvalidValues() throws {
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = Date().startOfDay
+        log.flowLevel = 99
+        log.painLevel = 0
+        log.mood = 99
+        log.energyLevel = 99
+        log.notes = nil
+        log.symptoms = nil
+
+        try context.save()
+
+        let url = ExportService.shared.generateCSV(context: context)
+        XCTAssertNotNil(url)
+
+        if let url {
+            let content = try String(contentsOf: url)
+            XCTAssertTrue(content.contains(",\"0\","))
+            XCTAssertTrue(content.contains("\"\",\"\",\"\",\"\""))
+        }
+    }
+
+    func testGenerateCSV_ignoresSymptomsWithNilName() throws {
+        let log = DayLog(context: context)
+        log.id = UUID()
+        log.date = Date().startOfDay
+        log.flowLevel = FlowLevel.light.rawValue
+        log.painLevel = 1
+        log.mood = Mood.happy.rawValue
+        log.energyLevel = EnergyLevel.medium.rawValue
+
+        let symptom = Symptom(context: context)
+        symptom.id = UUID().uuidString
+        symptom.name = nil
+        symptom.category = "Physical"
+        log.addToSymptoms(symptom)
+
+        // Keep the object unsaved so we can exercise nil-name filtering without
+        // violating the Core Data required-field validation for Symptom.name.
+
+        let url = ExportService.shared.generateCSV(context: context)
+        XCTAssertNotNil(url)
+
+        if let url {
+            let content = try String(contentsOf: url)
+            XCTAssertTrue(content.contains("\"\",\"\""))
+        }
+    }
+
     func testGenerateCSV_multipleSymptoms_joined() throws {
         let calendar = Calendar(identifier: .gregorian)
         let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2024, month: 2, day: 16)))
@@ -183,6 +233,20 @@ final class ExportServiceTests: XCTestCase {
         let url = ExportService.shared.generateCSV(context: throwingContext)
 
         XCTAssertNil(url)
+    }
+
+    func testSymptomsText_helper_handlesNilAndValues() {
+        XCTAssertEqual(ExportService.symptomsText(from: nil), "")
+
+        let symptom = Symptom(context: context)
+        symptom.id = UUID().uuidString
+        symptom.name = "cramps"
+        symptom.category = "Physical"
+
+        XCTAssertEqual(
+            ExportService.symptomsText(from: NSSet(array: [symptom])),
+            "cramps"
+        )
     }
 
     private func makeInMemoryCoordinator() throws -> NSPersistentStoreCoordinator {

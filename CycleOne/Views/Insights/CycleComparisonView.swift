@@ -44,16 +44,8 @@ struct CycleComparisonView: View {
 
                     ComparisonRow(
                         label: "Start Date",
-                        current: pair.current.startDate?
-                            .formatted(
-                                .dateTime.month(.abbreviated)
-                                    .day()
-                            ) ?? "N/A",
-                        previous: pair.previous.startDate?
-                            .formatted(
-                                .dateTime.month(.abbreviated)
-                                    .day()
-                            ) ?? "N/A"
+                        current: Self.formattedStartDate(pair.current.startDate),
+                        previous: Self.formattedStartDate(pair.previous.startDate)
                     )
 
                     ComparisonRow(
@@ -150,23 +142,54 @@ struct CycleComparisonView: View {
                     .padding(.horizontal)
                 }
                 .padding(.bottom, 24)
-            } else {
-                EmptyStateView(
-                    icon: "arrow.left.arrow.right",
-                    title: "Not Enough Data",
-                    message: "Log at least two cycles to compare."
-                )
-                .padding(.top, 60)
             }
+
+            emptyStateView
+                .opacity(Self.emptyStateOpacity(hasLatestTwo: latestTwo != nil))
+                .frame(height: Self.emptyStateHeight(hasLatestTwo: latestTwo != nil))
         }
         .accessibilityIdentifier("CycleComparisonViewRoot")
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Compare Cycles")
         .navigationBarTitleDisplayMode(.inline)
     }
+
+    static func formattedStartDate(_ date: Date?) -> String {
+        date?.formatted(
+            .dateTime.month(.abbreviated)
+                .day()
+        ) ?? "N/A"
+    }
+
+    static func emptyStateOpacity(hasLatestTwo: Bool) -> Double {
+        hasLatestTwo ? 0 : 1
+    }
+
+    static func emptyStateHeight(hasLatestTwo: Bool) -> CGFloat? {
+        hasLatestTwo ? 0 : nil
+    }
+
+    private var emptyStateView: some View {
+        EmptyStateView(
+            icon: "arrow.left.arrow.right",
+            title: "Not Enough Data",
+            message: "Log at least two cycles to compare."
+        )
+        .padding(.top, 60)
+    }
+
+    #if DEBUG
+        var testHasLatestTwo: Bool {
+            latestTwo != nil
+        }
+
+        func testEmptyStateView() -> some View {
+            emptyStateView
+        }
+    #endif
 }
 
-private struct ComparisonRow: View {
+struct ComparisonRow: View {
     let label: String
     let current: String
     let previous: String
@@ -190,11 +213,7 @@ private struct ComparisonRow: View {
                 if let diff {
                     HStack(spacing: 2) {
                         Image(
-                            systemName: diff > 0
-                                ? "arrow.up.circle.fill"
-                                : diff < 0
-                                ? "arrow.down.circle.fill"
-                                : "equal.circle.fill"
+                            systemName: Self.diffIconName(for: diff)
                         )
                         .font(.caption2)
                         Text(
@@ -206,9 +225,7 @@ private struct ComparisonRow: View {
                         .fontWeight(.medium)
                     }
                     .foregroundColor(
-                        diff > 0
-                            ? .orange
-                            : diff < 0 ? .green : .secondary
+                        Self.diffColor(for: diff)
                     )
                 } else {
                     Text("vs")
@@ -231,5 +248,27 @@ private struct ComparisonRow: View {
                 .fill(Color(.secondarySystemBackground))
         )
         .padding(.horizontal)
+    }
+
+    static func diffIconName(for diff: Int) -> String {
+        switch diff {
+        case let value where value > 0:
+            "arrow.up.circle.fill"
+        case let value where value < 0:
+            "arrow.down.circle.fill"
+        default:
+            "equal.circle.fill"
+        }
+    }
+
+    static func diffColor(for diff: Int) -> Color {
+        switch diff {
+        case let value where value > 0:
+            .orange
+        case let value where value < 0:
+            .green
+        default:
+            .secondary
+        }
     }
 }

@@ -46,8 +46,7 @@ struct CalendarView: View {
 
                         CalendarDayDetailView(
                             date: viewModel.selectedDate,
-                            log: viewModel.selectedDayLog,
-                            onLog: {}
+                            log: viewModel.selectedDayLog
                         )
                         .padding(.top)
                         .fadeSlideIn(delay: 0.35)
