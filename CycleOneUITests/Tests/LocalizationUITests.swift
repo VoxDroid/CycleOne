@@ -38,6 +38,9 @@ final class LocalizationUITests: XCTestCase {
                 app.descendants(matching: .any)
                     .matching(NSPredicate(format: "label == %@", label))
                     .firstMatch,
+                app.descendants(matching: .any)
+                    .matching(NSPredicate(format: "label CONTAINS[c] %@", label))
+                    .firstMatch,
             ]
 
             for option in optionCandidates where option.waitForExistence(timeout: 2) {

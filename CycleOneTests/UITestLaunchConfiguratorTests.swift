@@ -138,6 +138,21 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
         )
     }
 
+    func testConfigureIfNeeded_allowsChineseLanguageOverrideArgument() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        UITestLaunchConfigurator.configureIfNeeded(
+            context: context,
+            arguments: ["-ui-testing", "-ui-testing-language", "zh-Hant"],
+            retryCount: 20
+        )
+
+        XCTAssertEqual(
+            UserDefaults.standard.string(forKey: AppLanguage.storageKey),
+            AppLanguage.chineseTraditional.rawValue
+        )
+    }
+
     func testConfigureIfNeeded_retriesWhenPersistentStoresMissing() {
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 

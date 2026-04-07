@@ -11,6 +11,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
     case filipino = "fil"
     case japanese = "ja"
+    case chineseSimplified = "zh-Hans"
+    case chineseTraditional = "zh-Hant"
     case korean = "ko"
 
     static let storageKey = "selected_app_language"
@@ -29,6 +31,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             Locale(identifier: "fil")
         case .japanese:
             Locale(identifier: "ja")
+        case .chineseSimplified:
+            Locale(identifier: "zh-Hans")
+        case .chineseTraditional:
+            Locale(identifier: "zh-Hant")
         case .korean:
             Locale(identifier: "ko")
         }
@@ -44,6 +50,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             "settings.language.filipino"
         case .japanese:
             "settings.language.japanese"
+        case .chineseSimplified:
+            "settings.language.simplified_chinese"
+        case .chineseTraditional:
+            "settings.language.traditional_chinese"
         case .korean:
             "settings.language.korean"
         }
@@ -59,6 +69,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             "Filipino"
         case .japanese:
             "Japanese"
+        case .chineseSimplified:
+            "Simplified Chinese"
+        case .chineseTraditional:
+            "Traditional Chinese"
         case .korean:
             "Korean"
         }
@@ -86,6 +100,10 @@ enum AppLanguage: String, CaseIterable, Identifiable {
             "fil"
         case .japanese:
             "ja"
+        case .chineseSimplified:
+            "zh-Hans"
+        case .chineseTraditional:
+            "zh-Hant"
         case .korean:
             "ko"
         }

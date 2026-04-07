@@ -57,6 +57,8 @@
 "settings.language.english" = "Ingles";
 "settings.language.filipino" = "Filipino";
 "settings.language.japanese" = "Hapones";
+"settings.language.simplified_chinese" = "Intsik (Pinasimple)";
+"settings.language.traditional_chinese" = "Intsik (Tradisyonal)";
 "settings.language.korean" = "Koreano";
 "settings.accent_color" = "Kulay ng Accent";
 "settings.accent.rose" = "Rosas";

@@ -113,10 +113,14 @@ final class LocalizationCoverageTests: XCTestCase {
         let en = try keys(inStringsFileAt: localizedStringsFileURL(for: "en"))
         let fil = try keys(inStringsFileAt: localizedStringsFileURL(for: "fil"))
         let ja = try keys(inStringsFileAt: localizedStringsFileURL(for: "ja"))
+        let zhHans = try keys(inStringsFileAt: localizedStringsFileURL(for: "zh-Hans"))
+        let zhHant = try keys(inStringsFileAt: localizedStringsFileURL(for: "zh-Hant"))
         let ko = try keys(inStringsFileAt: localizedStringsFileURL(for: "ko"))
 
         XCTAssertEqual(en, fil, "English and Filipino keys are out of sync")
         XCTAssertEqual(en, ja, "English and Japanese keys are out of sync")
+        XCTAssertEqual(en, zhHans, "English and Simplified Chinese keys are out of sync")
+        XCTAssertEqual(en, zhHant, "English and Traditional Chinese keys are out of sync")
         XCTAssertEqual(en, ko, "English and Korean keys are out of sync")
     }
 
@@ -146,6 +150,14 @@ final class LocalizationCoverageTests: XCTestCase {
         XCTAssertNotNil(AppLanguage.english.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
         XCTAssertNotNil(AppLanguage.filipino.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
         XCTAssertNotNil(AppLanguage.japanese.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
+        XCTAssertNotNil(AppLanguage.chineseSimplified.localizedResourceURL(
+            forResource: "PrivacyPolicy",
+            withExtension: "html"
+        ))
+        XCTAssertNotNil(AppLanguage.chineseTraditional.localizedResourceURL(
+            forResource: "PrivacyPolicy",
+            withExtension: "html"
+        ))
         XCTAssertNotNil(AppLanguage.korean.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
     }
 }

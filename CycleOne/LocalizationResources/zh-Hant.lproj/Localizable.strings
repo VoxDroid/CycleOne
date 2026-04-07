@@ -1,0 +1,244 @@
+"tab.calendar" = "日曆";
+"tab.insights" = "洞察";
+"tab.settings" = "設定";
+
+"common.vs" = "對比";
+"common.na" = "不適用";
+"common.same" = "相同";
+"common.days_format" = "%d 天";
+"common.days_short_format" = "%d天";
+"common.unknown" = "未知";
+"common.unit.days" = "天";
+
+"flow.none" = "無";
+"flow.light" = "少";
+"flow.medium" = "中等";
+"flow.heavy" = "多";
+
+"mood.happy" = "開心";
+"mood.neutral" = "一般";
+"mood.sad" = "難過";
+"mood.anxious" = "焦慮";
+"mood.angry" = "生氣";
+
+"energy.low" = "低";
+"energy.medium" = "中";
+"energy.high" = "高";
+
+"symptom.category.physical" = "身體";
+"symptom.category.mood" = "情緒與心理";
+"symptom.category.digestion" = "消化";
+"symptom.category.other" = "其他";
+
+"symptom.cramps" = "痙攣";
+"symptom.bloating" = "腹脹";
+"symptom.headache" = "頭痛";
+"symptom.acne" = "痤瘡";
+"symptom.breast_tenderness" = "乳房脹痛";
+"symptom.back_pain" = "腰背痛";
+"symptom.dizziness" = "頭暈";
+"symptom.nausea" = "噁心";
+"symptom.mood_swings" = "情緒波動";
+"symptom.irritability" = "易怒";
+"symptom.fatigue" = "疲勞";
+"symptom.cravings" = "食慾增加";
+"symptom.insomnia" = "失眠";
+
+"settings.section.preferences" = "偏好";
+"settings.enable_predictions" = "啟用預測";
+"settings.notifications" = "通知";
+"settings.section.appearance" = "外觀";
+"settings.theme" = "主題";
+"settings.theme.system" = "跟隨系統";
+"settings.theme.light" = "淺色";
+"settings.theme.dark" = "深色";
+"settings.language" = "語言";
+"settings.language.system" = "系統預設";
+"settings.language.english" = "英語";
+"settings.language.filipino" = "菲律賓語";
+"settings.language.japanese" = "日語";
+"settings.language.simplified_chinese" = "簡體中文";
+"settings.language.traditional_chinese" = "繁體中文";
+"settings.language.korean" = "韓語";
+"settings.accent_color" = "強調色";
+"settings.accent.rose" = "玫瑰";
+"settings.accent.lavender" = "薰衣草";
+"settings.accent.ocean" = "海洋";
+"settings.accent.sage" = "鼠尾草";
+"settings.accent.sunset" = "日落";
+"settings.section.data" = "資料";
+"settings.export_csv" = "匯出資料 (CSV)";
+"settings.delete_all_data" = "刪除所有資料";
+"settings.section.app" = "應用程式";
+"settings.help_guide" = "幫助與指南";
+"settings.support_feedback" = "支援與回饋";
+"settings.privacy_policy" = "隱私政策";
+"settings.rate_cycleone" = "評價 CycleOne";
+"settings.about" = "關於";
+"settings.footer.byline" = "VoxDroid 出品 CycleOne";
+"settings.footer.copyright" = "© 2026 VoxDroid. 保留所有權利。";
+"settings.navigation_title" = "設定";
+"settings.alert.delete_title" = "刪除所有資料？";
+"settings.alert.delete_action" = "刪除";
+"settings.alert.cancel_action" = "取消";
+"settings.alert.delete_message" = "此操作無法復原。你記錄的所有週期和症狀都將被永久刪除。";
+
+"settings.notifications.title" = "通知";
+"settings.notifications.section.period" = "經期提醒";
+"settings.notifications.toggle.period" = "經期前提醒我";
+"settings.notifications.section.fertile" = "易孕期";
+"settings.notifications.toggle.fertile" = "易孕期提醒";
+"settings.notifications.footer" = "通知會在每天上午 8:00 於你的裝置本地安排。";
+"settings.notifications.days_before" = "提前天數";
+"settings.notifications.days.1" = "1 天";
+"settings.notifications.days.2" = "2 天";
+"settings.notifications.days.3" = "3 天";
+"settings.notifications.days.5" = "5 天";
+"settings.notifications.days.format" = "%d 天";
+
+"notifications.content.title" = "CycleOne";
+"notifications.content.period.body" = "預測你的經期將在明天開始。";
+"notifications.content.fertile.body" = "你的易孕期將於明天開始。";
+
+"calendar.legend.title" = "日曆圖例";
+"calendar.legend.period" = "經期";
+"calendar.legend.predicted" = "預測";
+"calendar.legend.ovulation" = "排卵";
+"calendar.legend.fertile" = "易孕期";
+"calendar.legend.logged" = "已記錄";
+
+"calendar.day.no_period_logged" = "未記錄經期";
+"calendar.day.log_day" = "記錄當天";
+"calendar.day.edit_log" = "編輯記錄";
+"calendar.day.tap_to_log" = "輕點以記錄你的週期、症狀或心情。";
+"calendar.day.flow_fallback" = "經量";
+
+"calendar.header.irregular" = "不規律";
+"calendar.header.disclaimer" = "預測僅供參考，不構成醫療建議。";
+"calendar.header.log_first" = "先記錄你的首次經期";
+"calendar.header.overdue" = "經期已延遲";
+"calendar.header.starts_today" = "經期今天開始";
+"calendar.header.next_period" = "下次經期";
+"calendar.header.expected_today" = "預計今天";
+"calendar.header.overdue_by_days" = "已延遲 %d 天";
+"calendar.header.in_days" = "%d 天後";
+"calendar.header.ovulation_starts_today" = "今天開始排卵";
+"calendar.header.ovulation_in_days" = "%d 天後排卵";
+
+"insights.avg_cycle" = "平均週期";
+"insights.avg_period" = "平均經期";
+"insights.shortest" = "最短";
+"insights.longest" = "最長";
+"insights.total" = "總計";
+"insights.avg_pain" = "平均疼痛";
+"insights.logged" = "已記錄";
+"insights.symptoms" = "症狀";
+
+"insights.history.empty_title" = "暫無資料";
+"insights.history.empty_message" = "記錄首次經期後，你的週期歷史會顯示在這裡。";
+"insights.history.past_cycles" = "歷史週期";
+"insights.history.title" = "歷史";
+"insights.history.period_days_format" = "經期 %d 天";
+
+"insights.compare.title" = "週期對比";
+"insights.compare.current" = "當前";
+"insights.compare.previous" = "上一個";
+"insights.compare.start_date" = "開始日期";
+"insights.compare.cycle_length" = "週期長度";
+"insights.compare.period_length" = "經期長度";
+"insights.compare.length_comparison" = "長度對比";
+"insights.compare.navigation_title" = "對比週期";
+"insights.compare.empty_title" = "資料不足";
+"insights.compare.empty_message" = "至少記錄兩個週期才能對比。";
+
+"onboarding.page1.title" = "歡迎使用 CycleOne";
+"onboarding.page1.subtitle" = "以隱私為先的經期追蹤器。\n無訂閱。無雲端。無帳號。";
+"onboarding.page2.title" = "追蹤你的週期";
+"onboarding.page2.subtitle" = "輕點日曆中的任意一天，記錄經期、症狀、心情和能量。";
+"onboarding.page3.title" = "發現規律";
+"onboarding.page3.subtitle" = "查看有關週期長度、常見症狀和預測的洞察。";
+"onboarding.page4.title" = "你的資料保持私密";
+"onboarding.page4.subtitle" = "所有資料都儲存在你的裝置上。\n無伺服器。無追蹤。始終如此。";
+"onboarding.next" = "下一步";
+"onboarding.get_started" = "開始使用";
+"onboarding.skip" = "跳過";
+
+"log.pain_level_format" = "疼痛等級：%d";
+"privacy_policy.not_found" = "未找到隱私政策。";
+"export.csv.header" = "日期,經量,疼痛,心情,能量,症狀,備註";
+
+"Log your day" = "記錄今天";
+"Flow" = "經量";
+"Mood & Energy" = "心情與能量";
+"Symptoms" = "症狀";
+"Add notes..." = "新增備註...";
+"Notes" = "備註";
+"Delete This Log" = "刪除此記錄";
+"Log Day" = "記錄當天";
+"Dismiss" = "關閉";
+"Delete Log?" = "刪除記錄？";
+"Delete" = "刪除";
+"Cancel" = "取消";
+"This will permanently remove this day's log and all associated symptoms." = "這將永久刪除當天記錄及所有關聯症狀。";
+
+"Cycle Length Trend" = "週期長度趨勢";
+"Mood Distribution" = "心情分布";
+"Top Symptoms" = "高頻症狀";
+"Compare Cycles" = "對比週期";
+"View Full History" = "查看完整歷史";
+"Insights" = "洞察";
+
+"User Guide" = "使用者指南";
+"Calendar" = "日曆";
+"Logging" = "記錄";
+"Reminders" = "提醒";
+"The main screen shows your cycle. Tap any date to view details or log data." = "主畫面會顯示你的週期。輕點任意日期可查看詳情或記錄資料。";
+"Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away." = "記錄你的經量、症狀、心情和能量。離開頁面時會自動儲存。";
+"View your average cycle length, period duration, and top symptoms." = "查看平均週期長度、經期時長和高頻症狀。";
+"Enable notifications in Settings for alerts before period or fertile window." = "在設定中啟用通知，以接收經期前或易孕期提醒。";
+"Quick Tips" = "快速提示";
+"Swipe left or right to change months." = "左右滑動可切換月份。";
+"Tap the detail card to log or edit." = "輕點詳情卡片可記錄或編輯。";
+"Check Insights to understand patterns." = "查看洞察以了解週期規律。";
+"Export your data anytime — you own it." = "你可隨時匯出資料，資料歸你所有。";
+"App Philosophy" = "應用理念";
+"Privacy First" = "隱私優先";
+"Zero cloud sync and zero tracking. Data stays on your device." = "零雲同步、零追蹤。資料僅保存在你的裝置上。";
+"No Subscriptions" = "無訂閱";
+"Don't pay monthly for your own health data. One purchase, forever." = "不必為自己的健康資料每月付費。一次購買，長期使用。";
+"Manual & Support" = "幫助與支援";
+"View Project on GitHub" = "在 GitHub 查看專案";
+"Privacy Policy" = "隱私政策";
+"Help & Guide" = "幫助與指南";
+
+"Export Your Data" = "匯出你的資料";
+"Get a CSV file of all your logged cycles and symptoms. Your data stays private." = "將你記錄的所有週期和症狀匯出為 CSV 檔案。你的資料始終私密。";
+"Generating CSV..." = "正在生成 CSV...";
+"Share CSV File" = "分享 CSV 檔案";
+"Regenerate" = "重新生成";
+"Generate CSV" = "生成 CSV";
+"Export is plaintext only. No proprietary format." = "匯出為純文字，不使用專有格式。";
+"Export" = "匯出";
+
+"A privacy-first, open-source period tracker for iOS." = "一款以隱私為先的 iOS 開源經期追蹤器。";
+"Developer" = "開發者";
+"VoxDroid" = "VoxDroid";
+"Lead Developer" = "主要開發者";
+"izeno.contact@gmail.com" = "izeno.contact@gmail.com";
+"Direct Support" = "直接支援";
+"github.com/VoxDroid" = "github.com/VoxDroid";
+"Follow on GitHub" = "在 GitHub 追蹤";
+"Project" = "專案";
+"Source Code" = "原始碼";
+"GPL-3.0 Licensed" = "GPL-3.0 授權";
+"Privacy Commitment" = "隱私承諾";
+"100% local, zero tracking" = "100% 本地儲存，零追蹤";
+"Built with Swift" = "使用 Swift 建構";
+"SwiftUI + Core Data" = "SwiftUI + Core Data";
+"CycleOne by VoxDroid" = "VoxDroid 出品 CycleOne";
+"© 2026 VoxDroid. All rights reserved." = "© 2026 VoxDroid. 保留所有權利。";
+"About" = "關於";
+
+"CycleOne" = "CycleOne";
+"Version 1.0.0" = "版本 1.0.0";
+"Privacy-first period tracking" = "隱私優先的經期追蹤";

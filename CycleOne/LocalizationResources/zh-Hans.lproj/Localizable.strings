@@ -1,0 +1,244 @@
+"tab.calendar" = "日历";
+"tab.insights" = "洞察";
+"tab.settings" = "设置";
+
+"common.vs" = "对比";
+"common.na" = "不适用";
+"common.same" = "相同";
+"common.days_format" = "%d 天";
+"common.days_short_format" = "%d天";
+"common.unknown" = "未知";
+"common.unit.days" = "天";
+
+"flow.none" = "无";
+"flow.light" = "少";
+"flow.medium" = "中等";
+"flow.heavy" = "多";
+
+"mood.happy" = "开心";
+"mood.neutral" = "一般";
+"mood.sad" = "难过";
+"mood.anxious" = "焦虑";
+"mood.angry" = "生气";
+
+"energy.low" = "低";
+"energy.medium" = "中";
+"energy.high" = "高";
+
+"symptom.category.physical" = "身体";
+"symptom.category.mood" = "情绪与心理";
+"symptom.category.digestion" = "消化";
+"symptom.category.other" = "其他";
+
+"symptom.cramps" = "痉挛";
+"symptom.bloating" = "腹胀";
+"symptom.headache" = "头痛";
+"symptom.acne" = "痤疮";
+"symptom.breast_tenderness" = "乳房胀痛";
+"symptom.back_pain" = "腰背痛";
+"symptom.dizziness" = "头晕";
+"symptom.nausea" = "恶心";
+"symptom.mood_swings" = "情绪波动";
+"symptom.irritability" = "易怒";
+"symptom.fatigue" = "疲劳";
+"symptom.cravings" = "食欲增加";
+"symptom.insomnia" = "失眠";
+
+"settings.section.preferences" = "偏好";
+"settings.enable_predictions" = "启用预测";
+"settings.notifications" = "通知";
+"settings.section.appearance" = "外观";
+"settings.theme" = "主题";
+"settings.theme.system" = "跟随系统";
+"settings.theme.light" = "浅色";
+"settings.theme.dark" = "深色";
+"settings.language" = "语言";
+"settings.language.system" = "系统默认";
+"settings.language.english" = "英语";
+"settings.language.filipino" = "菲律宾语";
+"settings.language.japanese" = "日语";
+"settings.language.simplified_chinese" = "简体中文";
+"settings.language.traditional_chinese" = "繁体中文";
+"settings.language.korean" = "韩语";
+"settings.accent_color" = "强调色";
+"settings.accent.rose" = "玫瑰";
+"settings.accent.lavender" = "薰衣草";
+"settings.accent.ocean" = "海洋";
+"settings.accent.sage" = "鼠尾草";
+"settings.accent.sunset" = "日落";
+"settings.section.data" = "数据";
+"settings.export_csv" = "导出数据 (CSV)";
+"settings.delete_all_data" = "删除所有数据";
+"settings.section.app" = "应用";
+"settings.help_guide" = "帮助与指南";
+"settings.support_feedback" = "支持与反馈";
+"settings.privacy_policy" = "隐私政策";
+"settings.rate_cycleone" = "评价 CycleOne";
+"settings.about" = "关于";
+"settings.footer.byline" = "VoxDroid 出品 CycleOne";
+"settings.footer.copyright" = "© 2026 VoxDroid. 保留所有权利。";
+"settings.navigation_title" = "设置";
+"settings.alert.delete_title" = "删除所有数据？";
+"settings.alert.delete_action" = "删除";
+"settings.alert.cancel_action" = "取消";
+"settings.alert.delete_message" = "此操作无法撤销。你记录的所有周期和症状都将被永久删除。";
+
+"settings.notifications.title" = "通知";
+"settings.notifications.section.period" = "经期提醒";
+"settings.notifications.toggle.period" = "经期前提醒我";
+"settings.notifications.section.fertile" = "易孕期";
+"settings.notifications.toggle.fertile" = "易孕期提醒";
+"settings.notifications.footer" = "通知会在每天上午 8:00 于你的设备本地安排。";
+"settings.notifications.days_before" = "提前天数";
+"settings.notifications.days.1" = "1 天";
+"settings.notifications.days.2" = "2 天";
+"settings.notifications.days.3" = "3 天";
+"settings.notifications.days.5" = "5 天";
+"settings.notifications.days.format" = "%d 天";
+
+"notifications.content.title" = "CycleOne";
+"notifications.content.period.body" = "预测你的经期将在明天开始。";
+"notifications.content.fertile.body" = "你的易孕期将于明天开始。";
+
+"calendar.legend.title" = "日历图例";
+"calendar.legend.period" = "经期";
+"calendar.legend.predicted" = "预测";
+"calendar.legend.ovulation" = "排卵";
+"calendar.legend.fertile" = "易孕期";
+"calendar.legend.logged" = "已记录";
+
+"calendar.day.no_period_logged" = "未记录经期";
+"calendar.day.log_day" = "记录当天";
+"calendar.day.edit_log" = "编辑记录";
+"calendar.day.tap_to_log" = "轻点以记录你的周期、症状或心情。";
+"calendar.day.flow_fallback" = "经量";
+
+"calendar.header.irregular" = "不规律";
+"calendar.header.disclaimer" = "预测仅供参考，不构成医疗建议。";
+"calendar.header.log_first" = "先记录你的首次经期";
+"calendar.header.overdue" = "经期已推迟";
+"calendar.header.starts_today" = "经期今天开始";
+"calendar.header.next_period" = "下次经期";
+"calendar.header.expected_today" = "预计今天";
+"calendar.header.overdue_by_days" = "已推迟 %d 天";
+"calendar.header.in_days" = "%d 天后";
+"calendar.header.ovulation_starts_today" = "今天开始排卵";
+"calendar.header.ovulation_in_days" = "%d 天后排卵";
+
+"insights.avg_cycle" = "平均周期";
+"insights.avg_period" = "平均经期";
+"insights.shortest" = "最短";
+"insights.longest" = "最长";
+"insights.total" = "总计";
+"insights.avg_pain" = "平均疼痛";
+"insights.logged" = "已记录";
+"insights.symptoms" = "症状";
+
+"insights.history.empty_title" = "暂无数据";
+"insights.history.empty_message" = "记录首次经期后，你的周期历史会显示在这里。";
+"insights.history.past_cycles" = "历史周期";
+"insights.history.title" = "历史";
+"insights.history.period_days_format" = "经期 %d 天";
+
+"insights.compare.title" = "周期对比";
+"insights.compare.current" = "当前";
+"insights.compare.previous" = "上一个";
+"insights.compare.start_date" = "开始日期";
+"insights.compare.cycle_length" = "周期长度";
+"insights.compare.period_length" = "经期长度";
+"insights.compare.length_comparison" = "长度对比";
+"insights.compare.navigation_title" = "对比周期";
+"insights.compare.empty_title" = "数据不足";
+"insights.compare.empty_message" = "至少记录两个周期才能对比。";
+
+"onboarding.page1.title" = "欢迎使用 CycleOne";
+"onboarding.page1.subtitle" = "以隐私为先的经期追踪器。\n无订阅。无云端。无账号。";
+"onboarding.page2.title" = "追踪你的周期";
+"onboarding.page2.subtitle" = "轻点日历中的任意一天，记录经期、症状、心情和能量。";
+"onboarding.page3.title" = "发现规律";
+"onboarding.page3.subtitle" = "查看有关周期长度、常见症状和预测的洞察。";
+"onboarding.page4.title" = "你的数据保持私密";
+"onboarding.page4.subtitle" = "所有数据都存储在你的设备上。\n无服务器。无追踪。始终如此。";
+"onboarding.next" = "下一步";
+"onboarding.get_started" = "开始使用";
+"onboarding.skip" = "跳过";
+
+"log.pain_level_format" = "疼痛等级：%d";
+"privacy_policy.not_found" = "未找到隐私政策。";
+"export.csv.header" = "日期,经量,疼痛,心情,能量,症状,备注";
+
+"Log your day" = "记录今天";
+"Flow" = "经量";
+"Mood & Energy" = "心情与能量";
+"Symptoms" = "症状";
+"Add notes..." = "添加备注...";
+"Notes" = "备注";
+"Delete This Log" = "删除此记录";
+"Log Day" = "记录当天";
+"Dismiss" = "关闭";
+"Delete Log?" = "删除记录？";
+"Delete" = "删除";
+"Cancel" = "取消";
+"This will permanently remove this day's log and all associated symptoms." = "这将永久删除当天记录及所有关联症状。";
+
+"Cycle Length Trend" = "周期长度趋势";
+"Mood Distribution" = "心情分布";
+"Top Symptoms" = "高频症状";
+"Compare Cycles" = "对比周期";
+"View Full History" = "查看完整历史";
+"Insights" = "洞察";
+
+"User Guide" = "用户指南";
+"Calendar" = "日历";
+"Logging" = "记录";
+"Reminders" = "提醒";
+"The main screen shows your cycle. Tap any date to view details or log data." = "主界面会显示你的周期。轻点任意日期可查看详情或记录数据。";
+"Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away." = "记录你的经量、症状、心情和能量。离开页面时会自动保存。";
+"View your average cycle length, period duration, and top symptoms." = "查看平均周期长度、经期时长和高频症状。";
+"Enable notifications in Settings for alerts before period or fertile window." = "在设置中启用通知，以接收经期前或易孕期提醒。";
+"Quick Tips" = "快速提示";
+"Swipe left or right to change months." = "左右滑动可切换月份。";
+"Tap the detail card to log or edit." = "轻点详情卡片可记录或编辑。";
+"Check Insights to understand patterns." = "查看洞察以了解周期规律。";
+"Export your data anytime — you own it." = "你可随时导出数据，数据归你所有。";
+"App Philosophy" = "应用理念";
+"Privacy First" = "隐私优先";
+"Zero cloud sync and zero tracking. Data stays on your device." = "零云同步、零追踪。数据仅保存在你的设备上。";
+"No Subscriptions" = "无订阅";
+"Don't pay monthly for your own health data. One purchase, forever." = "不必为自己的健康数据每月付费。一次购买，长期使用。";
+"Manual & Support" = "帮助与支持";
+"View Project on GitHub" = "在 GitHub 查看项目";
+"Privacy Policy" = "隐私政策";
+"Help & Guide" = "帮助与指南";
+
+"Export Your Data" = "导出你的数据";
+"Get a CSV file of all your logged cycles and symptoms. Your data stays private." = "将你记录的所有周期和症状导出为 CSV 文件。你的数据始终私密。";
+"Generating CSV..." = "正在生成 CSV...";
+"Share CSV File" = "分享 CSV 文件";
+"Regenerate" = "重新生成";
+"Generate CSV" = "生成 CSV";
+"Export is plaintext only. No proprietary format." = "导出为纯文本，不使用专有格式。";
+"Export" = "导出";
+
+"A privacy-first, open-source period tracker for iOS." = "一款以隐私为先的 iOS 开源经期追踪器。";
+"Developer" = "开发者";
+"VoxDroid" = "VoxDroid";
+"Lead Developer" = "主开发者";
+"izeno.contact@gmail.com" = "izeno.contact@gmail.com";
+"Direct Support" = "直接支持";
+"github.com/VoxDroid" = "github.com/VoxDroid";
+"Follow on GitHub" = "在 GitHub 关注";
+"Project" = "项目";
+"Source Code" = "源代码";
+"GPL-3.0 Licensed" = "GPL-3.0 许可";
+"Privacy Commitment" = "隐私承诺";
+"100% local, zero tracking" = "100% 本地存储，零追踪";
+"Built with Swift" = "使用 Swift 构建";
+"SwiftUI + Core Data" = "SwiftUI + Core Data";
+"CycleOne by VoxDroid" = "VoxDroid 出品 CycleOne";
+"© 2026 VoxDroid. All rights reserved." = "© 2026 VoxDroid. 保留所有权利。";
+"About" = "关于";
+
+"CycleOne" = "CycleOne";
+"Version 1.0.0" = "版本 1.0.0";
+"Privacy-first period tracking" = "隐私优先的经期追踪";

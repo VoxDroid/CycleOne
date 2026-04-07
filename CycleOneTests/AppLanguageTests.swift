@@ -28,6 +28,8 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.english.locale.identifier, "en")
         XCTAssertEqual(AppLanguage.filipino.locale.identifier, "fil")
         XCTAssertEqual(AppLanguage.japanese.locale.identifier, "ja")
+        XCTAssertEqual(AppLanguage.chineseSimplified.locale.identifier, "zh-Hans")
+        XCTAssertEqual(AppLanguage.chineseTraditional.locale.identifier, "zh-Hant")
         XCTAssertEqual(AppLanguage.korean.locale.identifier, "ko")
     }
 
@@ -36,6 +38,8 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.english.englishDisplayName, "English")
         XCTAssertEqual(AppLanguage.filipino.englishDisplayName, "Filipino")
         XCTAssertEqual(AppLanguage.japanese.englishDisplayName, "Japanese")
+        XCTAssertEqual(AppLanguage.chineseSimplified.englishDisplayName, "Simplified Chinese")
+        XCTAssertEqual(AppLanguage.chineseTraditional.englishDisplayName, "Traditional Chinese")
         XCTAssertEqual(AppLanguage.korean.englishDisplayName, "Korean")
     }
 
@@ -50,6 +54,14 @@ final class AppLanguageTests: XCTestCase {
         )
         XCTAssertEqual(
             AppLanguage.japanese.localizedString("tab.settings", defaultValue: "Settings"),
+            "設定"
+        )
+        XCTAssertEqual(
+            AppLanguage.chineseSimplified.localizedString("tab.settings", defaultValue: "Settings"),
+            "设置"
+        )
+        XCTAssertEqual(
+            AppLanguage.chineseTraditional.localizedString("tab.settings", defaultValue: "Settings"),
             "設定"
         )
         XCTAssertEqual(
@@ -73,6 +85,18 @@ final class AppLanguageTests: XCTestCase {
         )
         XCTAssertNotNil(
             AppLanguage.japanese.localizedResourceURL(
+                forResource: "PrivacyPolicy",
+                withExtension: "html"
+            )
+        )
+        XCTAssertNotNil(
+            AppLanguage.chineseSimplified.localizedResourceURL(
+                forResource: "PrivacyPolicy",
+                withExtension: "html"
+            )
+        )
+        XCTAssertNotNil(
+            AppLanguage.chineseTraditional.localizedResourceURL(
                 forResource: "PrivacyPolicy",
                 withExtension: "html"
             )

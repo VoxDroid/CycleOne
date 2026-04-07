@@ -57,6 +57,8 @@
 "settings.language.english" = "영어";
 "settings.language.filipino" = "필리핀어";
 "settings.language.japanese" = "일본어";
+"settings.language.simplified_chinese" = "중국어(간체)";
+"settings.language.traditional_chinese" = "중국어(번체)";
 "settings.language.korean" = "한국어";
 "settings.accent_color" = "강조 색상";
 "settings.accent.rose" = "로즈";
