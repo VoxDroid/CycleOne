@@ -8,8 +8,14 @@ import SwiftUI
 struct EmptyStateView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     let icon: String
-    let title: String
-    let message: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+
+    init(icon: String, title: String, message: String) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.message = LocalizedStringKey(message)
+    }
 
     var body: some View {
         VStack(spacing: 16) {

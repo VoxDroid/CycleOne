@@ -39,7 +39,7 @@ struct FlowPickerView: View {
                     .scaleEffect(selection == level ? 1.02 : 1.0)
                 })
                 .buttonStyle(.plain)
-                .accessibilityIdentifier("Flow_\(level.description)")
+                .accessibilityIdentifier("Flow_\(level.accessibilityName)")
             }
         }
         .padding(4)

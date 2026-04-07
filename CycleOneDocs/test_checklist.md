@@ -22,6 +22,16 @@
 - [x] Cycle comparison empty-state/diff/date helper branches verified
 - [x] UITest launch data-reset helper verified against object-ID batch-delete results (no crash path)
 
+## Localization & Internationalization Checks (2026-04-07)
+- [x] Localization key parity verified across `en`, `fil`, and `ja`
+- [x] Source-to-strings coverage test verifies all user-facing view strings exist in English table
+- [x] Language-specific resource checks validate localized Privacy Policy HTML availability
+- [x] App language model tests validate stored selection, locale mapping, and localized bundle lookup
+- [x] UI language-switch flow validated from Settings (English -> Japanese)
+- [x] UI language round-trip validated (Japanese -> English) with translated Calendar legend assertions
+- [x] Calendar legend regression check verifies localization keys are never rendered literally in UI
+- [x] Locale-sensitive UI tests now prefer accessibility identifiers over display text where practical
+
 ## Unit Tests
 - [x] `CycleEngine`: Predict next period start
 - [x] `CycleEngine`: Predict ovulation date

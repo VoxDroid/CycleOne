@@ -20,16 +20,19 @@ final class LogFlowUITests: XCTestCase {
 
         UITestAppHarness.waitForMainTabs(in: app)
 
-        // Find the Log/Edit button using a predicate
-        let logButton = app.buttons
-            .matching(NSPredicate(format: "label CONTAINS 'Log Day' OR label CONTAINS 'Edit Log'")).firstMatch
+        let logButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(logButton.waitForExistence(timeout: 5))
         logButton.tap()
 
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 5))
 
-        // We use "Dismiss" now, and it auto-saves
-        app.buttons["Dismiss"].tap()
+        UITestAppHarness.element(
+            withIdentifier: "Log_DismissButton",
+            in: app
+        ).tap()
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
     }
 }

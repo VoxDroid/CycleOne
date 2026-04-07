@@ -15,7 +15,12 @@ struct CalendarDayDetailView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(date.formatted(
-                        date: .complete, time: .omitted
+                        .dateTime
+                            .weekday(.wide)
+                            .month(.wide)
+                            .day()
+                            .year()
+                            .locale(AppLanguage.currentSelection().locale)
                     ))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
@@ -30,7 +35,7 @@ struct CalendarDayDetailView: View {
                                 .foregroundColor(.themePeriod)
                         }
                     } else {
-                        Text("No Period Logged")
+                        Text("calendar.day.no_period_logged")
                             .font(.headline)
                     }
                 }
@@ -44,7 +49,11 @@ struct CalendarDayDetailView: View {
                                 "plus.circle.fill" :
                                 "pencil.circle.fill"
                         )
-                        Text(log == nil ? "Log Day" : "Edit Log")
+                        if log == nil {
+                            Text("calendar.day.log_day")
+                        } else {
+                            Text("calendar.day.edit_log")
+                        }
                     }
                     .font(.footnote)
                     .fontWeight(.bold)
@@ -58,6 +67,7 @@ struct CalendarDayDetailView: View {
                         radius: 6, x: 0, y: 3
                     )
                 }
+                .accessibilityIdentifier("Calendar_LogActionButton")
             }
 
             if let log {
@@ -124,7 +134,7 @@ struct CalendarDayDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "calendar.badge.plus")
                         .foregroundColor(.themeAccent)
-                    Text("Tap to log your cycle, symptoms, or mood.")
+                    Text("calendar.day.tap_to_log")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -145,7 +155,8 @@ struct CalendarDayDetailView: View {
     }
 
     static func flowDescription(for flowLevel: Int16) -> String {
-        FlowLevel(rawValue: flowLevel)?.description ?? "Flow"
+        FlowLevel(rawValue: flowLevel)?.description
+            ?? L10n.string("calendar.day.flow_fallback", default: "Flow")
     }
 
     static func moodIcon(for mood: Int16) -> String {
@@ -165,7 +176,10 @@ struct CalendarDayDetailView: View {
     }
 
     static func symptomName(_ symptom: Symptom) -> String {
-        symptom.name ?? ""
+        SymptomType.localizedName(
+            forID: symptom.id,
+            fallbackName: symptom.name ?? ""
+        )
     }
 
     static func sortedSymptoms(_ symptoms: Set<Symptom>) -> [Symptom] {

@@ -15,6 +15,17 @@ enum AppTheme: String, CaseIterable, Identifiable {
         rawValue
     }
 
+    var displayNameKey: LocalizedStringKey {
+        switch self {
+        case .system:
+            "settings.theme.system"
+        case .light:
+            "settings.theme.light"
+        case .dark:
+            "settings.theme.dark"
+        }
+    }
+
     var colorScheme: ColorScheme? {
         switch self {
         case .system: nil
@@ -33,6 +44,21 @@ enum AccentTheme: String, CaseIterable, Identifiable {
 
     var id: String {
         rawValue
+    }
+
+    var displayNameKey: LocalizedStringKey {
+        switch self {
+        case .rose:
+            "settings.accent.rose"
+        case .lavender:
+            "settings.accent.lavender"
+        case .ocean:
+            "settings.accent.ocean"
+        case .sage:
+            "settings.accent.sage"
+        case .sunset:
+            "settings.accent.sunset"
+        }
     }
 
     var accentColor: Color {

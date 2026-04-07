@@ -103,6 +103,18 @@ final class NotificationSettingsViewLogicTests: XCTestCase {
     }
 
     func testDaysLabel_handlesSingularAndPlural() {
+        let defaults = UserDefaults.standard
+        let previousValue = defaults.string(forKey: AppLanguage.storageKey)
+        defer {
+            if let previousValue {
+                defaults.set(previousValue, forKey: AppLanguage.storageKey)
+            } else {
+                defaults.removeObject(forKey: AppLanguage.storageKey)
+            }
+        }
+
+        defaults.set(AppLanguage.english.rawValue, forKey: AppLanguage.storageKey)
+
         XCTAssertEqual(NotificationSettingsView.daysLabel(for: 1), "1 day")
         XCTAssertEqual(NotificationSettingsView.daysLabel(for: 2), "2 days")
     }

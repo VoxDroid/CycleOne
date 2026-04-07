@@ -9,6 +9,7 @@ import SwiftUI
 struct InsightsView: View {
     @Environment(\.managedObjectContext) var context
     @EnvironmentObject private var themeManager: ThemeManager
+    @AppStorage(AppLanguage.storageKey) private var selectedLanguageCode = AppLanguage.system.rawValue
     @StateObject private var viewModel: InsightsViewModel
 
     init(context: NSManagedObjectContext) {
@@ -25,18 +26,18 @@ struct InsightsView: View {
                     HStack(spacing: 12) {
                         StatCard(
                             icon: "calendar.circle.fill",
-                            title: "Avg Cycle",
+                            title: "insights.avg_cycle",
                             value: "\(Int(viewModel.avgCycleLength))",
-                            unit: "days",
+                            unit: "common.unit.days",
                             color: .themeAccent
                         )
                         .fadeSlideIn(delay: 0.05)
 
                         StatCard(
                             icon: "drop.fill",
-                            title: "Avg Period",
+                            title: "insights.avg_period",
                             value: "\(Int(viewModel.avgPeriodLength))",
-                            unit: "days",
+                            unit: "common.unit.days",
                             color: .themePeriod
                         )
                         .fadeSlideIn(delay: 0.1)
@@ -46,23 +47,23 @@ struct InsightsView: View {
                     // Variation Cards
                     HStack(spacing: 12) {
                         MiniStatCard(
-                            title: "Shortest",
-                            value: "\(viewModel.shortestCycle)d",
+                            title: "insights.shortest",
+                            value: Self.dayShortValue(viewModel.shortestCycle),
                             icon: "arrow.down.circle.fill",
                             color: .green
                         )
                         .fadeSlideIn(delay: 0.15)
 
                         MiniStatCard(
-                            title: "Longest",
-                            value: "\(viewModel.longestCycle)d",
+                            title: "insights.longest",
+                            value: Self.dayShortValue(viewModel.longestCycle),
                             icon: "arrow.up.circle.fill",
                             color: .orange
                         )
                         .fadeSlideIn(delay: 0.2)
 
                         MiniStatCard(
-                            title: "Total",
+                            title: "insights.total",
                             value: "\(viewModel.totalCycles)",
                             icon: "number.circle.fill",
                             color: .themeAccent
@@ -74,7 +75,7 @@ struct InsightsView: View {
                     // Extra Stats Row
                     HStack(spacing: 12) {
                         MiniStatCard(
-                            title: "Avg Pain",
+                            title: "insights.avg_pain",
                             value: String(
                                 format: "%.1f",
                                 viewModel.avgPainLevel
@@ -85,7 +86,7 @@ struct InsightsView: View {
                         .fadeSlideIn(delay: 0.28)
 
                         MiniStatCard(
-                            title: "Logged",
+                            title: "insights.logged",
                             value: "\(viewModel.totalLogsCount)",
                             icon: "note.text",
                             color: .indigo
@@ -93,7 +94,7 @@ struct InsightsView: View {
                         .fadeSlideIn(delay: 0.3)
 
                         MiniStatCard(
-                            title: "Symptoms",
+                            title: "insights.symptoms",
                             value: "\(viewModel.symptomDistribution.count)",
                             icon: "list.clipboard.fill",
                             color: .teal
@@ -210,6 +211,13 @@ struct InsightsView: View {
             .onAppear {
                 viewModel.calculateStats()
             }
+            .onChange(of: selectedLanguageCode, initial: false) { _, _ in
+                viewModel.calculateStats()
+            }
         }
+    }
+
+    static func dayShortValue(_ days: Int) -> String {
+        L10n.format("common.days_short_format", default: "%dd", days)
     }
 }

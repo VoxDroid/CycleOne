@@ -12,12 +12,25 @@ enum FlowLevel: Int16, CaseIterable {
     case medium = 2
     case heavy = 3
 
+    var accessibilityName: String {
+        switch self {
+        case .none: "none"
+        case .light: "light"
+        case .medium: "medium"
+        case .heavy: "heavy"
+        }
+    }
+
     var description: String {
         switch self {
-        case .none: "None"
-        case .light: "Light"
-        case .medium: "Medium"
-        case .heavy: "Heavy"
+        case .none:
+            L10n.string("flow.none", default: "None")
+        case .light:
+            L10n.string("flow.light", default: "Light")
+        case .medium:
+            L10n.string("flow.medium", default: "Medium")
+        case .heavy:
+            L10n.string("flow.heavy", default: "Heavy")
         }
     }
 
@@ -50,11 +63,16 @@ enum Mood: Int16, CaseIterable {
 
     var description: String {
         switch self {
-        case .happy: "Happy"
-        case .neutral: "Neutral"
-        case .sad: "Sad"
-        case .anxious: "Anxious"
-        case .angry: "Angry"
+        case .happy:
+            L10n.string("mood.happy", default: "Happy")
+        case .neutral:
+            L10n.string("mood.neutral", default: "Neutral")
+        case .sad:
+            L10n.string("mood.sad", default: "Sad")
+        case .anxious:
+            L10n.string("mood.anxious", default: "Anxious")
+        case .angry:
+            L10n.string("mood.angry", default: "Angry")
         }
     }
 }
@@ -74,9 +92,12 @@ enum EnergyLevel: Int16, CaseIterable {
 
     var description: String {
         switch self {
-        case .low: "Low"
-        case .medium: "Normal"
-        case .high: "High"
+        case .low:
+            L10n.string("energy.low", default: "Low")
+        case .medium:
+            L10n.string("energy.medium", default: "Normal")
+        case .high:
+            L10n.string("energy.high", default: "High")
         }
     }
 }
@@ -96,6 +117,19 @@ enum SymptomCategory: String, CaseIterable {
         }
     }
 
+    var localizedName: String {
+        switch self {
+        case .physical:
+            L10n.string("symptom.category.physical", default: "Physical")
+        case .mood:
+            L10n.string("symptom.category.mood", default: "Mood & Mental")
+        case .digestion:
+            L10n.string("symptom.category.digestion", default: "Digestion")
+        case .other:
+            L10n.string("symptom.category.other", default: "Other")
+        }
+    }
+
     var color: Color {
         switch self {
         case .physical: .themePeriod
@@ -110,6 +144,10 @@ struct SymptomType: Identifiable, Hashable {
     let id: String
     let name: String
     let category: SymptomCategory
+
+    var localizedName: String {
+        SymptomType.localizedName(forID: id, fallbackName: name)
+    }
 
     static let defaults: [SymptomType] = [
         // Physical
@@ -130,4 +168,23 @@ struct SymptomType: Identifiable, Hashable {
         SymptomType(id: "cravings", name: "Cravings", category: .other),
         SymptomType(id: "insomnia", name: "Insomnia", category: .other),
     ]
+
+    static func localizedName(forID id: String?, fallbackName: String) -> String {
+        guard let id else { return fallbackName }
+
+        let defaultName = defaults.first(where: { $0.id == id })?.name ?? fallbackName
+        return L10n.string("symptom.\(id)", default: defaultName)
+    }
+
+    static func localizedName(forName name: String) -> String {
+        guard
+            let match = defaults.first(where: {
+                $0.name.caseInsensitiveCompare(name) == .orderedSame
+            })
+        else {
+            return name
+        }
+
+        return localizedName(forID: match.id, fallbackName: match.name)
+    }
 }

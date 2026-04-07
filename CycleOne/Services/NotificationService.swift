@@ -52,8 +52,14 @@ class NotificationService {
 
     func schedulePeriodAlert(for date: Date) {
         let content = UNMutableNotificationContent()
-        content.title = "CycleOne"
-        content.body = "Your period is predicted to start tomorrow."
+        content.title = AppLanguage.localizedString(
+            "notifications.content.title",
+            defaultValue: "CycleOne"
+        )
+        content.body = AppLanguage.localizedString(
+            "notifications.content.period.body",
+            defaultValue: "Your period is predicted to start tomorrow."
+        )
         content.sound = .default
 
         let components = triggerComponents(for: date)
@@ -75,8 +81,14 @@ class NotificationService {
 
     func scheduleFertileWindowAlert(for date: Date) {
         let content = UNMutableNotificationContent()
-        content.title = "CycleOne"
-        content.body = "Your fertile window starts tomorrow."
+        content.title = AppLanguage.localizedString(
+            "notifications.content.title",
+            defaultValue: "CycleOne"
+        )
+        content.body = AppLanguage.localizedString(
+            "notifications.content.fertile.body",
+            defaultValue: "Your fertile window starts tomorrow."
+        )
         content.sound = .default
 
         let components = triggerComponents(for: date)
@@ -97,7 +109,7 @@ class NotificationService {
     }
 
     func triggerComponents(for date: Date) -> DateComponents {
-        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date)!
+        let triggerDate = Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date
         var components = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
         components.hour = 8
         components.minute = 0

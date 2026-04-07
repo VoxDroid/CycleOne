@@ -11,6 +11,7 @@ struct CalendarView: View {
     @StateObject private var viewModel: CycleViewModel
     @EnvironmentObject private var themeManager: ThemeManager
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage(AppLanguage.storageKey) private var selectedLanguageCode = AppLanguage.system.rawValue
 
     init(context: NSManagedObjectContext) {
         _viewModel = StateObject(
@@ -34,10 +35,13 @@ struct CalendarView: View {
                         .padding()
                         .fadeSlideIn(delay: 0.1)
 
-                        NativeCalendarView(viewModel: viewModel)
-                            .padding(.horizontal)
-                            .frame(minHeight: 400)
-                            .fadeSlideIn(delay: 0.2)
+                        NativeCalendarView(
+                            viewModel: viewModel,
+                            selectedLanguageCode: selectedLanguageCode
+                        )
+                        .padding(.horizontal)
+                        .frame(minHeight: 400)
+                        .fadeSlideIn(delay: 0.2)
 
                         CalendarLegendView()
                             .padding(.horizontal)
@@ -74,5 +78,10 @@ struct CalendarView: View {
                 }
             }
         }
+        .id("calendar-stack-\(selectedLanguageCode)")
+        .environment(
+            \.locale,
+            AppLanguage.fromStoredValue(selectedLanguageCode).locale
+        )
     }
 }

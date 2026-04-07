@@ -71,10 +71,24 @@ struct CycleLengthChartView: View {
 
 struct StatCard: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
     let value: String
-    let unit: String
+    let unit: LocalizedStringKey
     let color: Color
+
+    init(
+        icon: String,
+        title: String,
+        value: String,
+        unit: String,
+        color: Color
+    ) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.value = value
+        self.unit = LocalizedStringKey(unit)
+        self.color = color
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -122,10 +136,22 @@ struct StatCard: View {
 }
 
 struct MiniStatCard: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     let icon: String
     let color: Color
+
+    init(
+        title: String,
+        value: String,
+        icon: String,
+        color: Color
+    ) {
+        self.title = LocalizedStringKey(title)
+        self.value = value
+        self.icon = icon
+        self.color = color
+    }
 
     var body: some View {
         VStack(spacing: 6) {

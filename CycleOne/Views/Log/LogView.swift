@@ -74,7 +74,7 @@ struct LogView: View {
                                 )
                         }
                         .frame(maxWidth: .infinity)
-                        .accessibilityIdentifier("Log_Mood_\(mood.description)")
+                        .accessibilityIdentifier("Log_Mood_\(mood.rawValue)")
                         .onTapGesture {
                             withAnimation(.spring(response: 0.3)) {
                                 viewModel.mood = mood
@@ -113,7 +113,7 @@ struct LogView: View {
                                 )
                         }
                         .frame(maxWidth: .infinity)
-                        .accessibilityIdentifier("Log_Energy_\(energy.description)")
+                        .accessibilityIdentifier("Log_Energy_\(energy.rawValue)")
                         .onTapGesture {
                             withAnimation(.spring(response: 0.3)) {
                                 viewModel.energy = energy
@@ -125,7 +125,7 @@ struct LogView: View {
             }
             .fadeSlideIn(delay: 0.1)
 
-            Section("Pain Level: \(Int(viewModel.painLevel))") {
+            Section(Self.painLevelTitle(Int(viewModel.painLevel))) {
                 HStack(spacing: 8) {
                     Image(systemName: "hand.thumbsup")
                         .foregroundColor(.green)
@@ -192,6 +192,7 @@ struct LogView: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
+                    .accessibilityIdentifier("Log_DeleteThisLogButton")
                 }
                 .fadeSlideIn(delay: 0.3)
             }
@@ -201,6 +202,7 @@ struct LogView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Dismiss") { dismiss() }
+                    .accessibilityIdentifier("Log_DismissButton")
                     .fontWeight(.medium)
                     .foregroundColor(.themeAccent)
             }
@@ -235,5 +237,9 @@ struct LogView: View {
             return String(value.prefix(maximumLength))
         }
         return value
+    }
+
+    static func painLevelTitle(_ value: Int) -> String {
+        L10n.format("log.pain_level_format", default: "Pain Level: %d", value)
     }
 }

@@ -22,8 +22,8 @@ struct NotificationSettingsView: View {
 
     var body: some View {
         List {
-            Section(header: Text("Period Reminders")) {
-                Toggle("Remind me before period", isOn: $remindBeforePeriod)
+            Section(header: Text("settings.notifications.section.period")) {
+                Toggle("settings.notifications.toggle.period", isOn: $remindBeforePeriod)
                     .accessibilityIdentifier("Notifications_PeriodToggle")
                     .onChange(of: remindBeforePeriod, initial: false, handlePeriodReminderChange)
 
@@ -34,22 +34,49 @@ struct NotificationSettingsView: View {
                 }
             }
 
-            Section(header: Text("Fertile Window")) {
-                Toggle("Fertile window alerts", isOn: $remindBeforeFertile)
+            Section(header: Text("settings.notifications.section.fertile")) {
+                Toggle("settings.notifications.toggle.fertile", isOn: $remindBeforeFertile)
                     .accessibilityIdentifier("Notifications_FertileToggle")
                     .onChange(of: remindBeforeFertile, initial: false, handleFertileReminderChange)
             }
 
-            Section(footer: Text("Notifications are scheduled locally on your device at 8:00 AM.")) {
+            Section(footer: Text("settings.notifications.footer")) {
                 EmptyView()
             }
         }
         .accessibilityIdentifier("NotificationSettingsViewRoot")
-        .navigationTitle("Notifications")
+        .navigationTitle("settings.notifications.title")
     }
 
     static func daysLabel(for day: Int) -> String {
-        "\(day) day\(day > 1 ? "s" : "")"
+        switch day {
+        case 1:
+            return AppLanguage.localizedString(
+                "settings.notifications.days.1",
+                defaultValue: "1 day"
+            )
+        case 2:
+            return AppLanguage.localizedString(
+                "settings.notifications.days.2",
+                defaultValue: "2 days"
+            )
+        case 3:
+            return AppLanguage.localizedString(
+                "settings.notifications.days.3",
+                defaultValue: "3 days"
+            )
+        case 5:
+            return AppLanguage.localizedString(
+                "settings.notifications.days.5",
+                defaultValue: "5 days"
+            )
+        default:
+            let format = AppLanguage.localizedString(
+                "settings.notifications.days.format",
+                defaultValue: "%d days"
+            )
+            return String(format: format, day)
+        }
     }
 
     @MainActor
@@ -59,7 +86,7 @@ struct NotificationSettingsView: View {
 
     @MainActor
     static func daysBeforePicker(selection: Binding<Int>) -> some View {
-        Picker("Days before", selection: selection) {
+        Picker("settings.notifications.days_before", selection: selection) {
             dayPickerRow(for: 1)
             dayPickerRow(for: 2)
             dayPickerRow(for: 3)

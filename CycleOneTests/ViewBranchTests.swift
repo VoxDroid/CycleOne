@@ -233,8 +233,9 @@ final class ViewBranchTests: XCTestCase {
         )
     }
 
+    @MainActor
     func testSettingsView_applyAccent_updatesThemeManager() {
-        let manager = ThemeManager()
+        let manager = ThemeManager.shared
         let previousAccent = manager.selectedAccent
         defer { manager.selectedAccent = previousAccent }
 
@@ -331,7 +332,10 @@ final class ViewBranchTests: XCTestCase {
         XCTAssertNil(PrivacyPolicyView.fallbackMessage(for: url))
         XCTAssertEqual(
             PrivacyPolicyView.fallbackMessage(for: nil),
-            "Privacy Policy not found."
+            L10n.string(
+                "privacy_policy.not_found",
+                default: "Privacy Policy not found."
+            )
         )
     }
 
@@ -363,8 +367,9 @@ final class ViewBranchTests: XCTestCase {
         cycle.periodLength = 4
 
         host(CycleHistoryList(cycles: [cycle]), context: context)
-        XCTAssertEqual(CycleHistoryList.formattedStartDate(nil), "Unknown")
-        XCTAssertNotEqual(CycleHistoryList.formattedStartDate(Date().startOfDay), "Unknown")
+        let fallback = L10n.string("common.unknown", default: "Unknown")
+        XCTAssertEqual(CycleHistoryList.formattedStartDate(nil), fallback)
+        XCTAssertNotEqual(CycleHistoryList.formattedStartDate(Date().startOfDay), fallback)
     }
 
     func testInsightsAndSettingsViews_withSeededData_buildDeeperBranches() throws {

@@ -9,21 +9,21 @@ struct CalendarLegendView: View {
     @EnvironmentObject private var themeManager: ThemeManager
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Calendar Legend")
+            Text("calendar.legend.title")
                 .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundColor(.secondary)
 
             HStack(spacing: 0) {
-                LegendItem(color: .systemPink, label: "Period", isCustomView: true)
+                LegendItem(color: .systemPink, labelKey: "calendar.legend.period", isCustomView: true)
                 Spacer()
-                LegendItem(color: .systemGray, label: "Predicted")
+                LegendItem(color: .systemGray, labelKey: "calendar.legend.predicted")
                 Spacer()
-                LegendItem(color: .systemTeal, label: "Ovulation")
+                LegendItem(color: .systemTeal, labelKey: "calendar.legend.ovulation")
                 Spacer()
-                LegendItem(color: .systemTeal.withAlphaComponent(0.3), label: "Fertile")
+                LegendItem(color: .systemTeal.withAlphaComponent(0.3), labelKey: "calendar.legend.fertile")
                 Spacer()
-                LegendItem(color: .secondaryLabel, label: "Logged")
+                LegendItem(color: .secondaryLabel, labelKey: "calendar.legend.logged")
             }
         }
         .padding(14)
@@ -36,15 +36,25 @@ struct CalendarLegendView: View {
 
 struct LegendItem: View {
     let color: UIColor
-    let label: String
+    let labelKey: LocalizedStringKey
     var isCustomView: Bool = false
+
+    init(
+        color: UIColor,
+        labelKey: String,
+        isCustomView: Bool = false
+    ) {
+        self.color = color
+        self.labelKey = LocalizedStringKey(labelKey)
+        self.isCustomView = isCustomView
+    }
 
     var body: some View {
         HStack(spacing: 5) {
             Circle()
                 .fill(Color(color))
                 .frame(width: isCustomView ? 8 : 6, height: isCustomView ? 8 : 6)
-            Text(label)
+            Text(labelKey)
                 .font(.caption2)
                 .foregroundColor(.primary)
         }

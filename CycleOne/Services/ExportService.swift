@@ -30,7 +30,14 @@ class ExportService {
     }
 
     static func symptomsText(from symptoms: NSSet?) -> String {
-        (symptoms as? Set<Symptom>)?.compactMap(\.name).joined(separator: ";") ?? ""
+        (symptoms as? Set<Symptom>)?.compactMap { symptom in
+            let displayName = SymptomType.localizedName(
+                forID: symptom.id,
+                fallbackName: symptom.name ?? ""
+            )
+            return displayName.isEmpty ? nil : displayName
+        }
+        .joined(separator: ";") ?? ""
     }
 
     func generateCSV(context: NSManagedObjectContext) -> URL? {
@@ -39,13 +46,21 @@ class ExportService {
 
         do {
             let logs = try context.fetch(request)
-            var csvString = "Date,Flow,Pain,Mood,Energy,Symptoms,Notes\n"
+            let header = L10n.string(
+                "export.csv.header",
+                default: "Date,Flow,Pain,Mood,Energy,Symptoms,Notes"
+            )
+            var csvString = header + "\n"
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .short
 
             for log in logs {
-                let dateStr = dateFormatter.string(from: log.date!)
+                guard let logDate = log.date else {
+                    Logger.storage.error("Skipping export row with missing date")
+                    continue
+                }
+                let dateStr = dateFormatter.string(from: logDate)
                 let flowStr = FlowLevel(rawValue: log.flowLevel)?.description ?? ""
                 let painStr = "\(log.painLevel)"
                 let moodStr = Mood(rawValue: log.mood)?.description ?? ""

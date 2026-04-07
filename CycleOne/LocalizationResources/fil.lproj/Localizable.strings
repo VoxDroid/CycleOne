@@ -1,0 +1,241 @@
+"tab.calendar" = "Kalendaryo";
+"tab.insights" = "Mga Insight";
+"tab.settings" = "Mga Setting";
+
+"common.vs" = "vs";
+"common.na" = "N/A";
+"common.same" = "Pareho";
+"common.days_format" = "%d araw";
+"common.days_short_format" = "%dar";
+"common.unknown" = "Hindi Alam";
+"common.unit.days" = "araw";
+
+"flow.none" = "Wala";
+"flow.light" = "Kaunti";
+"flow.medium" = "Katamtaman";
+"flow.heavy" = "Malakas";
+
+"mood.happy" = "Masaya";
+"mood.neutral" = "Neutral";
+"mood.sad" = "Malungkot";
+"mood.anxious" = "Balisa";
+"mood.angry" = "Galit";
+
+"energy.low" = "Mababa";
+"energy.medium" = "Karaniwan";
+"energy.high" = "Mataas";
+
+"symptom.category.physical" = "Pisikal";
+"symptom.category.mood" = "Mood at Mental";
+"symptom.category.digestion" = "Pagtunaw";
+"symptom.category.other" = "Iba pa";
+
+"symptom.cramps" = "Pananakit";
+"symptom.bloating" = "Kabag";
+"symptom.headache" = "Sakit ng Ulo";
+"symptom.acne" = "Taghiyawat";
+"symptom.breast_tenderness" = "Pananakit ng Dibdib";
+"symptom.back_pain" = "Sakit ng Likod";
+"symptom.dizziness" = "Pagkahilo";
+"symptom.nausea" = "Pagduduwal";
+"symptom.mood_swings" = "Pabago-bagong Mood";
+"symptom.irritability" = "Pagiging Mainitin";
+"symptom.fatigue" = "Pagkapagod";
+"symptom.cravings" = "Paglilihi";
+"symptom.insomnia" = "Hindi Makatulog";
+
+"settings.section.preferences" = "Mga Kagustuhan";
+"settings.enable_predictions" = "I-enable ang Mga Prediksyon";
+"settings.notifications" = "Mga Abiso";
+"settings.section.appearance" = "Itsura";
+"settings.theme" = "Tema";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Maliwanag";
+"settings.theme.dark" = "Madilim";
+"settings.language" = "Wika";
+"settings.language.system" = "Sundin ang System";
+"settings.language.english" = "Ingles";
+"settings.language.filipino" = "Filipino";
+"settings.language.japanese" = "Hapones";
+"settings.accent_color" = "Kulay ng Accent";
+"settings.accent.rose" = "Rosas";
+"settings.accent.lavender" = "Lavender";
+"settings.accent.ocean" = "Karagatan";
+"settings.accent.sage" = "Sage";
+"settings.accent.sunset" = "Takipsilim";
+"settings.section.data" = "Data";
+"settings.export_csv" = "I-export ang Data (CSV)";
+"settings.delete_all_data" = "Burahin ang Lahat ng Data";
+"settings.section.app" = "App";
+"settings.help_guide" = "Tulong at Gabay";
+"settings.support_feedback" = "Suporta at Feedback";
+"settings.privacy_policy" = "Patakaran sa Privacy";
+"settings.rate_cycleone" = "I-rate ang CycleOne";
+"settings.about" = "Tungkol Dito";
+"settings.footer.byline" = "CycleOne ni VoxDroid";
+"settings.footer.copyright" = "© 2026 VoxDroid. Lahat ng karapatan ay nakalaan.";
+"settings.navigation_title" = "Mga Setting";
+"settings.alert.delete_title" = "Burahin ang Lahat ng Data?";
+"settings.alert.delete_action" = "Burahin";
+"settings.alert.cancel_action" = "Kanselahin";
+"settings.alert.delete_message" = "Hindi na ito maaaring ibalik. Permanenteng mabubura ang lahat ng na-log mong cycle at sintomas.";
+
+"settings.notifications.title" = "Mga Abiso";
+"settings.notifications.section.period" = "Mga Paalala sa Regla";
+"settings.notifications.toggle.period" = "Paalalahanan ako bago ang regla";
+"settings.notifications.section.fertile" = "Fertile Window";
+"settings.notifications.toggle.fertile" = "Mga alert para sa fertile window";
+"settings.notifications.footer" = "Naka-iskedyul ang mga abiso sa iyong device tuwing 8:00 AM.";
+"settings.notifications.days_before" = "Mga araw bago";
+"settings.notifications.days.1" = "1 araw";
+"settings.notifications.days.2" = "2 araw";
+"settings.notifications.days.3" = "3 araw";
+"settings.notifications.days.5" = "5 araw";
+"settings.notifications.days.format" = "%d araw";
+
+"notifications.content.title" = "CycleOne";
+"notifications.content.period.body" = "Inaasahang magsisimula ang iyong regla bukas.";
+"notifications.content.fertile.body" = "Magsisimula ang iyong fertile window bukas.";
+
+"calendar.legend.title" = "Legend ng Kalendaryo";
+"calendar.legend.period" = "Regla";
+"calendar.legend.predicted" = "Hula";
+"calendar.legend.ovulation" = "Ovulation";
+"calendar.legend.fertile" = "Fertile";
+"calendar.legend.logged" = "Na-log";
+
+"calendar.day.no_period_logged" = "Walang Na-log na Regla";
+"calendar.day.log_day" = "I-log ang Araw";
+"calendar.day.edit_log" = "I-edit ang Log";
+"calendar.day.tap_to_log" = "I-tap para i-log ang cycle, sintomas, o mood mo.";
+"calendar.day.flow_fallback" = "Flow";
+
+"calendar.header.irregular" = "Iregular";
+"calendar.header.disclaimer" = "Tantya lamang ang mga prediksyon. Hindi ito medikal na payo.";
+"calendar.header.log_first" = "I-log ang una mong regla";
+"calendar.header.overdue" = "Lagpas na ang inaasahang regla";
+"calendar.header.starts_today" = "Magsisimula ang regla ngayon";
+"calendar.header.next_period" = "Susunod na regla";
+"calendar.header.expected_today" = "Inaasahan ngayon";
+"calendar.header.overdue_by_days" = "Nahuli ng %d araw";
+"calendar.header.in_days" = "Sa loob ng %d araw";
+"calendar.header.ovulation_starts_today" = "Magsisimula ang ovulation ngayon";
+"calendar.header.ovulation_in_days" = "Ovulation sa loob ng %d araw";
+
+"insights.avg_cycle" = "Avg Cycle";
+"insights.avg_period" = "Avg Period";
+"insights.shortest" = "Pinakamaiksi";
+"insights.longest" = "Pinakamahaba";
+"insights.total" = "Kabuuan";
+"insights.avg_pain" = "Avg Sakit";
+"insights.logged" = "Na-log";
+"insights.symptoms" = "Sintomas";
+
+"insights.history.empty_title" = "Wala pang data";
+"insights.history.empty_message" = "Lalabas dito ang history ng cycle mo kapag na-log mo na ang unang regla.";
+"insights.history.past_cycles" = "Mga Nakaraang Cycle";
+"insights.history.title" = "History";
+"insights.history.period_days_format" = "%d araw na regla";
+
+"insights.compare.title" = "Paghahambing ng Cycle";
+"insights.compare.current" = "Kasalukuyan";
+"insights.compare.previous" = "Nakaraan";
+"insights.compare.start_date" = "Petsa ng Simula";
+"insights.compare.cycle_length" = "Haba ng Cycle";
+"insights.compare.period_length" = "Haba ng Regla";
+"insights.compare.length_comparison" = "Paghahambing ng Haba";
+"insights.compare.navigation_title" = "Ihambing ang mga Cycle";
+"insights.compare.empty_title" = "Kulang ang Data";
+"insights.compare.empty_message" = "Mag-log ng hindi bababa sa dalawang cycle para maikumpara.";
+
+"onboarding.page1.title" = "Welcome sa CycleOne";
+"onboarding.page1.subtitle" = "Isang period tracker na privacy-first.\nWalang subscription. Walang cloud. Walang account.";
+"onboarding.page2.title" = "Subaybayan ang Iyong Cycle";
+"onboarding.page2.subtitle" = "I-tap ang kahit anong araw sa kalendaryo para i-log ang regla, sintomas, mood, at energy mo.";
+"onboarding.page3.title" = "Tuklasin ang Mga Pattern";
+"onboarding.page3.subtitle" = "Tingnan ang insights tungkol sa haba ng cycle mo, karaniwang sintomas, at mga prediksyon.";
+"onboarding.page4.title" = "Pribado ang Data Mo";
+"onboarding.page4.subtitle" = "Lahat ay naka-store sa device mo.\nWalang server. Walang tracking. Kailanman.";
+"onboarding.next" = "Susunod";
+"onboarding.get_started" = "Simulan";
+"onboarding.skip" = "Laktawan";
+
+"log.pain_level_format" = "Antas ng Sakit: %d";
+"privacy_policy.not_found" = "Hindi nahanap ang Patakaran sa Privacy.";
+"export.csv.header" = "Petsa,Flow,Sakit,Mood,Energy,Sintomas,Tala";
+
+"Log your day" = "I-log ang araw mo";
+"Flow" = "Flow";
+"Mood & Energy" = "Mood at Energy";
+"Symptoms" = "Mga Sintomas";
+"Add notes..." = "Magdagdag ng tala...";
+"Notes" = "Mga Tala";
+"Delete This Log" = "Burahin ang Log na Ito";
+"Log Day" = "I-log ang Araw";
+"Dismiss" = "Isara";
+"Delete Log?" = "Burahin ang Log?";
+"Delete" = "Burahin";
+"Cancel" = "Kanselahin";
+"This will permanently remove this day's log and all associated symptoms." = "Permanenteng mabubura ang log ng araw na ito at lahat ng kaugnay na sintomas.";
+
+"Cycle Length Trend" = "Trend ng Haba ng Cycle";
+"Mood Distribution" = "Distribusyon ng Mood";
+"Top Symptoms" = "Pinakamaraming Sintomas";
+"Compare Cycles" = "Ihambing ang mga Cycle";
+"View Full History" = "Tingnan ang Buong History";
+"Insights" = "Mga Insight";
+
+"User Guide" = "Gabay ng User";
+"Calendar" = "Kalendaryo";
+"Logging" = "Pag-log";
+"Reminders" = "Mga Paalala";
+"The main screen shows your cycle. Tap any date to view details or log data." = "Ipinapakita ng pangunahing screen ang cycle mo. I-tap ang anumang petsa para makita ang detalye o mag-log ng data.";
+"Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away." = "I-log ang flow, sintomas, mood, at energy mo. Awtomatikong nase-save kapag umalis ka sa page.";
+"View your average cycle length, period duration, and top symptoms." = "Tingnan ang average na haba ng cycle, tagal ng regla, at pinakakaraniwang sintomas.";
+"Enable notifications in Settings for alerts before period or fertile window." = "I-enable ang notifications sa Settings para sa paalala bago regla o fertile window.";
+"Quick Tips" = "Mabilis na Tips";
+"Swipe left or right to change months." = "Mag-swipe pakaliwa o pakanan para magpalit ng buwan.";
+"Tap the detail card to log or edit." = "I-tap ang detail card para mag-log o mag-edit.";
+"Check Insights to understand patterns." = "Tingnan ang Insights para maunawaan ang patterns.";
+"Export your data anytime — you own it." = "I-export ang data mo anumang oras — pag-aari mo ito.";
+"App Philosophy" = "Pilosopiya ng App";
+"Privacy First" = "Privacy Muna";
+"Zero cloud sync and zero tracking. Data stays on your device." = "Walang cloud sync at walang tracking. Nananatili ang data sa device mo.";
+"No Subscriptions" = "Walang Subscription";
+"Don't pay monthly for your own health data. One purchase, forever." = "Huwag magbayad buwan-buwan para sa sarili mong health data. Isang bili, habambuhay.";
+"Manual & Support" = "Manual at Suporta";
+"View Project on GitHub" = "Tingnan ang Project sa GitHub";
+"Privacy Policy" = "Patakaran sa Privacy";
+"Help & Guide" = "Tulong at Gabay";
+
+"Export Your Data" = "I-export ang Iyong Data";
+"Get a CSV file of all your logged cycles and symptoms. Your data stays private." = "Kumuha ng CSV file ng lahat ng na-log mong cycle at sintomas. Pribado ang data mo.";
+"Generating CSV..." = "Gumagawa ng CSV...";
+"Share CSV File" = "I-share ang CSV File";
+"Regenerate" = "Gumawa Ulit";
+"Generate CSV" = "Gumawa ng CSV";
+"Export is plaintext only. No proprietary format." = "Plaintext lamang ang export. Walang proprietary format.";
+"Export" = "Export";
+
+"A privacy-first, open-source period tracker for iOS." = "Isang privacy-first, open-source na period tracker para sa iOS.";
+"Developer" = "Developer";
+"VoxDroid" = "VoxDroid";
+"Lead Developer" = "Lead Developer";
+"izeno.contact@gmail.com" = "izeno.contact@gmail.com";
+"Direct Support" = "Direktang Suporta";
+"github.com/VoxDroid" = "github.com/VoxDroid";
+"Follow on GitHub" = "Sundan sa GitHub";
+"Project" = "Project";
+"Source Code" = "Source Code";
+"GPL-3.0 Licensed" = "May Lisensyang GPL-3.0";
+"Privacy Commitment" = "Pangako sa Privacy";
+"100% local, zero tracking" = "100% lokal, walang tracking";
+"Built with Swift" = "Ginawa gamit ang Swift";
+"SwiftUI + Core Data" = "SwiftUI + Core Data";
+"CycleOne by VoxDroid" = "CycleOne ni VoxDroid";
+"© 2026 VoxDroid. All rights reserved." = "© 2026 VoxDroid. Lahat ng karapatan ay nakalaan.";
+"About" = "Tungkol Dito";
+
+"CycleOne" = "CycleOne";
+"Version 1.0.0" = "Bersyon 1.0.0";
+"Privacy-first period tracking" = "Privacy-first na period tracking";

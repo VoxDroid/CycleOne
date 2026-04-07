@@ -4,10 +4,10 @@ import XCTest
 final class CycleEnumsTests: XCTestCase {
     func testFlowLevelDescriptionsAndIcons() {
         let expected: [(FlowLevel, String, String)] = [
-            (.none, "None", "drop"),
-            (.light, "Light", "drop"),
-            (.medium, "Medium", "drop.fill"),
-            (.heavy, "Heavy", "drop.halffull"),
+            (.none, L10n.string("flow.none", default: "None"), "drop"),
+            (.light, L10n.string("flow.light", default: "Light"), "drop"),
+            (.medium, L10n.string("flow.medium", default: "Medium"), "drop.fill"),
+            (.heavy, L10n.string("flow.heavy", default: "Heavy"), "drop.halffull"),
         ]
 
         XCTAssertEqual(FlowLevel.allCases.count, expected.count)
@@ -19,11 +19,11 @@ final class CycleEnumsTests: XCTestCase {
 
     func testMoodDescriptionsAndIcons() {
         let expected: [(Mood, String, String)] = [
-            (.happy, "Happy", "face.smiling"),
-            (.neutral, "Neutral", "face.dashed"),
-            (.sad, "Sad", "cloud.drizzle.fill"),
-            (.anxious, "Anxious", "face.smiling.inverse"),
-            (.angry, "Angry", "flame.fill"),
+            (.happy, L10n.string("mood.happy", default: "Happy"), "face.smiling"),
+            (.neutral, L10n.string("mood.neutral", default: "Neutral"), "face.dashed"),
+            (.sad, L10n.string("mood.sad", default: "Sad"), "cloud.drizzle.fill"),
+            (.anxious, L10n.string("mood.anxious", default: "Anxious"), "face.smiling.inverse"),
+            (.angry, L10n.string("mood.angry", default: "Angry"), "flame.fill"),
         ]
 
         XCTAssertEqual(Mood.allCases.count, expected.count)
@@ -35,9 +35,9 @@ final class CycleEnumsTests: XCTestCase {
 
     func testEnergyLevelDescriptionsAndIcons() {
         let expected: [(EnergyLevel, String, String)] = [
-            (.low, "Low", "battery.25"),
-            (.medium, "Normal", "battery.50"),
-            (.high, "High", "battery.100"),
+            (.low, L10n.string("energy.low", default: "Low"), "battery.25"),
+            (.medium, L10n.string("energy.medium", default: "Normal"), "battery.50"),
+            (.high, L10n.string("energy.high", default: "High"), "battery.100"),
         ]
 
         XCTAssertEqual(EnergyLevel.allCases.count, expected.count)

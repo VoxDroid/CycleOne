@@ -104,7 +104,7 @@ final class ViewInstantiationTests: XCTestCase {
         host(FlowPickerView(selection: .constant(.medium)))
 
         host(SymptomGridView(selectedSymptoms: .constant([]), symptoms: SymptomType.defaults))
-        let chip = SymptomChip(name: "sym", isSelected: false, action: Self.noopAction)
+        let chip = SymptomChip(id: "sym", localizedName: "sym", isSelected: false, action: Self.noopAction)
         chip.action()
         host(chip)
 

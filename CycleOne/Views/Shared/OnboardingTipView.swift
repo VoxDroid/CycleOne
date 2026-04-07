@@ -13,26 +13,26 @@ struct OnboardingTipView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             icon: "heart.circle.fill",
-            title: "Welcome to CycleOne",
-            subtitle: "A privacy-first period tracker.\nNo subscriptions. No cloud. No account.",
+            title: "onboarding.page1.title",
+            subtitle: "onboarding.page1.subtitle",
             color: .themeAccent
         ),
         OnboardingPage(
             icon: "calendar.badge.plus",
-            title: "Track Your Cycle",
-            subtitle: "Tap any day on the calendar to log your period, symptoms, mood, and energy.",
+            title: "onboarding.page2.title",
+            subtitle: "onboarding.page2.subtitle",
             color: .themeAccent
         ),
         OnboardingPage(
             icon: "chart.bar.fill",
-            title: "Discover Patterns",
-            subtitle: "View insights about your cycle length, common symptoms, and predictions.",
+            title: "onboarding.page3.title",
+            subtitle: "onboarding.page3.subtitle",
             color: .themeFertile
         ),
         OnboardingPage(
             icon: "lock.shield.fill",
-            title: "Your Data Stays Private",
-            subtitle: "Everything is stored on your device.\nNo servers. No tracking. Ever.",
+            title: "onboarding.page4.title",
+            subtitle: "onboarding.page4.subtitle",
             color: .green
         ),
     ]
@@ -89,10 +89,13 @@ struct OnboardingTipView: View {
                         onDismiss()
                     }
                 }, label: {
-                    Text(
-                        currentPage < pages.count - 1 ?
-                            "Next" : "Get Started"
-                    )
+                    Group {
+                        if currentPage < pages.count - 1 {
+                            Text("onboarding.next")
+                        } else {
+                            Text("onboarding.get_started")
+                        }
+                    }
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -104,7 +107,7 @@ struct OnboardingTipView: View {
                 .padding(.horizontal, 8)
 
                 if currentPage < pages.count - 1 {
-                    Button("Skip") {
+                    Button("onboarding.skip") {
                         onDismiss()
                     }
                     .font(.subheadline)
@@ -159,8 +162,8 @@ struct OnboardingTipView: View {
 
 private struct OnboardingPage {
     let icon: String
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
     let color: Color
 }
 

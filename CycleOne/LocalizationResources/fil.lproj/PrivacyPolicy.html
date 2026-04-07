@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patakaran sa Privacy ng CycleOne</title>
+    <style>
+        :root {
+            --text: #333;
+            --bg: #fff;
+            --accent: #FF6B9D;
+            --card-bg: #f9f9f9;
+            --card-border: #e0e0e0;
+            --muted: #888;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #e0e0e0;
+                --bg: #1c1c1e;
+                --card-bg: #2c2c2e;
+                --card-border: #3a3a3c;
+                --muted: #8e8e93;
+            }
+        }
+        body {
+            font-family: -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        h1 { color: var(--accent); font-size: 1.6em; }
+        h2 {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            margin-top: 28px;
+            font-size: 1.15em;
+        }
+        .privacy-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        .privacy-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+        p { margin: 10px 0; }
+        .footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.8em;
+            color: var(--muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Privacy Muna. Walang Cloud.</h1>
+    <p>Ginawa ang CycleOne para sa iisang layunin: protektahan ang cycle data mo laban sa kahit sino, kasama na kami.</p>
+
+    <div class="privacy-box">
+        <strong>1. Lokal na Storage Lang</strong>
+        <p>Lahat ng data mo (mga petsa, sintomas, mood) ay naka-save lang sa iPhone mo gamit ang Core Data. Wala kaming servers at hindi kami gumagamit ng iCloud sync.</p>
+    </div>
+
+    <h2>2. Walang Account</h2>
+    <p>Hindi mo kailangang mag-sign up o magbigay ng email. Nakakabit ang data mo sa device mo, hindi sa pagkakakilanlan mo.</p>
+
+    <h2>3. Walang Ad Tracking o Analytics</h2>
+    <p>Hindi kami gumagamit ng third-party SDK, ad tracker, o analytics tools. Wala kaming alam kung gaano kadalas mong gamitin ang app o kung ano ang nilolog mo.</p>
+
+    <h2>4. Data Mo, Ikaw ang Masusunod</h2>
+    <p>Puwede mong i-export ang data mo bilang CSV anumang oras. Puwede mo ring burahin ang lahat ng data sa loob ng app o sa pagbura mismo ng app sa device mo.</p>
+
+    <h2>5. Third-Party Services</h2>
+    <p>Hindi kumokonekta ang CycleOne sa anumang third-party service. Walang network request na ginagawa ang app. Zero dependency sa external servers o APIs.</p>
+
+    <h2>6. Data Retention</h2>
+    <p>Mananatili lang ang data mo habang naka-install ang app. Kapag in-uninstall ang CycleOne, permanenteng mabubura ang lahat ng data. Hindi namin ito maibabalik.</p>
+
+    <h2>7. Privacy ng mga Bata</h2>
+    <p>Hindi para sa mga batang wala pang 13 taon ang CycleOne. Hindi kami sadyang nangongolekta ng personal na data mula sa mga bata.</p>
+
+    <h2>8. Contact</h2>
+    <p>Kung may tanong ka tungkol sa patakarang ito, kontakin kami sa aming GitHub repository: <a href="https://github.com/VoxDroid/CycleOne" style="color: var(--accent)">github.com/VoxDroid/CycleOne</a></p>
+
+    <div class="footer">
+        <p>&copy; 2026 CycleOne by VoxDroid. Lahat ng karapatan ay nakalaan.</p>
+        <p>Huling update: Abril 2026</p>
+    </div>
+</body>
+</html>

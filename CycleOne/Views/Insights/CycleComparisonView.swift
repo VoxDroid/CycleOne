@@ -18,23 +18,23 @@ struct CycleComparisonView: View {
         ScrollView {
             if let pair = latestTwo {
                 VStack(spacing: 16) {
-                    Text("Cycle Comparison")
+                    Text("insights.compare.title")
                         .font(.headline)
                         .foregroundColor(.themeAccent)
                         .padding(.top, 8)
 
                     HStack(spacing: 0) {
-                        Text("Current")
+                        Text("insights.compare.current")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.themeAccent)
                             .frame(maxWidth: .infinity)
 
-                        Text("vs")
+                        Text("common.vs")
                             .font(.caption)
                             .foregroundColor(.secondary)
 
-                        Text("Previous")
+                        Text("insights.compare.previous")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.secondary)
@@ -43,30 +43,30 @@ struct CycleComparisonView: View {
                     .padding(.horizontal)
 
                     ComparisonRow(
-                        label: "Start Date",
+                        label: "insights.compare.start_date",
                         current: Self.formattedStartDate(pair.current.startDate),
                         previous: Self.formattedStartDate(pair.previous.startDate)
                     )
 
                     ComparisonRow(
-                        label: "Cycle Length",
-                        current: "\(pair.current.cycleLength) days",
-                        previous: "\(pair.previous.cycleLength) days",
+                        label: "insights.compare.cycle_length",
+                        current: Self.daysText(Int(pair.current.cycleLength)),
+                        previous: Self.daysText(Int(pair.previous.cycleLength)),
                         diff: Int(pair.current.cycleLength)
                             - Int(pair.previous.cycleLength)
                     )
 
                     ComparisonRow(
-                        label: "Period Length",
-                        current: "\(pair.current.periodLength) days",
-                        previous: "\(pair.previous.periodLength) days",
+                        label: "insights.compare.period_length",
+                        current: Self.daysText(Int(pair.current.periodLength)),
+                        previous: Self.daysText(Int(pair.previous.periodLength)),
                         diff: Int(pair.current.periodLength)
                             - Int(pair.previous.periodLength)
                     )
 
                     // Visual bar comparison
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Length Comparison")
+                        Text("insights.compare.length_comparison")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.secondary)
@@ -79,7 +79,7 @@ struct CycleComparisonView: View {
 
                         VStack(spacing: 8) {
                             HStack(spacing: 8) {
-                                Text("Current")
+                                Text("insights.compare.current")
                                     .font(.caption)
                                     .frame(
                                         width: 60,
@@ -104,7 +104,7 @@ struct CycleComparisonView: View {
                             }
 
                             HStack(spacing: 8) {
-                                Text("Previous")
+                                Text("insights.compare.previous")
                                     .font(.caption)
                                     .frame(
                                         width: 60,
@@ -150,7 +150,7 @@ struct CycleComparisonView: View {
         }
         .accessibilityIdentifier("CycleComparisonViewRoot")
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("Compare Cycles")
+        .navigationTitle("insights.compare.navigation_title")
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -158,7 +158,11 @@ struct CycleComparisonView: View {
         date?.formatted(
             .dateTime.month(.abbreviated)
                 .day()
-        ) ?? "N/A"
+        ) ?? L10n.string("common.na", default: "N/A")
+    }
+
+    static func daysText(_ days: Int) -> String {
+        L10n.format("common.days_format", default: "%d days", days)
     }
 
     static func emptyStateOpacity(hasLatestTwo: Bool) -> Double {
@@ -172,8 +176,8 @@ struct CycleComparisonView: View {
     private var emptyStateView: some View {
         EmptyStateView(
             icon: "arrow.left.arrow.right",
-            title: "Not Enough Data",
-            message: "Log at least two cycles to compare."
+            title: "insights.compare.empty_title",
+            message: "insights.compare.empty_message"
         )
         .padding(.top, 60)
     }
@@ -190,10 +194,22 @@ struct CycleComparisonView: View {
 }
 
 struct ComparisonRow: View {
-    let label: String
+    let label: LocalizedStringKey
     let current: String
     let previous: String
     var diff: Int?
+
+    init(
+        label: String,
+        current: String,
+        previous: String,
+        diff: Int? = nil
+    ) {
+        self.label = LocalizedStringKey(label)
+        self.current = current
+        self.previous = previous
+        self.diff = diff
+    }
 
     var body: some View {
         VStack(spacing: 6) {
@@ -216,19 +232,15 @@ struct ComparisonRow: View {
                             systemName: Self.diffIconName(for: diff)
                         )
                         .font(.caption2)
-                        Text(
-                            diff == 0
-                                ? "Same"
-                                : "\(abs(diff))d"
-                        )
-                        .font(.caption2)
-                        .fontWeight(.medium)
+                        Text(Self.diffText(for: diff))
+                            .font(.caption2)
+                            .fontWeight(.medium)
                     }
                     .foregroundColor(
                         Self.diffColor(for: diff)
                     )
                 } else {
-                    Text("vs")
+                    Text("common.vs")
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
@@ -259,6 +271,14 @@ struct ComparisonRow: View {
         default:
             "equal.circle.fill"
         }
+    }
+
+    static func diffText(for diff: Int) -> String {
+        if diff == 0 {
+            return L10n.string("common.same", default: "Same")
+        }
+
+        return L10n.format("common.days_short_format", default: "%dd", abs(diff))
     }
 
     static func diffColor(for diff: Int) -> Color {

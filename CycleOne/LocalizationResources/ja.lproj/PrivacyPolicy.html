@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CycleOne プライバシーポリシー</title>
+    <style>
+        :root {
+            --text: #333;
+            --bg: #fff;
+            --accent: #FF6B9D;
+            --card-bg: #f9f9f9;
+            --card-border: #e0e0e0;
+            --muted: #888;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #e0e0e0;
+                --bg: #1c1c1e;
+                --card-bg: #2c2c2e;
+                --card-border: #3a3a3c;
+                --muted: #8e8e93;
+            }
+        }
+        body {
+            font-family: -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        h1 { color: var(--accent); font-size: 1.6em; }
+        h2 {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            margin-top: 28px;
+            font-size: 1.15em;
+        }
+        .privacy-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        .privacy-box strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+        p { margin: 10px 0; }
+        .footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.8em;
+            color: var(--muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>プライバシー最優先。クラウドなし。</h1>
+    <p>CycleOne は、あなたの周期データを誰からも守ることを唯一の目的として作られました。私たち自身も例外ではありません。</p>
+
+    <div class="privacy-box">
+        <strong>1. 端末内保存のみ</strong>
+        <p>あなたのデータ（日付、症状、気分）はすべて Core Data を使って iPhone 内だけに保存されます。サーバーは保有せず、iCloud 同期も利用しません。</p>
+    </div>
+
+    <h2>2. アカウント不要</h2>
+    <p>登録やメールアドレスの入力は不要です。データはあなたの身元ではなく、あなたの端末に紐づきます。</p>
+
+    <h2>3. 広告トラッキング・解析なし</h2>
+    <p>サードパーティ SDK、広告トラッカー、解析ツールは一切使用しません。あなたの利用頻度や記録内容を私たちが把握することはありません。</p>
+
+    <h2>4. データの主導権はあなたに</h2>
+    <p>データはいつでも CSV として書き出せます。アプリ内から全データを削除することも、アプリを削除して消去することもできます。</p>
+
+    <h2>5. 外部サービスとの連携なし</h2>
+    <p>CycleOne は外部サービスに接続しません。アプリからネットワークリクエストは行われず、外部サーバーや API への依存はゼロです。</p>
+
+    <h2>6. データ保持期間</h2>
+    <p>データはアプリがインストールされている間だけ保持されます。CycleOne をアンインストールすると、すべてのデータは完全に削除され、復元はできません。</p>
+
+    <h2>7. 子どものプライバシー</h2>
+    <p>CycleOne は 13 歳未満の子どもを対象としていません。子どもの個人データを意図的に収集することはありません。</p>
+
+    <h2>8. お問い合わせ</h2>
+    <p>このポリシーについてのご質問は、GitHub リポジトリからご連絡ください: <a href="https://github.com/VoxDroid/CycleOne" style="color: var(--accent)">github.com/VoxDroid/CycleOne</a></p>
+
+    <div class="footer">
+        <p>&copy; 2026 CycleOne by VoxDroid. 無断転載を禁じます。</p>
+        <p>最終更新: 2026年4月</p>
+    </div>
+</body>
+</html>

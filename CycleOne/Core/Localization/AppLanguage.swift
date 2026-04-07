@@ -1,0 +1,137 @@
+//
+//  AppLanguage.swift
+//  CycleOne
+//
+
+import Foundation
+import SwiftUI
+
+enum AppLanguage: String, CaseIterable, Identifiable {
+    case system
+    case english = "en"
+    case filipino = "fil"
+    case japanese = "ja"
+
+    static let storageKey = "selected_app_language"
+
+    var id: String {
+        rawValue
+    }
+
+    var locale: Locale {
+        switch self {
+        case .system:
+            .autoupdatingCurrent
+        case .english:
+            Locale(identifier: "en")
+        case .filipino:
+            Locale(identifier: "fil")
+        case .japanese:
+            Locale(identifier: "ja")
+        }
+    }
+
+    var displayNameKey: LocalizedStringKey {
+        switch self {
+        case .system:
+            "settings.language.system"
+        case .english:
+            "settings.language.english"
+        case .filipino:
+            "settings.language.filipino"
+        case .japanese:
+            "settings.language.japanese"
+        }
+    }
+
+    static func fromStoredValue(_ rawValue: String?) -> AppLanguage {
+        AppLanguage(rawValue: rawValue ?? "") ?? .system
+    }
+
+    static func currentSelection(
+        userDefaults: UserDefaults = .standard
+    ) -> AppLanguage {
+        fromStoredValue(
+            userDefaults.string(forKey: storageKey)
+        )
+    }
+
+    var resourceLanguageCode: String? {
+        switch self {
+        case .system:
+            nil
+        case .english:
+            "en"
+        case .filipino:
+            "fil"
+        case .japanese:
+            "ja"
+        }
+    }
+
+    var localizedBundle: Bundle {
+        guard
+            let languageCode = resourceLanguageCode,
+            let bundle = Bundle.localizedBundle(for: languageCode)
+        else {
+            return .main
+        }
+        return bundle
+    }
+
+    func localizedResourceURL(
+        forResource name: String,
+        withExtension ext: String
+    ) -> URL? {
+        localizedBundle.url(forResource: name, withExtension: ext)
+    }
+
+    func localizedString(
+        _ key: String,
+        defaultValue: String
+    ) -> String {
+        let value = localizedBundle.localizedString(
+            forKey: key,
+            value: defaultValue,
+            table: nil
+        )
+        return value == key ? defaultValue : value
+    }
+
+    static func localizedString(
+        _ key: String,
+        defaultValue: String
+    ) -> String {
+        currentSelection().localizedString(
+            key,
+            defaultValue: defaultValue
+        )
+    }
+}
+
+private extension Bundle {
+    static func localizedBundle(for languageCode: String) -> Bundle? {
+        if
+            let directPath = Bundle.main.path(
+                forResource: languageCode,
+                ofType: "lproj"
+            ),
+            let bundle = Bundle(path: directPath)
+        {
+            return bundle
+        }
+
+        if
+            let groupedPath = Bundle.main.path(
+                forResource: languageCode,
+                ofType: "lproj",
+                inDirectory: "LocalizationResources"
+            ),
+            let bundle = Bundle(path: groupedPath)
+        {
+            return bundle
+        }
+
+        return nil
+    }
+}

@@ -22,7 +22,14 @@ final class LogViewModel: ObservableObject {
     private let context: NSManagedObjectContext
 
     var formattedDate: String {
-        date.formatted(.dateTime.weekday(.wide).month(.wide).day().year())
+        date.formatted(
+            .dateTime
+                .weekday(.wide)
+                .month(.wide)
+                .day()
+                .year()
+                .locale(AppLanguage.currentSelection().locale)
+        )
     }
 
     init(

@@ -48,6 +48,18 @@ In an era of cloud-connected health apps, CycleOne takes a stand: **Your health 
 - **Smooth Animations**: High-fidelity transitions and staggered animations for a premium app feel.
 - **Zero Emojis**: A consistent, professional aesthetic using high-quality SF Symbols.
 
+### Localization
+- **In-app language switcher** in Settings with runtime locale updates.
+- **Supported languages**: English (`en`), Filipino/Tagalog (`fil`), Japanese (`ja`).
+- **Coverage guardrails**: localization parity and source-key coverage tests in `CycleOneTests/LocalizationCoverageTests.swift`.
+- **Localized custom pages**: Privacy Policy HTML is shipped per language resource bundle.
+- **Organized resources**: language folders are grouped under `CycleOne/LocalizationResources/` in source.
+- **Legend correctness**: Calendar legend labels resolve localized values (not raw string keys).
+- **Round-trip stability**: UI tests validate language switching Japanese -> English and verify localized legend text remains correct.
+
+Note on folder structure:
+- Source files are grouped in `CycleOne/LocalizationResources` for maintainability while preserving runtime localization behavior.
+
 ## The Privacy Manifesto
 
 CycleOne was built from the ground up to be safe:
@@ -92,6 +104,24 @@ We use a `Makefile` for CI/CD consistency:
 - `make check`: Full verification suite (Lint, Format, Test, UI Test).
 - `make test`: Execute the main test suite and produce `TestResults.xcresult` coverage output.
 - `make test-ui`: Execute UI tests only.
+
+### Localization Validation
+
+```bash
+DEST_ID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
+if [ -z "$DEST_ID" ]; then
+  echo "No available iPhone simulator found."
+  exit 1
+fi
+
+xcodebuild test \
+  -project CycleOne.xcodeproj \
+  -scheme CycleOne \
+  -destination "id=${DEST_ID}" \
+  -parallel-testing-enabled NO \
+  -only-testing:CycleOneTests/LocalizationCoverageTests \
+  -only-testing:CycleOneTests/AppLanguageTests
+```
 
 ### Portable XCTest Command
 

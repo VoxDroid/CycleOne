@@ -37,25 +37,28 @@ final class CoverageRuntimeUITests: XCTestCase {
 
         UITestAppHarness.waitForMainTabs(in: app)
 
-        let logButton = app.buttons["Log Day"]
+        let logButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(logButton.waitForExistence(timeout: 8))
         logButton.tap()
 
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 6))
 
-        let heavyFlow = app.buttons["Flow_Heavy"]
+        let heavyFlow = app.buttons["Flow_heavy"]
         XCTAssertTrue(heavyFlow.waitForExistence(timeout: 4))
         heavyFlow.tap()
 
         let happyMood = UITestAppHarness.element(
-            withIdentifier: "Log_Mood_Happy",
+            withIdentifier: "Log_Mood_0",
             in: app
         )
         XCTAssertTrue(happyMood.waitForExistence(timeout: 4))
         happyMood.tap()
 
         let highEnergy = UITestAppHarness.element(
-            withIdentifier: "Log_Energy_High",
+            withIdentifier: "Log_Energy_2",
             in: app
         )
         XCTAssertTrue(highEnergy.waitForExistence(timeout: 4))
@@ -66,7 +69,7 @@ final class CoverageRuntimeUITests: XCTestCase {
         painSlider.adjust(toNormalizedSliderPosition: 0.8)
 
         let crampsChip = UITestAppHarness.element(
-            withIdentifier: "Symptom_Cramps",
+            withIdentifier: "Symptom_cramps",
             in: app
         )
         XCTAssertTrue(crampsChip.waitForExistence(timeout: 4))
@@ -78,7 +81,10 @@ final class CoverageRuntimeUITests: XCTestCase {
         notesEditor.typeText("integration coverage note")
 
         app.tap()
-        let dismissButton = app.buttons["Dismiss"]
+        let dismissButton = UITestAppHarness.element(
+            withIdentifier: "Log_DismissButton",
+            in: app
+        )
         XCTAssertTrue(dismissButton.waitForExistence(timeout: 6))
         dismissButton.tap()
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 8))
@@ -93,11 +99,17 @@ final class CoverageRuntimeUITests: XCTestCase {
         )
 
         UITestAppHarness.waitForMainTabs(in: app)
-        let editButton = app.buttons["Edit Log"]
+        let editButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(editButton.waitForExistence(timeout: 8))
         editButton.tap()
 
-        let deleteLogButton = app.buttons["Delete This Log"]
+        let deleteLogButton = UITestAppHarness.element(
+            withIdentifier: "Log_DeleteThisLogButton",
+            in: app
+        )
         for _ in 0 ..< 3 where !deleteLogButton.exists {
             app.swipeUp()
         }
@@ -120,11 +132,17 @@ final class CoverageRuntimeUITests: XCTestCase {
         )
 
         UITestAppHarness.waitForMainTabs(in: app)
-        let editButton = app.buttons["Edit Log"]
+        let editButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(editButton.waitForExistence(timeout: 8))
         editButton.tap()
 
-        let deleteLogButton = app.buttons["Delete This Log"]
+        let deleteLogButton = UITestAppHarness.element(
+            withIdentifier: "Log_DeleteThisLogButton",
+            in: app
+        )
         for _ in 0 ..< 3 where !deleteLogButton.exists {
             app.swipeUp()
         }
@@ -136,7 +154,10 @@ final class CoverageRuntimeUITests: XCTestCase {
         cancelDeleteButton.tap()
 
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 6))
-        let dismissButton = app.buttons["Dismiss"]
+        let dismissButton = UITestAppHarness.element(
+            withIdentifier: "Log_DismissButton",
+            in: app
+        )
         XCTAssertTrue(dismissButton.waitForExistence(timeout: 6))
         dismissButton.tap()
 

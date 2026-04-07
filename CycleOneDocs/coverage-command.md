@@ -23,3 +23,12 @@ xcrun xccov view --report --json TestResults.xcresult \
   '
 
 # jq exits 0 when all targets meet the threshold, non-zero otherwise.
+
+# 5) Run localization integrity checks
+DEST_ID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
+if [ -z "$DEST_ID" ]; then echo "No available iPhone simulator found."; exit 1; fi
+
+xcodebuild test -project CycleOne.xcodeproj -scheme CycleOne -destination "id=${DEST_ID}" \
+  -parallel-testing-enabled NO \
+  -only-testing:CycleOneTests/LocalizationCoverageTests \
+  -only-testing:CycleOneTests/AppLanguageTests

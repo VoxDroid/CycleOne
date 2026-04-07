@@ -15,8 +15,8 @@ struct CycleHistoryList: View {
                 Section {
                     EmptyStateView(
                         icon: "calendar.badge.clock",
-                        title: "No data yet",
-                        message: "Your cycle history will appear here once you log your first period."
+                        title: "insights.history.empty_title",
+                        message: "insights.history.empty_message"
                     )
                     .listRowBackground(Color.clear)
                 }
@@ -43,7 +43,10 @@ struct CycleHistoryList: View {
                                         .font(.headline)
                                     Spacer()
                                     if cycle.cycleLength > 0 {
-                                        PillBadge(text: "\(cycle.cycleLength) days", color: .themeAccent)
+                                        PillBadge(
+                                            text: Self.cycleLengthText(cycle.cycleLength),
+                                            color: .themeAccent
+                                        )
                                     }
                                 }
 
@@ -52,7 +55,7 @@ struct CycleHistoryList: View {
                                         Image(systemName: "drop.fill")
                                             .font(.caption2)
                                             .foregroundColor(.themePeriod)
-                                        Text("\(cycle.periodLength) days period")
+                                        Text(Self.periodLengthText(cycle.periodLength))
                                             .font(.caption)
                                             .foregroundColor(.secondary)
                                     }
@@ -63,17 +66,27 @@ struct CycleHistoryList: View {
                         .fadeSlideIn(delay: Double(index) * Theme.staggerDelay)
                     }
                 } header: {
-                    Text("Past Cycles")
+                    Text("insights.history.past_cycles")
                 }
             }
         }
         .accessibilityIdentifier("CycleHistoryListRoot")
-        .navigationTitle("History")
+        .navigationTitle("insights.history.title")
         .navigationBarTitleDisplayMode(.inline)
     }
 
     static func formattedStartDate(_ date: Date?) -> String {
-        guard let date else { return "Unknown" }
+        guard let date else {
+            return L10n.string("common.unknown", default: "Unknown")
+        }
         return date.formatted(.dateTime.month(.wide).day().year())
+    }
+
+    static func cycleLengthText(_ cycleLength: Int16) -> String {
+        L10n.format("common.days_format", default: "%d days", Int(cycleLength))
+    }
+
+    static func periodLengthText(_ periodLength: Int16) -> String {
+        L10n.format("insights.history.period_days_format", default: "%d days period", Int(periodLength))
     }
 }

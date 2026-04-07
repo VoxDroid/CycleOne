@@ -7,8 +7,8 @@ import SwiftUI
 
 struct SettingsRow: View {
     let icon: String
-    let title: String
-    let subtitle: String?
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey?
     let color: Color
     let showChevron: Bool
 
@@ -20,8 +20,8 @@ struct SettingsRow: View {
         showChevron: Bool = false
     ) {
         self.icon = icon
-        self.title = title
-        self.subtitle = subtitle
+        self.title = LocalizedStringKey(title)
+        self.subtitle = subtitle.map { LocalizedStringKey($0) }
         self.color = color
         self.showChevron = showChevron
     }

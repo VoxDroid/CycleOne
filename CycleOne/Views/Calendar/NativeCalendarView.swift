@@ -8,11 +8,21 @@ import UIKit
 
 struct NativeCalendarView: UIViewRepresentable {
     @ObservedObject var viewModel: CycleViewModel
+    let selectedLanguageCode: String
+
+    init(
+        viewModel: CycleViewModel,
+        selectedLanguageCode: String? = nil
+    ) {
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
+        self.selectedLanguageCode = selectedLanguageCode
+            ?? AppLanguage.currentSelection().rawValue
+    }
 
     func makeUIView(context: Context) -> UICalendarView {
         let calendarView = UICalendarView()
         calendarView.calendar = .current
-        calendarView.locale = .current
+        calendarView.locale = AppLanguage.fromStoredValue(selectedLanguageCode).locale
         calendarView.fontDesign = .rounded
 
         let selection = UICalendarSelectionSingleDate(delegate: context.coordinator)
@@ -27,6 +37,11 @@ struct NativeCalendarView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UICalendarView, context: Context) {
+        let selectedLocale = AppLanguage.fromStoredValue(selectedLanguageCode).locale
+        if uiView.locale != selectedLocale {
+            uiView.locale = selectedLocale
+        }
+
         // Update selection if viewModel changes
         if let selection = uiView.selectionBehavior as? UICalendarSelectionSingleDate {
             let components = Calendar.current.dateComponents([.year, .month, .day], from: viewModel.selectedDate)

@@ -12,7 +12,9 @@ struct SymptomGridView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            let categories = Array(Set(symptoms.map(\.category))).sorted(by: { $0.rawValue < $1.rawValue })
+            let categories = Array(Set(symptoms.map(\.category))).sorted(by: {
+                $0.localizedName < $1.localizedName
+            })
 
             ForEach(categories, id: \.self) { category in
                 VStack(alignment: .leading, spacing: 8) {
@@ -20,7 +22,7 @@ struct SymptomGridView: View {
                         Image(systemName: category.icon)
                             .font(.caption)
                             .foregroundColor(category.color)
-                        Text(category.rawValue.capitalized)
+                        Text(category.localizedName)
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundColor(.secondary)
@@ -29,7 +31,8 @@ struct SymptomGridView: View {
                     FlowLayout(spacing: 8) {
                         ForEach(symptoms.filter { $0.category == category }) { symptom in
                             SymptomChip(
-                                name: symptom.name,
+                                id: symptom.id,
+                                localizedName: symptom.localizedName,
                                 isSelected: selectedSymptoms.contains(symptom.id),
                                 color: category.color
                             ) {
@@ -62,13 +65,14 @@ struct SymptomGridView: View {
 }
 
 struct SymptomChip: View {
-    let name: String
+    let id: String
+    let localizedName: String
     let isSelected: Bool
     var color: Color = .themePeriod
     let action: () -> Void
 
     var body: some View {
-        Text(name)
+        Text(localizedName)
             .font(.subheadline)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
@@ -76,7 +80,7 @@ struct SymptomChip: View {
             .foregroundColor(isSelected ? .white : .primary)
             .cornerRadius(20)
             .scaleEffect(isSelected ? 1.05 : 1.0)
-            .accessibilityIdentifier("Symptom_\(name)")
+            .accessibilityIdentifier("Symptom_\(id)")
             .onTapGesture {
                 action()
             }

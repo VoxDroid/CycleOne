@@ -56,11 +56,13 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
         super.setUp()
         UITestLaunchConfigurator.resetForTests()
         UserDefaults.standard.removeObject(forKey: "hasSeenOnboarding")
+        UserDefaults.standard.removeObject(forKey: AppLanguage.storageKey)
     }
 
     override func tearDown() {
         UITestLaunchConfigurator.resetForTests()
         UserDefaults.standard.removeObject(forKey: "hasSeenOnboarding")
+        UserDefaults.standard.removeObject(forKey: AppLanguage.storageKey)
         super.tearDown()
     }
 
@@ -104,6 +106,36 @@ final class UITestLaunchConfiguratorTests: XCTestCase {
         )
 
         XCTAssertFalse(UserDefaults.standard.bool(forKey: "hasSeenOnboarding"))
+    }
+
+    func testConfigureIfNeeded_setsEnglishLanguageByDefault() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        UITestLaunchConfigurator.configureIfNeeded(
+            context: context,
+            arguments: ["-ui-testing"],
+            retryCount: 20
+        )
+
+        XCTAssertEqual(
+            UserDefaults.standard.string(forKey: AppLanguage.storageKey),
+            AppLanguage.english.rawValue
+        )
+    }
+
+    func testConfigureIfNeeded_allowsLanguageOverrideArgument() {
+        let context = TestPersistenceController.empty().container.viewContext
+
+        UITestLaunchConfigurator.configureIfNeeded(
+            context: context,
+            arguments: ["-ui-testing", "-ui-testing-language", "ja"],
+            retryCount: 20
+        )
+
+        XCTAssertEqual(
+            UserDefaults.standard.string(forKey: AppLanguage.storageKey),
+            AppLanguage.japanese.rawValue
+        )
     }
 
     func testConfigureIfNeeded_retriesWhenPersistentStoresMissing() {

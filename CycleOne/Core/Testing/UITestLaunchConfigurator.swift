@@ -42,6 +42,13 @@ enum UITestLaunchConfigurator {
 
         hasApplied = true
 
+        // Keep UI automation deterministic even when simulator language differs.
+        let uiTestLanguage = uiTestLanguageCode(from: arguments)
+        UserDefaults.standard.set(
+            uiTestLanguage,
+            forKey: AppLanguage.storageKey
+        )
+
         if arguments.contains("-ui-testing-has-seen-onboarding") {
             UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         }
@@ -55,6 +62,17 @@ enum UITestLaunchConfigurator {
                 seedInsightsData(in: context)
             }
         }
+    }
+
+    private static func uiTestLanguageCode(from arguments: [String]) -> String {
+        guard
+            let index = arguments.firstIndex(of: "-ui-testing-language"),
+            arguments.indices.contains(index + 1)
+        else {
+            return AppLanguage.english.rawValue
+        }
+
+        return AppLanguage.fromStoredValue(arguments[index + 1]).rawValue
     }
 
     private static func clearAllData(in context: NSManagedObjectContext) {

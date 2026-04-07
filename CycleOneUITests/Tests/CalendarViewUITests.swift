@@ -23,9 +23,10 @@ final class CalendarViewUITests: XCTestCase {
         // Verify navigation title
         XCTAssertTrue(app.navigationBars["CycleOne"].waitForExistence(timeout: 5))
 
-        // Find the NavigationLink to LogView
-        let logButton = app.buttons
-            .matching(NSPredicate(format: "label CONTAINS 'Log Day' OR label CONTAINS 'Edit Log'")).firstMatch
+        let logButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(logButton.exists)
     }
 
@@ -39,16 +40,20 @@ final class CalendarViewUITests: XCTestCase {
 
         UITestAppHarness.waitForMainTabs(in: app)
 
-        // Tap the Log Day button
-        let logButton = app.buttons
-            .matching(NSPredicate(format: "label CONTAINS 'Log Day' OR label CONTAINS 'Edit Log'")).firstMatch
+        let logButton = UITestAppHarness.element(
+            withIdentifier: "Calendar_LogActionButton",
+            in: app
+        )
         XCTAssertTrue(logButton.waitForExistence(timeout: 5))
         logButton.tap()
 
         // Verify we are on the Log Day screen
         XCTAssertTrue(app.staticTexts["Log Day"].waitForExistence(timeout: 5))
 
-        let dismissButton = app.buttons["Dismiss"]
+        let dismissButton = UITestAppHarness.element(
+            withIdentifier: "Log_DismissButton",
+            in: app
+        )
         XCTAssertTrue(dismissButton.waitForExistence(timeout: 5))
         dismissButton.tap()
 

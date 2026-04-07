@@ -27,23 +27,7 @@ struct CycleHeaderView: View {
 
                     Group {
                         if let days = daysUntilPeriod {
-                            HStack(spacing: 6) {
-                                Text(
-                                    days == 0 ?
-                                        "Expected today" : "In"
-                                )
-                                if days > 0 {
-                                    Text("\(days)")
-                                        .font(.system(
-                                            .title2,
-                                            design: .rounded
-                                        ))
-                                        .fontWeight(.heavy)
-                                        .foregroundColor(.themeAccent)
-                                        .gentlePulse()
-                                    Text("days")
-                                }
-                            }
+                            Text(Self.periodCountdownText(days: days))
                         }
 
                         if let ovDays = daysUntilOvulation,
@@ -53,12 +37,7 @@ struct CycleHeaderView: View {
                                 Image(systemName: "sparkles")
                                     .font(.caption)
                                     .foregroundColor(.themeFertile)
-                                Text(
-                                    "Ovulation: " +
-                                        (ovDays == 0 ?
-                                            "starts today" :
-                                            "in \(ovDays) days")
-                                )
+                                Text(Self.ovulationText(days: ovDays))
                             }
                         }
                     }
@@ -75,7 +54,7 @@ struct CycleHeaderView: View {
                         )
                         .foregroundColor(.yellow)
                         .font(.title3)
-                        Text("Irregular")
+                        Text("calendar.header.irregular")
                             .font(.caption2)
                             .foregroundColor(.yellow)
                     }
@@ -86,7 +65,7 @@ struct CycleHeaderView: View {
                 Image(systemName: "info.circle")
                     .font(.caption2)
                     .foregroundColor(.secondary)
-                Text("Predictions are estimates. Not medical advice.")
+                Text("calendar.header.disclaimer")
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }
@@ -113,14 +92,37 @@ struct CycleHeaderView: View {
 
     private var predictionText: String {
         guard let days = daysUntilPeriod else {
-            return "Log your first period"
+            return L10n.string("calendar.header.log_first", default: "Log your first period")
         }
         if days < 0 {
-            return "Period is overdue"
+            return L10n.string("calendar.header.overdue", default: "Period is overdue")
         } else if days == 0 {
-            return "Period starts today"
+            return L10n.string("calendar.header.starts_today", default: "Period starts today")
         } else {
-            return "Next period"
+            return L10n.string("calendar.header.next_period", default: "Next period")
         }
+    }
+
+    static func periodCountdownText(days: Int) -> String {
+        switch days {
+        case 0:
+            L10n.string("calendar.header.expected_today", default: "Expected today")
+        case let value where value < 0:
+            L10n.format(
+                "calendar.header.overdue_by_days",
+                default: "Overdue by %d days",
+                abs(value)
+            )
+        default:
+            L10n.format("calendar.header.in_days", default: "In %d days", days)
+        }
+    }
+
+    static func ovulationText(days: Int) -> String {
+        if days == 0 {
+            return L10n.string("calendar.header.ovulation_starts_today", default: "Ovulation starts today")
+        }
+
+        return L10n.format("calendar.header.ovulation_in_days", default: "Ovulation in %d days", days)
     }
 }

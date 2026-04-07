@@ -12,10 +12,7 @@ struct PrivacyPolicyView: View {
     private let policyURL: URL?
 
     init(
-        policyURL: URL? = Bundle.main.url(
-            forResource: "PrivacyPolicy",
-            withExtension: "html"
-        )
+        policyURL: URL? = PrivacyPolicyView.defaultPolicyURL()
     ) {
         self.policyURL = policyURL
     }
@@ -29,12 +26,33 @@ struct PrivacyPolicyView: View {
             Text(fallbackMessage ?? "")
                 .opacity(fallbackMessage == nil ? 0 : 1)
         }
-        .navigationTitle("Privacy Policy")
+        .navigationTitle("settings.privacy_policy")
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    static func defaultPolicyURL(
+        language: AppLanguage = AppLanguage.currentSelection()
+    ) -> URL? {
+        if let url = language.localizedResourceURL(
+            forResource: "PrivacyPolicy",
+            withExtension: "html"
+        ) {
+            return url
+        }
+
+        return Bundle.main.url(
+            forResource: "PrivacyPolicy",
+            withExtension: "html"
+        )
+    }
+
     static func fallbackMessage(for policyURL: URL?) -> String? {
-        policyURL == nil ? "Privacy Policy not found." : nil
+        policyURL == nil
+            ? L10n.string(
+                "privacy_policy.not_found",
+                default: "Privacy Policy not found."
+            )
+            : nil
     }
 }
 

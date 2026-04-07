@@ -107,8 +107,13 @@ final class InsightsViewModel: ObservableObject {
         do {
             let symptoms = try context.fetch(request)
             let counts = symptoms.reduce(into: [String: Int]()) { counts, symptom in
-                if let name = symptom.name {
-                    counts[name, default: 0] += 1
+                let displayName = SymptomType.localizedName(
+                    forID: symptom.id,
+                    fallbackName: symptom.name ?? ""
+                )
+
+                if !displayName.isEmpty {
+                    counts[displayName, default: 0] += 1
                 }
             }
             topSymptoms = Array(counts.sorted { $0.value > $1.value }

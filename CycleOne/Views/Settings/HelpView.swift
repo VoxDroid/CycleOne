@@ -105,9 +105,16 @@ struct HelpView: View {
 
 private struct GuideCard: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let color: Color
+
+    init(icon: String, title: String, description: String, color: Color) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.description = LocalizedStringKey(description)
+        self.color = color
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -134,7 +141,12 @@ private struct GuideCard: View {
 
 private struct NumberedTip: View {
     let number: Int
-    let text: String
+    let text: LocalizedStringKey
+
+    init(number: Int, text: String) {
+        self.number = number
+        self.text = LocalizedStringKey(text)
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -155,9 +167,16 @@ private struct NumberedTip: View {
 
 private struct PhilosophyItem: View {
     let icon: String
-    let title: String
-    let description: String
+    let title: LocalizedStringKey
+    let description: LocalizedStringKey
     let color: Color
+
+    init(icon: String, title: String, description: String, color: Color) {
+        self.icon = icon
+        self.title = LocalizedStringKey(title)
+        self.description = LocalizedStringKey(description)
+        self.color = color
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {

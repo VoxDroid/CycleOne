@@ -15,21 +15,21 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             CalendarView(context: context)
                 .tabItem {
-                    Label("Calendar", systemImage: "calendar")
+                    Label("tab.calendar", systemImage: "calendar")
                 }
                 .tag(0)
                 .accessibilityIdentifier("CalendarTab")
 
             InsightsView(context: context)
                 .tabItem {
-                    Label("Insights", systemImage: "chart.bar.fill")
+                    Label("tab.insights", systemImage: "chart.bar.fill")
                 }
                 .tag(1)
                 .accessibilityIdentifier("InsightsTab")
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gear")
+                    Label("tab.settings", systemImage: "gear")
                 }
                 .tag(2)
                 .accessibilityIdentifier("SettingsTab")

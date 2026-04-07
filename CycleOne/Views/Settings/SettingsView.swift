@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.managedObjectContext) var context
     @AppStorage("enablePredictions") private var enablePredictions = true
+    @AppStorage(AppLanguage.storageKey) private var selectedLanguageCode = AppLanguage.system.rawValue
     @EnvironmentObject private var themeManager: ThemeManager
     @State private var showingDeleteAlert = false
 
@@ -54,11 +55,11 @@ struct SettingsView: View {
                     .listRowBackground(Color.clear)
                 }
 
-                Section("Preferences") {
+                Section("settings.section.preferences") {
                     Toggle(isOn: $enablePredictions) {
                         SettingsRow(
                             icon: "wand.and.stars",
-                            title: "Enable Predictions",
+                            title: "settings.enable_predictions",
                             color: .themeFertile
                         )
                     }
@@ -69,18 +70,18 @@ struct SettingsView: View {
                     ) {
                         SettingsRow(
                             icon: "bell.fill",
-                            title: "Notifications",
+                            title: "settings.notifications",
                             color: .orange
                         )
                     }
                     .accessibilityIdentifier("Settings_NotificationsLink")
                 }
 
-                Section("Appearance") {
+                Section("settings.section.appearance") {
                     HStack {
                         SettingsRow(
                             icon: "paintbrush.fill",
-                            title: "Theme",
+                            title: "settings.theme",
                             color: .themeAccent
                         )
                         Spacer()
@@ -89,25 +90,47 @@ struct SettingsView: View {
                             selection: $themeManager.selectedTheme
                         ) {
                             ForEach(AppTheme.allCases) { theme in
-                                Text(theme.rawValue).tag(theme)
+                                Text(theme.displayNameKey).tag(theme)
                             }
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()
                     }
 
+                    HStack {
+                        SettingsRow(
+                            icon: "globe",
+                            title: "settings.language",
+                            color: .blue
+                        )
+                        Spacer()
+                        Picker(
+                            "",
+                            selection: $selectedLanguageCode
+                        ) {
+                            ForEach(AppLanguage.allCases) { language in
+                                Text(language.displayNameKey).tag(language.rawValue)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                        .accessibilityIdentifier("Settings_LanguagePicker")
+                    }
+
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Accent Color")
+                        Text("settings.accent_color")
                             .font(.subheadline)
                             .accessibilityIdentifier("AccentColorTitle")
 
                         HStack(spacing: 12) {
                             ForEach(AccentTheme.allCases) { accent in
                                 Button(action: {
-                                    SettingsView.applyAccent(
-                                        accent,
-                                        themeManager: themeManager
-                                    )
+                                    withAnimation(.spring(response: 0.3)) {
+                                        SettingsView.applyAccent(
+                                            accent,
+                                            themeManager: themeManager
+                                        )
+                                    }
                                 }, label: {
                                     VStack(spacing: 4) {
                                         Circle()
@@ -125,7 +148,7 @@ struct SettingsView: View {
                                                             .selectedAccent == accent ? -3 : 0
                                                     )
                                             )
-                                        Text(accent.rawValue)
+                                        Text(accent.displayNameKey)
                                             .font(.caption2)
                                             .foregroundColor(
                                                 themeManager
@@ -142,11 +165,11 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 }
 
-                Section("Data") {
+                Section("settings.section.data") {
                     NavigationLink(destination: ExportView()) {
                         SettingsRow(
                             icon: "square.and.arrow.up",
-                            title: "Export Data (CSV)",
+                            title: "settings.export_csv",
                             color: .green
                         )
                     }
@@ -157,17 +180,18 @@ struct SettingsView: View {
                     } label: {
                         SettingsRow(
                             icon: "trash",
-                            title: "Delete All Data",
+                            title: "settings.delete_all_data",
                             color: .red
                         )
                     }
+                    .accessibilityIdentifier("Settings_DeleteAllDataButton")
                 }
 
-                Section("App") {
+                Section("settings.section.app") {
                     NavigationLink(destination: HelpView()) {
                         SettingsRow(
                             icon: "questionmark.circle.fill",
-                            title: "Help & Guide",
+                            title: "settings.help_guide",
                             color: .blue
                         )
                     }
@@ -179,7 +203,7 @@ struct SettingsView: View {
                         Link(destination: url) {
                             SettingsRow(
                                 icon: "link",
-                                title: "Support & Feedback",
+                                title: "settings.support_feedback",
                                 color: .teal
                             )
                         }
@@ -190,7 +214,7 @@ struct SettingsView: View {
                     ) {
                         SettingsRow(
                             icon: "shield.fill",
-                            title: "Privacy Policy",
+                            title: "settings.privacy_policy",
                             color: .indigo
                         )
                     }
@@ -202,7 +226,7 @@ struct SettingsView: View {
                         Link(destination: url) {
                             SettingsRow(
                                 icon: "star.fill",
-                                title: "Rate CycleOne",
+                                title: "settings.rate_cycleone",
                                 color: .yellow
                             )
                         }
@@ -216,7 +240,7 @@ struct SettingsView: View {
                     ) {
                         SettingsRow(
                             icon: "info.circle.fill",
-                            title: "About",
+                            title: "settings.about",
                             color: .gray
                         )
                     }
@@ -225,49 +249,48 @@ struct SettingsView: View {
 
                 Section {
                     VStack(spacing: 4) {
-                        Text("CycleOne by VoxDroid")
+                        Text("settings.footer.byline")
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundColor(.secondary)
-                        Text(
-                            "\u{00A9} 2026 VoxDroid. " +
-                                "All rights reserved."
-                        )
-                        .font(.caption2)
-                        .foregroundColor(
-                            .secondary.opacity(0.7)
-                        )
+                        Text("settings.footer.copyright")
+                            .font(.caption2)
+                            .foregroundColor(
+                                .secondary.opacity(0.7)
+                            )
                     }
                     .frame(maxWidth: .infinity)
                     .listRowBackground(Color.clear)
                 }
             }
             .accessibilityIdentifier("SettingsList")
-            .navigationTitle("Settings")
+            .navigationTitle("settings.navigation_title")
             .navigationBarTitleDisplayMode(.inline)
             .alert(
-                "Delete All Data?",
+                "settings.alert.delete_title",
                 isPresented: $showingDeleteAlert
             ) {
-                Button("Delete", role: .destructive) {
+                Button("settings.alert.delete_action", role: .destructive) {
                     deleteAllData()
                 }
-                Button("Cancel", role: .cancel) {}
+                Button("settings.alert.cancel_action", role: .cancel) {}
             } message: {
-                Text(
-                    "This action cannot be undone. All your logged cycles and symptoms will be permanently removed."
-                )
+                Text("settings.alert.delete_message")
             }
         }
+        .id("settings-stack-\(selectedLanguageCode)")
+        .environment(
+            \.locale,
+            AppLanguage.fromStoredValue(selectedLanguageCode).locale
+        )
     }
 
+    @MainActor
     static func applyAccent(
         _ accent: AccentTheme,
         themeManager: ThemeManager
     ) {
-        withAnimation(.spring(response: 0.3)) {
-            themeManager.selectedAccent = accent
-        }
+        themeManager.selectedAccent = accent
     }
 
     static func deleteAllData(in context: NSManagedObjectContext) {

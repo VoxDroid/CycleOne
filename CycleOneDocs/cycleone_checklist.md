@@ -91,3 +91,15 @@
 - [x] **Splash**: Enhanced with floating animation, ring burst effect, and upward fly-off exit
 - [x] **Feature**: Added `CycleComparisonView` for current vs previous cycle analysis
 - [x] **Feature**: Added `AboutView` with developer info (VoxDroid), email, and GitHub links
+
+## Internationalization (Phase 14)
+- [x] **Runtime Locale**: Added in-app language selection with persisted preference
+- [x] **Languages**: Added English, Filipino/Tagalog, and Japanese localizations
+- [x] **Views**: Localized all user-facing SwiftUI pages/components via `Localizable.strings`
+- [x] **Custom Pages**: Added localized Privacy Policy HTML resources (`en`, `fil`, `ja`)
+- [x] **Testing**: Added localization coverage + language behavior tests
+- [x] **UI Testing**: Added language-switch UI test and locale-safe accessibility-ID interactions
+- [x] **Docs**: Updated README and QA commands for localization maintenance
+- [x] **Bug Fix**: Calendar legend now resolves translated labels instead of showing localization keys
+- [x] **Bug Fix**: Insights recalculates localized aggregate labels when in-app language changes
+- [x] **Regression Test**: Added language round-trip UI check (Japanese -> English) with legend assertions

@@ -26,7 +26,10 @@ final class SettingsDeleteUITests: XCTestCase {
         let settingsList = app.collectionViews["SettingsList"]
         XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
 
-        let deleteButton = app.buttons["Delete All Data"]
+        let deleteButton = UITestAppHarness.element(
+            withIdentifier: "Settings_DeleteAllDataButton",
+            in: app
+        )
         UITestAppHarness.scrollToElement(deleteButton, in: settingsList)
         XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
         deleteButton.tap()
@@ -55,7 +58,10 @@ final class SettingsDeleteUITests: XCTestCase {
         let settingsList = app.collectionViews["SettingsList"]
         XCTAssertTrue(settingsList.waitForExistence(timeout: 10))
 
-        let deleteButton = app.buttons["Delete All Data"]
+        let deleteButton = UITestAppHarness.element(
+            withIdentifier: "Settings_DeleteAllDataButton",
+            in: app
+        )
         UITestAppHarness.scrollToElement(deleteButton, in: settingsList)
         XCTAssertTrue(deleteButton.waitForExistence(timeout: 5))
         deleteButton.tap()

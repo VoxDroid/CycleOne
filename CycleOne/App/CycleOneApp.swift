@@ -13,7 +13,12 @@ struct CycleOneApp: App {
     let persistenceController = PersistenceController.shared
 
     @StateObject private var themeManager = ThemeManager.shared
+    @AppStorage(AppLanguage.storageKey) private var selectedLanguageCode = AppLanguage.system.rawValue
     @State private var showSplash = !ProcessInfo.processInfo.arguments.contains("-ui-testing-skip-splash")
+
+    private var appLanguage: AppLanguage {
+        AppLanguage.fromStoredValue(selectedLanguageCode)
+    }
 
     init() {
         UITestLaunchConfigurator.configureIfNeeded(
@@ -27,6 +32,7 @@ struct CycleOneApp: App {
                 MainTabView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
                     .environmentObject(themeManager)
+                    .environment(\.locale, appLanguage.locale)
                     .preferredColorScheme(themeManager.selectedTheme.colorScheme)
                     .opacity(showSplash ? 0 : 1)
 
@@ -37,6 +43,7 @@ struct CycleOneApp: App {
                         }
                     }
                     .environmentObject(themeManager)
+                    .environment(\.locale, appLanguage.locale)
                     .transition(.opacity)
                 }
             }

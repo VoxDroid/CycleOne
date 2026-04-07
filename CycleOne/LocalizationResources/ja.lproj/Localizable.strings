@@ -1,0 +1,241 @@
+"tab.calendar" = "カレンダー";
+"tab.insights" = "インサイト";
+"tab.settings" = "設定";
+
+"common.vs" = "vs";
+"common.na" = "N/A";
+"common.same" = "同じ";
+"common.days_format" = "%d日";
+"common.days_short_format" = "%d日";
+"common.unknown" = "不明";
+"common.unit.days" = "日";
+
+"flow.none" = "なし";
+"flow.light" = "少ない";
+"flow.medium" = "中程度";
+"flow.heavy" = "多い";
+
+"mood.happy" = "ハッピー";
+"mood.neutral" = "普通";
+"mood.sad" = "悲しい";
+"mood.anxious" = "不安";
+"mood.angry" = "怒り";
+
+"energy.low" = "低い";
+"energy.medium" = "普通";
+"energy.high" = "高い";
+
+"symptom.category.physical" = "身体";
+"symptom.category.mood" = "気分・メンタル";
+"symptom.category.digestion" = "消化";
+"symptom.category.other" = "その他";
+
+"symptom.cramps" = "腹痛";
+"symptom.bloating" = "膨満感";
+"symptom.headache" = "頭痛";
+"symptom.acne" = "ニキビ";
+"symptom.breast_tenderness" = "胸の張り";
+"symptom.back_pain" = "腰痛";
+"symptom.dizziness" = "めまい";
+"symptom.nausea" = "吐き気";
+"symptom.mood_swings" = "気分の変動";
+"symptom.irritability" = "いらいら";
+"symptom.fatigue" = "倦怠感";
+"symptom.cravings" = "食欲の増加";
+"symptom.insomnia" = "不眠";
+
+"settings.section.preferences" = "基本設定";
+"settings.enable_predictions" = "予測を有効にする";
+"settings.notifications" = "通知";
+"settings.section.appearance" = "表示";
+"settings.theme" = "テーマ";
+"settings.theme.system" = "システム";
+"settings.theme.light" = "ライト";
+"settings.theme.dark" = "ダーク";
+"settings.language" = "言語";
+"settings.language.system" = "システムに従う";
+"settings.language.english" = "英語";
+"settings.language.filipino" = "フィリピン語";
+"settings.language.japanese" = "日本語";
+"settings.accent_color" = "アクセントカラー";
+"settings.accent.rose" = "ローズ";
+"settings.accent.lavender" = "ラベンダー";
+"settings.accent.ocean" = "オーシャン";
+"settings.accent.sage" = "セージ";
+"settings.accent.sunset" = "サンセット";
+"settings.section.data" = "データ";
+"settings.export_csv" = "データを書き出し (CSV)";
+"settings.delete_all_data" = "すべてのデータを削除";
+"settings.section.app" = "アプリ";
+"settings.help_guide" = "ヘルプとガイド";
+"settings.support_feedback" = "サポートとフィードバック";
+"settings.privacy_policy" = "プライバシーポリシー";
+"settings.rate_cycleone" = "CycleOneを評価する";
+"settings.about" = "このアプリについて";
+"settings.footer.byline" = "CycleOne by VoxDroid";
+"settings.footer.copyright" = "© 2026 VoxDroid. 無断転載を禁じます。";
+"settings.navigation_title" = "設定";
+"settings.alert.delete_title" = "すべてのデータを削除しますか？";
+"settings.alert.delete_action" = "削除";
+"settings.alert.cancel_action" = "キャンセル";
+"settings.alert.delete_message" = "この操作は取り消せません。記録したすべての周期データと症状が完全に削除されます。";
+
+"settings.notifications.title" = "通知";
+"settings.notifications.section.period" = "生理リマインダー";
+"settings.notifications.toggle.period" = "生理前に通知する";
+"settings.notifications.section.fertile" = "妊娠しやすい期間";
+"settings.notifications.toggle.fertile" = "妊娠しやすい期間の通知";
+"settings.notifications.footer" = "通知は毎日午前8:00にこのデバイス上でスケジュールされます。";
+"settings.notifications.days_before" = "何日前";
+"settings.notifications.days.1" = "1日前";
+"settings.notifications.days.2" = "2日前";
+"settings.notifications.days.3" = "3日前";
+"settings.notifications.days.5" = "5日前";
+"settings.notifications.days.format" = "%d日前";
+
+"notifications.content.title" = "CycleOne";
+"notifications.content.period.body" = "生理が明日始まると予測されています。";
+"notifications.content.fertile.body" = "妊娠しやすい期間が明日始まります。";
+
+"calendar.legend.title" = "カレンダー凡例";
+"calendar.legend.period" = "生理";
+"calendar.legend.predicted" = "予測";
+"calendar.legend.ovulation" = "排卵";
+"calendar.legend.fertile" = "妊娠しやすい期間";
+"calendar.legend.logged" = "記録あり";
+
+"calendar.day.no_period_logged" = "生理の記録なし";
+"calendar.day.log_day" = "記録する";
+"calendar.day.edit_log" = "記録を編集";
+"calendar.day.tap_to_log" = "タップして周期・症状・気分を記録できます。";
+"calendar.day.flow_fallback" = "フロー";
+
+"calendar.header.irregular" = "不規則";
+"calendar.header.disclaimer" = "予測はあくまで目安です。医療アドバイスではありません。";
+"calendar.header.log_first" = "最初の生理を記録してください";
+"calendar.header.overdue" = "生理予定日を過ぎています";
+"calendar.header.starts_today" = "生理は今日始まる予定";
+"calendar.header.next_period" = "次の生理";
+"calendar.header.expected_today" = "今日の予定";
+"calendar.header.overdue_by_days" = "%d日遅れ";
+"calendar.header.in_days" = "あと%d日";
+"calendar.header.ovulation_starts_today" = "排卵期は今日開始";
+"calendar.header.ovulation_in_days" = "排卵まであと%d日";
+
+"insights.avg_cycle" = "平均周期";
+"insights.avg_period" = "平均生理日数";
+"insights.shortest" = "最短";
+"insights.longest" = "最長";
+"insights.total" = "合計";
+"insights.avg_pain" = "平均痛み";
+"insights.logged" = "記録日数";
+"insights.symptoms" = "症状";
+
+"insights.history.empty_title" = "まだデータがありません";
+"insights.history.empty_message" = "最初の生理を記録すると、ここに周期履歴が表示されます。";
+"insights.history.past_cycles" = "過去の周期";
+"insights.history.title" = "履歴";
+"insights.history.period_days_format" = "生理%d日";
+
+"insights.compare.title" = "周期比較";
+"insights.compare.current" = "今回";
+"insights.compare.previous" = "前回";
+"insights.compare.start_date" = "開始日";
+"insights.compare.cycle_length" = "周期日数";
+"insights.compare.period_length" = "生理日数";
+"insights.compare.length_comparison" = "日数比較";
+"insights.compare.navigation_title" = "周期を比較";
+"insights.compare.empty_title" = "データが不足しています";
+"insights.compare.empty_message" = "比較するには少なくとも2回分の周期を記録してください。";
+
+"onboarding.page1.title" = "CycleOneへようこそ";
+"onboarding.page1.subtitle" = "プライバシー重視の生理トラッカーです。\nサブスクなし。クラウドなし。アカウント不要。";
+"onboarding.page2.title" = "周期を記録する";
+"onboarding.page2.subtitle" = "カレンダーの日付をタップして、生理・症状・気分・エネルギーを記録しましょう。";
+"onboarding.page3.title" = "パターンを見つける";
+"onboarding.page3.subtitle" = "周期の長さ、よくある症状、予測のインサイトを確認できます。";
+"onboarding.page4.title" = "データはあなたの端末内だけ";
+"onboarding.page4.subtitle" = "すべてのデータは端末内に保存されます。\nサーバーなし。追跡なし。";
+"onboarding.next" = "次へ";
+"onboarding.get_started" = "開始する";
+"onboarding.skip" = "スキップ";
+
+"log.pain_level_format" = "痛みレベル: %d";
+"privacy_policy.not_found" = "プライバシーポリシーが見つかりません。";
+"export.csv.header" = "日付,フロー,痛み,気分,エネルギー,症状,メモ";
+
+"Log your day" = "今日を記録";
+"Flow" = "フロー";
+"Mood & Energy" = "気分とエネルギー";
+"Symptoms" = "症状";
+"Add notes..." = "メモを追加...";
+"Notes" = "メモ";
+"Delete This Log" = "この記録を削除";
+"Log Day" = "記録する";
+"Dismiss" = "閉じる";
+"Delete Log?" = "記録を削除しますか？";
+"Delete" = "削除";
+"Cancel" = "キャンセル";
+"This will permanently remove this day's log and all associated symptoms." = "この日の記録と関連する症状は完全に削除されます。";
+
+"Cycle Length Trend" = "周期日数の推移";
+"Mood Distribution" = "気分の分布";
+"Top Symptoms" = "よくある症状";
+"Compare Cycles" = "周期を比較";
+"View Full History" = "履歴をすべて表示";
+"Insights" = "インサイト";
+
+"User Guide" = "ユーザーガイド";
+"Calendar" = "カレンダー";
+"Logging" = "記録";
+"Reminders" = "リマインダー";
+"The main screen shows your cycle. Tap any date to view details or log data." = "メイン画面に周期が表示されます。日付をタップして詳細確認や記録ができます。";
+"Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away." = "フロー、症状、気分、エネルギーを記録できます。画面を離れると自動保存されます。";
+"View your average cycle length, period duration, and top symptoms." = "平均周期日数、生理期間、よくある症状を確認できます。";
+"Enable notifications in Settings for alerts before period or fertile window." = "設定で通知を有効にすると、生理前や妊娠しやすい期間の通知を受け取れます。";
+"Quick Tips" = "クイックヒント";
+"Swipe left or right to change months." = "左右にスワイプして月を切り替えます。";
+"Tap the detail card to log or edit." = "詳細カードをタップして記録または編集します。";
+"Check Insights to understand patterns." = "インサイトを確認して傾向を把握しましょう。";
+"Export your data anytime — you own it." = "データはいつでも書き出せます。データの主導権はあなたにあります。";
+"App Philosophy" = "アプリの考え方";
+"Privacy First" = "プライバシー最優先";
+"Zero cloud sync and zero tracking. Data stays on your device." = "クラウド同期なし、追跡なし。データは端末内にのみ保存されます。";
+"No Subscriptions" = "サブスクなし";
+"Don't pay monthly for your own health data. One purchase, forever." = "自分の健康データのために毎月支払う必要はありません。買い切りでずっと使えます。";
+"Manual & Support" = "マニュアルとサポート";
+"View Project on GitHub" = "GitHubでプロジェクトを見る";
+"Privacy Policy" = "プライバシーポリシー";
+"Help & Guide" = "ヘルプとガイド";
+
+"Export Your Data" = "データを書き出す";
+"Get a CSV file of all your logged cycles and symptoms. Your data stays private." = "記録した周期と症状をCSVで書き出せます。データはプライベートに保たれます。";
+"Generating CSV..." = "CSVを生成中...";
+"Share CSV File" = "CSVファイルを共有";
+"Regenerate" = "再生成";
+"Generate CSV" = "CSVを生成";
+"Export is plaintext only. No proprietary format." = "エクスポートはプレーンテキストのみです。独自形式は使いません。";
+"Export" = "エクスポート";
+
+"A privacy-first, open-source period tracker for iOS." = "プライバシー重視のオープンソースiOS生理トラッカー。";
+"Developer" = "開発者";
+"VoxDroid" = "VoxDroid";
+"Lead Developer" = "リード開発者";
+"izeno.contact@gmail.com" = "izeno.contact@gmail.com";
+"Direct Support" = "直接サポート";
+"github.com/VoxDroid" = "github.com/VoxDroid";
+"Follow on GitHub" = "GitHubでフォロー";
+"Project" = "プロジェクト";
+"Source Code" = "ソースコード";
+"GPL-3.0 Licensed" = "GPL-3.0 ライセンス";
+"Privacy Commitment" = "プライバシーへの約束";
+"100% local, zero tracking" = "100%ローカル保存、追跡ゼロ";
+"Built with Swift" = "Swiftで開発";
+"SwiftUI + Core Data" = "SwiftUI + Core Data";
+"CycleOne by VoxDroid" = "CycleOne by VoxDroid";
+"© 2026 VoxDroid. All rights reserved." = "© 2026 VoxDroid. 無断転載を禁じます。";
+"About" = "このアプリについて";
+
+"CycleOne" = "CycleOne";
+"Version 1.0.0" = "バージョン 1.0.0";
+"Privacy-first period tracking" = "プライバシー重視の周期トラッキング";

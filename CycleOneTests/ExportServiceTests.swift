@@ -50,7 +50,10 @@ final class ExportServiceTests: XCTestCase {
 
         if let url {
             let content = try String(contentsOf: url)
-            XCTAssertTrue(content.contains("Date,Flow,Pain,Mood,Energy,Symptoms,Notes"))
+            XCTAssertTrue(content.contains(L10n.string(
+                "export.csv.header",
+                default: "Date,Flow,Pain,Mood,Energy,Symptoms,Notes"
+            )))
             XCTAssertTrue(content.contains("bloating"))
             XCTAssertTrue(content.contains("\"Test, notes new line\""))
         }
@@ -75,9 +78,13 @@ final class ExportServiceTests: XCTestCase {
 
         if let url {
             let content = try String(contentsOf: url)
-            XCTAssertTrue(content.contains("Date,Flow,Pain,Mood,Energy,Symptoms,Notes"))
+            XCTAssertTrue(content.contains(L10n.string(
+                "export.csv.header",
+                default: "Date,Flow,Pain,Mood,Energy,Symptoms,Notes"
+            )))
             // Should include the flow description for `none`
-            XCTAssertTrue(content.contains("\"None\""))
+            let expectedFlowValue = L10n.string("flow.none", default: "None")
+            XCTAssertTrue(content.contains("\"\(expectedFlowValue)\""))
         }
     }
 

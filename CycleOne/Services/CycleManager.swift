@@ -13,7 +13,26 @@ final class CycleManager {
     private init() {}
 
     func rebuildAllCycles(in context: NSManagedObjectContext) {
-        // 1. Delete all existing cycles
+        clearExistingCycles(in: context)
+        let logs = fetchFlowLogs(in: context)
+        if logs.isEmpty {
+            return
+        }
+
+        rebuildCycles(from: logs, in: context)
+
+        context.processPendingChanges()
+        updateCycleMetrics(in: context)
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                Logger.storage.error("Cycle rebuild save failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func clearExistingCycles(in context: NSManagedObjectContext) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cycle")
         do {
             let cycles = try context.fetch(fetchRequest)
@@ -23,6 +42,7 @@ final class CycleManager {
         } catch {
             Logger.storage.error("Cycle cleanup fetch failed: \(error.localizedDescription)")
         }
+
         if context.hasChanges {
             do {
                 try context.save()
@@ -30,58 +50,46 @@ final class CycleManager {
                 Logger.storage.error("Cycle cleanup save failed: \(error.localizedDescription)")
             }
         }
+    }
 
-        // 2. Fetch all flow logs sorted by date
+    private func fetchFlowLogs(in context: NSManagedObjectContext) -> [NSManagedObject] {
         let logRequest = NSFetchRequest<NSManagedObject>(entityName: "DayLog")
         logRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
 
-        let allLogs: [NSManagedObject]
         do {
-            allLogs = try context.fetch(logRequest)
+            let allLogs = try context.fetch(logRequest)
+            return allLogs.filter { log in
+                let flowValue = log.value(forKey: "flowLevel")
+                return extractInt16(from: flowValue) > 0
+            }
         } catch {
             Logger.storage.error("Cycle rebuild log fetch failed: \(error.localizedDescription)")
-            return
+            return []
         }
+    }
 
-        // Filter flow logs in Swift for absolute robustness
-        let logs = allLogs.filter { log in
-            let flowValue = log.value(forKey: "flowLevel")
-            return extractInt16(from: flowValue) > 0
-        }
-
-        if logs.isEmpty {
-            return
-        }
-
-        // 3. Reconstruct cycles
+    private func rebuildCycles(
+        from logs: [NSManagedObject],
+        in context: NSManagedObjectContext
+    ) {
         var lastStartDate: Date?
+
         for log in logs {
             let dateValue = log.value(forKey: "date")
-            let validDate = extractDate(from: dateValue)!.startOfDay
+            guard let validDate = extractDate(from: dateValue)?.startOfDay else {
+                Logger.storage.error("Skipping DayLog with invalid date during cycle rebuild")
+                continue
+            }
 
-            if let last = lastStartDate {
-                let diff = validDate.days(from: last)
-                if diff >= 20 {
-                    createCycle(at: validDate, in: context)
-                    lastStartDate = validDate
-                }
-            } else {
-                // First ever flow log
+            guard let last = lastStartDate else {
                 createCycle(at: validDate, in: context)
                 lastStartDate = validDate
+                continue
             }
-        }
 
-        // Ensure changes are processed before metrics update
-        context.processPendingChanges()
-
-        // 4. Update metrics for the newly created cycles
-        updateCycleMetrics(in: context)
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                Logger.storage.error("Cycle rebuild save failed: \(error.localizedDescription)")
+            if validDate.days(from: last) >= 20 {
+                createCycle(at: validDate, in: context)
+                lastStartDate = validDate
             }
         }
     }
@@ -104,7 +112,10 @@ final class CycleManager {
             let cycles = try context.fetch(cycleRequest)
             for (index, cycle) in cycles.enumerated() {
                 let startDateValue = cycle.value(forKey: "startDate")
-                let validStart = extractDate(from: startDateValue)!
+                guard let validStart = extractDate(from: startDateValue) else {
+                    Logger.storage.error("Skipping Cycle with invalid startDate during metrics update")
+                    continue
+                }
 
                 // Calculate Period Length (consecutive flow days)
                 let periodLen = calculateConsecutiveFlowAt(

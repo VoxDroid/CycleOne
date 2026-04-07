@@ -1,0 +1,241 @@
+"tab.calendar" = "Calendar";
+"tab.insights" = "Insights";
+"tab.settings" = "Settings";
+
+"common.vs" = "vs";
+"common.na" = "N/A";
+"common.same" = "Same";
+"common.days_format" = "%d days";
+"common.days_short_format" = "%dd";
+"common.unknown" = "Unknown";
+"common.unit.days" = "days";
+
+"flow.none" = "None";
+"flow.light" = "Light";
+"flow.medium" = "Medium";
+"flow.heavy" = "Heavy";
+
+"mood.happy" = "Happy";
+"mood.neutral" = "Neutral";
+"mood.sad" = "Sad";
+"mood.anxious" = "Anxious";
+"mood.angry" = "Angry";
+
+"energy.low" = "Low";
+"energy.medium" = "Normal";
+"energy.high" = "High";
+
+"symptom.category.physical" = "Physical";
+"symptom.category.mood" = "Mood & Mental";
+"symptom.category.digestion" = "Digestion";
+"symptom.category.other" = "Other";
+
+"symptom.cramps" = "Cramps";
+"symptom.bloating" = "Bloating";
+"symptom.headache" = "Headache";
+"symptom.acne" = "Acne";
+"symptom.breast_tenderness" = "Breast Tenderness";
+"symptom.back_pain" = "Back Pain";
+"symptom.dizziness" = "Dizziness";
+"symptom.nausea" = "Nausea";
+"symptom.mood_swings" = "Mood Swings";
+"symptom.irritability" = "Irritability";
+"symptom.fatigue" = "Fatigue";
+"symptom.cravings" = "Cravings";
+"symptom.insomnia" = "Insomnia";
+
+"settings.section.preferences" = "Preferences";
+"settings.enable_predictions" = "Enable Predictions";
+"settings.notifications" = "Notifications";
+"settings.section.appearance" = "Appearance";
+"settings.theme" = "Theme";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Light";
+"settings.theme.dark" = "Dark";
+"settings.language" = "Language";
+"settings.language.system" = "System Default";
+"settings.language.english" = "English";
+"settings.language.filipino" = "Filipino";
+"settings.language.japanese" = "Japanese";
+"settings.accent_color" = "Accent Color";
+"settings.accent.rose" = "Rose";
+"settings.accent.lavender" = "Lavender";
+"settings.accent.ocean" = "Ocean";
+"settings.accent.sage" = "Sage";
+"settings.accent.sunset" = "Sunset";
+"settings.section.data" = "Data";
+"settings.export_csv" = "Export Data (CSV)";
+"settings.delete_all_data" = "Delete All Data";
+"settings.section.app" = "App";
+"settings.help_guide" = "Help & Guide";
+"settings.support_feedback" = "Support & Feedback";
+"settings.privacy_policy" = "Privacy Policy";
+"settings.rate_cycleone" = "Rate CycleOne";
+"settings.about" = "About";
+"settings.footer.byline" = "CycleOne by VoxDroid";
+"settings.footer.copyright" = "© 2026 VoxDroid. All rights reserved.";
+"settings.navigation_title" = "Settings";
+"settings.alert.delete_title" = "Delete All Data?";
+"settings.alert.delete_action" = "Delete";
+"settings.alert.cancel_action" = "Cancel";
+"settings.alert.delete_message" = "This action cannot be undone. All your logged cycles and symptoms will be permanently removed.";
+
+"settings.notifications.title" = "Notifications";
+"settings.notifications.section.period" = "Period Reminders";
+"settings.notifications.toggle.period" = "Remind me before period";
+"settings.notifications.section.fertile" = "Fertile Window";
+"settings.notifications.toggle.fertile" = "Fertile window alerts";
+"settings.notifications.footer" = "Notifications are scheduled locally on your device at 8:00 AM.";
+"settings.notifications.days_before" = "Days before";
+"settings.notifications.days.1" = "1 day";
+"settings.notifications.days.2" = "2 days";
+"settings.notifications.days.3" = "3 days";
+"settings.notifications.days.5" = "5 days";
+"settings.notifications.days.format" = "%d days";
+
+"notifications.content.title" = "CycleOne";
+"notifications.content.period.body" = "Your period is predicted to start tomorrow.";
+"notifications.content.fertile.body" = "Your fertile window starts tomorrow.";
+
+"calendar.legend.title" = "Calendar Legend";
+"calendar.legend.period" = "Period";
+"calendar.legend.predicted" = "Predicted";
+"calendar.legend.ovulation" = "Ovulation";
+"calendar.legend.fertile" = "Fertile";
+"calendar.legend.logged" = "Logged";
+
+"calendar.day.no_period_logged" = "No Period Logged";
+"calendar.day.log_day" = "Log Day";
+"calendar.day.edit_log" = "Edit Log";
+"calendar.day.tap_to_log" = "Tap to log your cycle, symptoms, or mood.";
+"calendar.day.flow_fallback" = "Flow";
+
+"calendar.header.irregular" = "Irregular";
+"calendar.header.disclaimer" = "Predictions are estimates. Not medical advice.";
+"calendar.header.log_first" = "Log your first period";
+"calendar.header.overdue" = "Period is overdue";
+"calendar.header.starts_today" = "Period starts today";
+"calendar.header.next_period" = "Next period";
+"calendar.header.expected_today" = "Expected today";
+"calendar.header.overdue_by_days" = "Overdue by %d days";
+"calendar.header.in_days" = "In %d days";
+"calendar.header.ovulation_starts_today" = "Ovulation starts today";
+"calendar.header.ovulation_in_days" = "Ovulation in %d days";
+
+"insights.avg_cycle" = "Avg Cycle";
+"insights.avg_period" = "Avg Period";
+"insights.shortest" = "Shortest";
+"insights.longest" = "Longest";
+"insights.total" = "Total";
+"insights.avg_pain" = "Avg Pain";
+"insights.logged" = "Logged";
+"insights.symptoms" = "Symptoms";
+
+"insights.history.empty_title" = "No data yet";
+"insights.history.empty_message" = "Your cycle history will appear here once you log your first period.";
+"insights.history.past_cycles" = "Past Cycles";
+"insights.history.title" = "History";
+"insights.history.period_days_format" = "%d days period";
+
+"insights.compare.title" = "Cycle Comparison";
+"insights.compare.current" = "Current";
+"insights.compare.previous" = "Previous";
+"insights.compare.start_date" = "Start Date";
+"insights.compare.cycle_length" = "Cycle Length";
+"insights.compare.period_length" = "Period Length";
+"insights.compare.length_comparison" = "Length Comparison";
+"insights.compare.navigation_title" = "Compare Cycles";
+"insights.compare.empty_title" = "Not Enough Data";
+"insights.compare.empty_message" = "Log at least two cycles to compare.";
+
+"onboarding.page1.title" = "Welcome to CycleOne";
+"onboarding.page1.subtitle" = "A privacy-first period tracker.\nNo subscriptions. No cloud. No account.";
+"onboarding.page2.title" = "Track Your Cycle";
+"onboarding.page2.subtitle" = "Tap any day on the calendar to log your period, symptoms, mood, and energy.";
+"onboarding.page3.title" = "Discover Patterns";
+"onboarding.page3.subtitle" = "View insights about your cycle length, common symptoms, and predictions.";
+"onboarding.page4.title" = "Your Data Stays Private";
+"onboarding.page4.subtitle" = "Everything is stored on your device.\nNo servers. No tracking. Ever.";
+"onboarding.next" = "Next";
+"onboarding.get_started" = "Get Started";
+"onboarding.skip" = "Skip";
+
+"log.pain_level_format" = "Pain Level: %d";
+"privacy_policy.not_found" = "Privacy Policy not found.";
+"export.csv.header" = "Date,Flow,Pain,Mood,Energy,Symptoms,Notes";
+
+"Log your day" = "Log your day";
+"Flow" = "Flow";
+"Mood & Energy" = "Mood & Energy";
+"Symptoms" = "Symptoms";
+"Add notes..." = "Add notes...";
+"Notes" = "Notes";
+"Delete This Log" = "Delete This Log";
+"Log Day" = "Log Day";
+"Dismiss" = "Dismiss";
+"Delete Log?" = "Delete Log?";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"This will permanently remove this day's log and all associated symptoms." = "This will permanently remove this day's log and all associated symptoms.";
+
+"Cycle Length Trend" = "Cycle Length Trend";
+"Mood Distribution" = "Mood Distribution";
+"Top Symptoms" = "Top Symptoms";
+"Compare Cycles" = "Compare Cycles";
+"View Full History" = "View Full History";
+"Insights" = "Insights";
+
+"User Guide" = "User Guide";
+"Calendar" = "Calendar";
+"Logging" = "Logging";
+"Reminders" = "Reminders";
+"The main screen shows your cycle. Tap any date to view details or log data." = "The main screen shows your cycle. Tap any date to view details or log data.";
+"Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away." = "Log your flow, symptoms, mood, and energy. Auto-saved when you navigate away.";
+"View your average cycle length, period duration, and top symptoms." = "View your average cycle length, period duration, and top symptoms.";
+"Enable notifications in Settings for alerts before period or fertile window." = "Enable notifications in Settings for alerts before period or fertile window.";
+"Quick Tips" = "Quick Tips";
+"Swipe left or right to change months." = "Swipe left or right to change months.";
+"Tap the detail card to log or edit." = "Tap the detail card to log or edit.";
+"Check Insights to understand patterns." = "Check Insights to understand patterns.";
+"Export your data anytime — you own it." = "Export your data anytime — you own it.";
+"App Philosophy" = "App Philosophy";
+"Privacy First" = "Privacy First";
+"Zero cloud sync and zero tracking. Data stays on your device." = "Zero cloud sync and zero tracking. Data stays on your device.";
+"No Subscriptions" = "No Subscriptions";
+"Don't pay monthly for your own health data. One purchase, forever." = "Don't pay monthly for your own health data. One purchase, forever.";
+"Manual & Support" = "Manual & Support";
+"View Project on GitHub" = "View Project on GitHub";
+"Privacy Policy" = "Privacy Policy";
+"Help & Guide" = "Help & Guide";
+
+"Export Your Data" = "Export Your Data";
+"Get a CSV file of all your logged cycles and symptoms. Your data stays private." = "Get a CSV file of all your logged cycles and symptoms. Your data stays private.";
+"Generating CSV..." = "Generating CSV...";
+"Share CSV File" = "Share CSV File";
+"Regenerate" = "Regenerate";
+"Generate CSV" = "Generate CSV";
+"Export is plaintext only. No proprietary format." = "Export is plaintext only. No proprietary format.";
+"Export" = "Export";
+
+"A privacy-first, open-source period tracker for iOS." = "A privacy-first, open-source period tracker for iOS.";
+"Developer" = "Developer";
+"VoxDroid" = "VoxDroid";
+"Lead Developer" = "Lead Developer";
+"izeno.contact@gmail.com" = "izeno.contact@gmail.com";
+"Direct Support" = "Direct Support";
+"github.com/VoxDroid" = "github.com/VoxDroid";
+"Follow on GitHub" = "Follow on GitHub";
+"Project" = "Project";
+"Source Code" = "Source Code";
+"GPL-3.0 Licensed" = "GPL-3.0 Licensed";
+"Privacy Commitment" = "Privacy Commitment";
+"100% local, zero tracking" = "100% local, zero tracking";
+"Built with Swift" = "Built with Swift";
+"SwiftUI + Core Data" = "SwiftUI + Core Data";
+"CycleOne by VoxDroid" = "CycleOne by VoxDroid";
+"© 2026 VoxDroid. All rights reserved." = "© 2026 VoxDroid. All rights reserved.";
+"About" = "About";
+
+"CycleOne" = "CycleOne";
+"Version 1.0.0" = "Version 1.0.0";
+"Privacy-first period tracking" = "Privacy-first period tracking";

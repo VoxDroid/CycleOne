@@ -5,8 +5,9 @@ import XCTest
 
 final class ViewBranchHelperCoverageTests: XCTestCase {
     func testCycleComparison_helpers_coverDateAndDiffBranches() {
-        XCTAssertEqual(CycleComparisonView.formattedStartDate(nil), "N/A")
-        XCTAssertNotEqual(CycleComparisonView.formattedStartDate(Date().startOfDay), "N/A")
+        let fallback = L10n.string("common.na", default: "N/A")
+        XCTAssertEqual(CycleComparisonView.formattedStartDate(nil), fallback)
+        XCTAssertNotEqual(CycleComparisonView.formattedStartDate(Date().startOfDay), fallback)
         XCTAssertEqual(CycleComparisonView.emptyStateOpacity(hasLatestTwo: true), 0)
         XCTAssertEqual(CycleComparisonView.emptyStateOpacity(hasLatestTwo: false), 1)
         XCTAssertEqual(CycleComparisonView.emptyStateHeight(hasLatestTwo: true), 0)
@@ -22,7 +23,10 @@ final class ViewBranchHelperCoverageTests: XCTestCase {
     }
 
     func testCalendarDayDetailView_helperBranches() {
-        XCTAssertEqual(CalendarDayDetailView.flowDescription(for: 99), "Flow")
+        XCTAssertEqual(
+            CalendarDayDetailView.flowDescription(for: 99),
+            L10n.string("calendar.day.flow_fallback", default: "Flow")
+        )
         XCTAssertEqual(CalendarDayDetailView.moodIcon(for: 99), "face.smiling")
         XCTAssertEqual(CalendarDayDetailView.moodDescription(for: 99), "")
         XCTAssertEqual(CalendarDayDetailView.energyLevel(for: 99), .medium)
