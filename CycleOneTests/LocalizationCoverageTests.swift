@@ -113,9 +113,11 @@ final class LocalizationCoverageTests: XCTestCase {
         let en = try keys(inStringsFileAt: localizedStringsFileURL(for: "en"))
         let fil = try keys(inStringsFileAt: localizedStringsFileURL(for: "fil"))
         let ja = try keys(inStringsFileAt: localizedStringsFileURL(for: "ja"))
+        let ko = try keys(inStringsFileAt: localizedStringsFileURL(for: "ko"))
 
         XCTAssertEqual(en, fil, "English and Filipino keys are out of sync")
         XCTAssertEqual(en, ja, "English and Japanese keys are out of sync")
+        XCTAssertEqual(en, ko, "English and Korean keys are out of sync")
     }
 
     func testUserFacingSourceStringsExistInEnglishTable() throws {
@@ -144,5 +146,6 @@ final class LocalizationCoverageTests: XCTestCase {
         XCTAssertNotNil(AppLanguage.english.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
         XCTAssertNotNil(AppLanguage.filipino.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
         XCTAssertNotNil(AppLanguage.japanese.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
+        XCTAssertNotNil(AppLanguage.korean.localizedResourceURL(forResource: "PrivacyPolicy", withExtension: "html"))
     }
 }

@@ -28,6 +28,7 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.english.locale.identifier, "en")
         XCTAssertEqual(AppLanguage.filipino.locale.identifier, "fil")
         XCTAssertEqual(AppLanguage.japanese.locale.identifier, "ja")
+        XCTAssertEqual(AppLanguage.korean.locale.identifier, "ko")
     }
 
     func testLocalizedString_usesLanguageSpecificBundle() {
@@ -42,6 +43,10 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(
             AppLanguage.japanese.localizedString("tab.settings", defaultValue: "Settings"),
             "設定"
+        )
+        XCTAssertEqual(
+            AppLanguage.korean.localizedString("tab.settings", defaultValue: "Settings"),
+            "설정"
         )
     }
 
@@ -60,6 +65,12 @@ final class AppLanguageTests: XCTestCase {
         )
         XCTAssertNotNil(
             AppLanguage.japanese.localizedResourceURL(
+                forResource: "PrivacyPolicy",
+                withExtension: "html"
+            )
+        )
+        XCTAssertNotNil(
+            AppLanguage.korean.localizedResourceURL(
                 forResource: "PrivacyPolicy",
                 withExtension: "html"
             )
