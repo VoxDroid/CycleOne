@@ -31,6 +31,14 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(AppLanguage.korean.locale.identifier, "ko")
     }
 
+    func testEnglishDisplayNameMapping_forPickerLabels() {
+        XCTAssertEqual(AppLanguage.system.englishDisplayName, "System")
+        XCTAssertEqual(AppLanguage.english.englishDisplayName, "English")
+        XCTAssertEqual(AppLanguage.filipino.englishDisplayName, "Filipino")
+        XCTAssertEqual(AppLanguage.japanese.englishDisplayName, "Japanese")
+        XCTAssertEqual(AppLanguage.korean.englishDisplayName, "Korean")
+    }
+
     func testLocalizedString_usesLanguageSpecificBundle() {
         XCTAssertEqual(
             AppLanguage.english.localizedString("tab.settings", defaultValue: "Settings"),

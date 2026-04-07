@@ -109,7 +109,9 @@ struct SettingsView: View {
                             selection: $selectedLanguageCode
                         ) {
                             ForEach(AppLanguage.allCases) { language in
-                                Text(language.displayNameKey).tag(language.rawValue)
+                                (Text(language.displayNameKey)
+                                    + Text(" (\(language.englishDisplayName))"))
+                                    .tag(language.rawValue)
                             }
                         }
                         .pickerStyle(.menu)

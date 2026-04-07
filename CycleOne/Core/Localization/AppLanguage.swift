@@ -49,6 +49,21 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    var englishDisplayName: String {
+        switch self {
+        case .system:
+            "System"
+        case .english:
+            "English"
+        case .filipino:
+            "Filipino"
+        case .japanese:
+            "Japanese"
+        case .korean:
+            "Korean"
+        }
+    }
+
     static func fromStoredValue(_ rawValue: String?) -> AppLanguage {
         AppLanguage(rawValue: rawValue ?? "") ?? .system
     }
