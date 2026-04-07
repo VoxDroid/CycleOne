@@ -206,7 +206,7 @@ struct InsightsView: View {
                 .padding(.bottom, 24)
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Insights")
+            .navigationTitle("tab.insights")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.calculateStats()
@@ -215,6 +215,11 @@ struct InsightsView: View {
                 viewModel.calculateStats()
             }
         }
+        .id("insights-stack-\(selectedLanguageCode)")
+        .environment(
+            \.locale,
+            AppLanguage.fromStoredValue(selectedLanguageCode).locale
+        )
     }
 
     static func dayShortValue(_ days: Int) -> String {
