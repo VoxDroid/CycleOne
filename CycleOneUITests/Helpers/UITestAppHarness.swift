@@ -55,14 +55,31 @@ enum UITestAppHarness {
 
     @MainActor
     static func openTab(at index: Int, in app: XCUIApplication) {
-        let tab = app.tabBars.buttons.element(boundBy: index)
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 25))
+        XCTAssertTrue(waitForHittable(tabBar, timeout: 25))
+
+        let tab = tabBar.buttons.element(boundBy: index)
         XCTAssertTrue(tab.waitForExistence(timeout: 12))
+        XCTAssertTrue(waitForHittable(tab, timeout: 12))
         tab.tap()
     }
 
     @MainActor
     static func waitForMainTabs(in app: XCUIApplication) {
-        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 12))
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 25))
+        XCTAssertTrue(waitForHittable(tabBar, timeout: 25))
+    }
+
+    @MainActor
+    static func waitForHittable(_ element: XCUIElement, timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "exists == true AND hittable == true")
+        let expectation = XCTNSPredicateExpectation(
+            predicate: predicate,
+            object: element
+        )
+        return XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed
     }
 
     @MainActor

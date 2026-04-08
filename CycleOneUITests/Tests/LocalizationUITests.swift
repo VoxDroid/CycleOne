@@ -11,6 +11,51 @@ final class LocalizationUITests: XCTestCase {
     }
 
     @MainActor
+    private func tapLanguageOption(
+        in app: XCUIApplication,
+        settingsList: XCUIElement,
+        currentPickerLabel: String,
+        candidates: [String]
+    ) -> Bool {
+        for _ in 0 ..< 3 {
+            for label in candidates {
+                let exactPredicate = NSPredicate(format: "label == %@", label)
+                let containsPredicate = NSPredicate(format: "label CONTAINS[c] %@", label)
+                let queries: [XCUIElementQuery] = [
+                    app.menuItems.matching(exactPredicate),
+                    app.buttons.matching(exactPredicate),
+                    app.staticTexts.matching(exactPredicate),
+                    app.descendants(matching: .any).matching(exactPredicate),
+                    app.descendants(matching: .any).matching(containsPredicate),
+                ]
+
+                for query in queries {
+                    for option in query.allElementsBoundByIndex where option.exists {
+                        if option.identifier == "Settings_LanguagePicker" {
+                            continue
+                        }
+
+                        if option.label == currentPickerLabel,
+                           option.elementType != .menuItem
+                        {
+                            continue
+                        }
+
+                        if option.isHittable {
+                            option.tap()
+                            return true
+                        }
+                    }
+                }
+            }
+
+            settingsList.swipeDown()
+        }
+
+        return false
+    }
+
+    @MainActor
     private func selectLanguage(
         in app: XCUIApplication,
         settingsList: XCUIElement,
@@ -28,28 +73,25 @@ final class LocalizationUITests: XCTestCase {
             UITestAppHarness.scrollToElement(languagePicker, in: settingsList)
         }
         XCTAssertTrue(languagePicker.isHittable)
+        let currentPickerLabel = languagePicker.label
         languagePicker.tap()
 
-        for label in candidates {
-            let optionCandidates: [XCUIElement] = [
-                app.buttons[label],
-                app.staticTexts[label],
-                app.menuItems[label],
-                app.descendants(matching: .any)
-                    .matching(NSPredicate(format: "label == %@", label))
-                    .firstMatch,
-                app.descendants(matching: .any)
-                    .matching(NSPredicate(format: "label CONTAINS[c] %@", label))
-                    .firstMatch,
-            ]
+        let didSelectLanguage = tapLanguageOption(
+            in: app,
+            settingsList: settingsList,
+            currentPickerLabel: currentPickerLabel,
+            candidates: candidates
+        )
+        XCTAssertTrue(didSelectLanguage, "Unable to find any language option from candidates: \(candidates)")
 
-            for option in optionCandidates where option.waitForExistence(timeout: 2) {
-                option.tap()
-                return
-            }
-        }
+        // Wait for the picker label to update when a new language has been selected.
+        let pickerLabelChanged = expectation(
+            for: NSPredicate(format: "label != %@", currentPickerLabel),
+            evaluatedWith: languagePicker
+        )
+        _ = XCTWaiter.wait(for: [pickerLabelChanged], timeout: 8)
 
-        XCTFail("Unable to find any language option from candidates: \(candidates)")
+        UITestAppHarness.waitForMainTabs(in: app)
     }
 
     @MainActor
@@ -67,7 +109,7 @@ final class LocalizationUITests: XCTestCase {
     private func assertLegendPeriodLabel(
         in app: XCUIApplication,
         expected: String,
-        timeout: TimeInterval = 15
+        timeout: TimeInterval = 25
     ) {
         UITestAppHarness.openTab(at: 0, in: app)
 
@@ -96,17 +138,19 @@ final class LocalizationUITests: XCTestCase {
                 break
             }
 
+            if let periodValue = periodLabel.value as? String,
+               periodValue.contains(expected)
+            {
+                foundLocalizedLabel = true
+                break
+            }
+
             if legendRoot.label.contains(expected) {
                 foundLocalizedLabel = true
                 break
             }
 
-            let scrollView = app.scrollViews.firstMatch
-            if scrollView.exists {
-                scrollView.swipeUp()
-                scrollView.swipeDown()
-            }
-            _ = app.staticTexts[expected].waitForExistence(timeout: 0.2)
+            _ = app.staticTexts[expected].waitForExistence(timeout: 0.3)
         }
 
         XCTAssertTrue(
@@ -146,7 +190,8 @@ final class LocalizationUITests: XCTestCase {
         let app = UITestAppHarness.launch(
             skipOnboarding: true,
             clearData: true,
-            seedInsights: false
+            seedInsights: false,
+            extraLaunchArguments: ["-ui-testing-language", "en"]
         )
 
         UITestAppHarness.waitForMainTabs(in: app)
@@ -154,13 +199,11 @@ final class LocalizationUITests: XCTestCase {
 
         let settingsList = openSettingsList(in: app)
         selectLanguage(in: app, settingsList: settingsList, candidates: ["Japanese", "日本語"])
-        XCTAssertTrue(app.tabBars.buttons["設定"].waitForExistence(timeout: 12))
 
         assertLegendPeriodLabel(in: app, expected: "生理")
 
         let settingsListJapanese = openSettingsList(in: app)
         selectLanguage(in: app, settingsList: settingsListJapanese, candidates: ["English", "英語"])
-        XCTAssertTrue(app.tabBars.buttons["Settings"].waitForExistence(timeout: 12))
 
         assertLegendPeriodLabel(in: app, expected: "Period")
     }

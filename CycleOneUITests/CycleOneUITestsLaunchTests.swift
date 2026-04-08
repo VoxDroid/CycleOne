@@ -20,8 +20,9 @@ final class CycleOneUITestsLaunchTests: XCTestCase {
     func testLaunch() {
         let app = UITestAppHarness.launch(
             skipOnboarding: true,
-            clearData: true,
-            seedInsights: false
+            clearData: false,
+            seedInsights: false,
+            extraLaunchArguments: ["-ui-testing-language", "en"]
         )
 
         UITestAppHarness.waitForMainTabs(in: app)
