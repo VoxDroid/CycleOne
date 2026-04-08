@@ -49,11 +49,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install swiftlint swiftformat pre-commit
-          pre-commit install
+          export HOMEBREW_NO_AUTO_UPDATE=1
+          command -v swiftlint >/dev/null 2>&1 || brew install swiftlint
+          command -v swiftformat >/dev/null 2>&1 || brew install swiftformat
 
-      - name: Run Checks (Lint)
+      - name: Run Checks
         run: make check
-
-      - name: Run Tests
-        run: make test
