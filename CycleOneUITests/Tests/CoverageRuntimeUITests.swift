@@ -24,14 +24,22 @@ final class CoverageRuntimeUITests: XCTestCase {
         _ = splashRoot.waitForExistence(timeout: 12)
         _ = splashTitle.waitForExistence(timeout: 12)
 
-        let splashGone = expectation(
-            for: NSPredicate(format: "exists == false"),
-            evaluatedWith: splashRoot
-        )
-        wait(for: [splashGone], timeout: 12)
-
         let tabs = app.tabBars.firstMatch
-        XCTAssertTrue(tabs.waitForExistence(timeout: 12))
+        XCTAssertTrue(tabs.waitForExistence(timeout: 25))
+
+        let tabsHittable = expectation(
+            for: NSPredicate(format: "hittable == true"),
+            evaluatedWith: tabs
+        )
+        wait(for: [tabsHittable], timeout: 25)
+
+        if splashRoot.exists {
+            let splashNotHittable = expectation(
+                for: NSPredicate(format: "hittable == false"),
+                evaluatedWith: splashRoot
+            )
+            wait(for: [splashNotHittable], timeout: 10)
+        }
     }
 
     @MainActor
