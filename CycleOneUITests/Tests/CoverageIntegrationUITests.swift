@@ -15,6 +15,13 @@ final class CoverageIntegrationUITests: XCTestCase {
     }
 
     @MainActor
+    private func tapBackButton(in app: XCUIApplication, timeout: TimeInterval = 8) {
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: timeout))
+        backButton.tap()
+    }
+
+    @MainActor
     func testOnboardingFlowAdvancesAndDismisses() {
         let app = UITestAppHarness.launch(
             skipOnboarding: false,
@@ -99,16 +106,21 @@ final class CoverageIntegrationUITests: XCTestCase {
         )
         XCTAssertTrue(helpRoot.waitForExistence(timeout: 8))
 
-        let privacyCell = app.staticTexts["Privacy Policy"]
-        UITestAppHarness.scrollToElement(privacyCell, in: helpRoot)
-        XCTAssertTrue(privacyCell.waitForExistence(timeout: 5))
-        privacyCell.tap()
+        let privacyLink = UITestAppHarness.element(
+            withIdentifier: "Help_PrivacyPolicyLink",
+            in: app
+        )
+        UITestAppHarness.scrollToElement(privacyLink, in: helpRoot)
+        XCTAssertTrue(privacyLink.waitForExistence(timeout: 8))
+        privacyLink.tap()
 
         XCTAssertTrue(app.navigationBars["Privacy Policy"].waitForExistence(timeout: 8))
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        tapBackButton(in: app)
 
         XCTAssertTrue(helpRoot.waitForExistence(timeout: 8))
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        tapBackButton(in: app)
+
+        XCTAssertTrue(settingsList.waitForExistence(timeout: 8))
 
         let aboutLink = UITestAppHarness.element(
             withIdentifier: "Settings_AboutLink",

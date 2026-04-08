@@ -90,11 +90,13 @@ struct HelpView: View {
                             systemImage: "link"
                         )
                     }
+                    .accessibilityIdentifier("Help_GitHubLink")
                 }
 
                 NavigationLink(destination: PrivacyPolicyView()) {
                     Label("Privacy Policy", systemImage: "shield.fill")
                 }
+                .accessibilityIdentifier("Help_PrivacyPolicyLink")
             }
         }
         .accessibilityIdentifier("HelpViewRoot")
