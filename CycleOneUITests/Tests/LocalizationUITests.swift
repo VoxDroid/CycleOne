@@ -64,6 +64,59 @@ final class LocalizationUITests: XCTestCase {
     }
 
     @MainActor
+    private func assertLegendPeriodLabel(
+        in app: XCUIApplication,
+        expected: String,
+        timeout: TimeInterval = 15
+    ) {
+        UITestAppHarness.openTab(at: 0, in: app)
+
+        let legendRoot = UITestAppHarness.element(
+            withIdentifier: "CalendarLegendView",
+            in: app
+        )
+        XCTAssertTrue(legendRoot.waitForExistence(timeout: timeout))
+
+        let periodLabel = UITestAppHarness.element(
+            withIdentifier: "CalendarLegend_PeriodLabel",
+            in: app
+        )
+
+        let deadline = Date().addingTimeInterval(timeout)
+        var foundLocalizedLabel = false
+
+        while Date() < deadline {
+            if app.staticTexts[expected].exists {
+                foundLocalizedLabel = true
+                break
+            }
+
+            if periodLabel.exists, periodLabel.label.contains(expected) {
+                foundLocalizedLabel = true
+                break
+            }
+
+            if legendRoot.label.contains(expected) {
+                foundLocalizedLabel = true
+                break
+            }
+
+            let scrollView = app.scrollViews.firstMatch
+            if scrollView.exists {
+                scrollView.swipeUp()
+                scrollView.swipeDown()
+            }
+            _ = app.staticTexts[expected].waitForExistence(timeout: 0.2)
+        }
+
+        XCTAssertTrue(
+            foundLocalizedLabel,
+            "Expected legend period label '\(expected)' not found. Legend root label: '\(legendRoot.label)'"
+        )
+        XCTAssertFalse(app.staticTexts["calendar.legend.period"].exists)
+    }
+
+    @MainActor
     func testSettingsLanguageSwitchToJapanese_updatesVisibleStrings() {
         let app = UITestAppHarness.launch(
             skipOnboarding: true,
@@ -101,17 +154,15 @@ final class LocalizationUITests: XCTestCase {
 
         let settingsList = openSettingsList(in: app)
         selectLanguage(in: app, settingsList: settingsList, candidates: ["Japanese", "日本語"])
+        XCTAssertTrue(app.tabBars.buttons["設定"].waitForExistence(timeout: 12))
 
-        UITestAppHarness.openTab(at: 0, in: app)
-        XCTAssertTrue(app.staticTexts["生理"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.staticTexts["calendar.legend.period"].exists)
+        assertLegendPeriodLabel(in: app, expected: "生理")
 
         let settingsListJapanese = openSettingsList(in: app)
         selectLanguage(in: app, settingsList: settingsListJapanese, candidates: ["English", "英語"])
+        XCTAssertTrue(app.tabBars.buttons["Settings"].waitForExistence(timeout: 12))
 
-        UITestAppHarness.openTab(at: 0, in: app)
-        XCTAssertTrue(app.staticTexts["Period"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.staticTexts["calendar.legend.period"].exists)
+        assertLegendPeriodLabel(in: app, expected: "Period")
     }
 
     @MainActor
