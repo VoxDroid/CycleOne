@@ -242,6 +242,27 @@ final class ExportServiceTests: XCTestCase {
         XCTAssertNil(url)
     }
 
+    func testGenerateCSV_skipsRowsWithMissingDate() throws {
+        let validLog = DayLog(context: context)
+        validLog.id = UUID()
+        validLog.date = Date().startOfDay
+        validLog.flowLevel = FlowLevel.light.rawValue
+
+        let missingDateLog = DayLog(context: context)
+        missingDateLog.id = UUID()
+        missingDateLog.date = nil
+        missingDateLog.flowLevel = FlowLevel.medium.rawValue
+
+        let url = ExportService.shared.generateCSV(context: context)
+        XCTAssertNotNil(url)
+
+        if let url {
+            let content = try String(contentsOf: url)
+            let lines = content.split(whereSeparator: \ .isNewline)
+            XCTAssertEqual(lines.count, 2)
+        }
+    }
+
     func testSymptomsText_helper_handlesNilAndValues() {
         XCTAssertEqual(ExportService.symptomsText(from: nil), "")
 

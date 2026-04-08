@@ -1,28 +1,29 @@
 import CoreData
 @testable import CycleOne
 import SwiftUI
+import UIKit
 import XCTest
 
-final class ViewBranchTests: XCTestCase {
-    private final class ThrowingDeleteManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
-        private(set) var executeCalls = 0
-        private(set) var saveCalls = 0
+private final class ThrowingDeleteManagedObjectContext: NSManagedObjectContext, @unchecked Sendable {
+    private(set) var executeCalls = 0
+    private(set) var saveCalls = 0
 
-        override var hasChanges: Bool {
-            true
-        }
-
-        override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
-            executeCalls += 1
-            throw NSError(domain: "ViewBranchTests", code: 1)
-        }
-
-        override func save() throws {
-            saveCalls += 1
-            throw NSError(domain: "ViewBranchTests", code: 2)
-        }
+    override var hasChanges: Bool {
+        true
     }
 
+    override func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+        executeCalls += 1
+        throw NSError(domain: "ViewBranchTests", code: 1)
+    }
+
+    override func save() throws {
+        saveCalls += 1
+        throw NSError(domain: "ViewBranchTests", code: 2)
+    }
+}
+
+final class ViewBranchTests: XCTestCase {
     func testThrowingDeleteManagedObjectContext_hasChangesAndSaveFailure() {
         let context = ThrowingDeleteManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 
@@ -337,6 +338,8 @@ final class ViewBranchTests: XCTestCase {
                 default: "Privacy Policy not found."
             )
         )
+        XCTAssertNotNil(PrivacyPolicyView.defaultPolicyURL(language: .english))
+        XCTAssertNotNil(PrivacyPolicyView.defaultPolicyURL(language: .system))
     }
 
     func testCycleHistoryList_emptyAndPopulatedBranches() {
@@ -380,6 +383,42 @@ final class ViewBranchTests: XCTestCase {
         host(SettingsView(), context: context)
         host(HelpView(), context: context)
         host(AboutView(), context: context)
+    }
+
+    @MainActor
+    func testInsightsView_reactsToLanguageChange() throws {
+        let defaults = UserDefaults.standard
+        let previous = defaults.string(forKey: AppLanguage.storageKey)
+        defer {
+            if let previous {
+                defaults.set(previous, forKey: AppLanguage.storageKey)
+            } else {
+                defaults.removeObject(forKey: AppLanguage.storageKey)
+            }
+        }
+
+        defaults.set(AppLanguage.english.rawValue, forKey: AppLanguage.storageKey)
+
+        let context = TestPersistenceController.empty().container.viewContext
+        try seedInsightsData(in: context)
+
+        let root = InsightsView(context: context)
+            .environment(\.managedObjectContext, context)
+            .environmentObject(ThemeManager.shared)
+        let host = UIHostingController(rootView: root)
+
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        host.view.layoutIfNeeded()
+
+        defaults.set(AppLanguage.japanese.rawValue, forKey: AppLanguage.storageKey)
+        RunLoop.main.run(until: Date().addingTimeInterval(0.15))
+
+        XCTAssertEqual(
+            AppLanguage.currentSelection(userDefaults: defaults),
+            .japanese
+        )
     }
 
     private func seedInsightsData(in context: NSManagedObjectContext) throws {

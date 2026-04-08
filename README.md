@@ -102,7 +102,7 @@ CycleOne was built from the ground up to be safe:
 ### Workflow Commands
 We use a `Makefile` for CI/CD consistency:
 - `make check`: Full verification suite (Lint, Format, Test, UI Test).
-- `make test`: Execute the main test suite and produce `TestResults.xcresult` coverage output.
+- `make test`: Execute the unit-test suite and produce `TestResults.xcresult` output.
 - `make test-ui`: Execute UI tests only.
 
 ### Localization Validation
@@ -116,7 +116,7 @@ fi
 
 xcodebuild test \
   -project CycleOne.xcodeproj \
-  -scheme CycleOne \
+  -scheme CycleOne-Unit \
   -destination "id=${DEST_ID}" \
   -parallel-testing-enabled NO \
   -only-testing:CycleOneTests/LocalizationCoverageTests \
@@ -134,7 +134,7 @@ fi
 
 xcodebuild test \
   -project CycleOne.xcodeproj \
-  -scheme CycleOne \
+  -scheme CycleOne-Unit \
   -destination "id=${DEST_ID}" \
   -parallel-testing-enabled NO \
   -only-testing:CycleOneTests
@@ -142,10 +142,10 @@ xcodebuild test \
 
 ### Coverage Snapshot
 
-Latest stable local run (`TestResults.xcresult`, 2026-04-02):
-- `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
-- `CycleOneTests.xctest`: 3,682 / 3,682 lines (100.00%)
-- `CycleOneUITests.xctest`: 773 / 773 lines (100.00%)
+Latest merged local run (`UnitCoverage.xcresult` + `UICoverage.xcresult`, 2026-04-08):
+- `CycleOne.app`: 10,893 / 10,893 lines (100.00%)
+- `CycleOneTests.xctest`: 4,298 / 4,316 lines (99.58%)
+- `CycleOneUITests.xctest`: 955 / 962 lines (99.27%)
 
 Latest run counts:
 - `CycleOneTests.xctest`: 182 tests, 0 failures.

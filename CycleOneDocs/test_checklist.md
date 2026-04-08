@@ -1,15 +1,15 @@
 # CycleOne Test Checklist
 
-## Current Automated Status (2026-04-02)
+## Current Automated Status (2026-04-08)
 - `make check` passes end-to-end.
 - `pre-commit run --all-files` passes all hooks.
 - Latest run counts:
   - `CycleOneTests.xctest`: 182 tests, 0 failures.
   - `CycleOneUITests.xctest`: 22 tests, 0 failures.
-- Coverage from latest stable full run (`TestResults.xcresult`):
-  - `CycleOne.app`: 10,313 / 10,313 lines (100.00%)
-  - `CycleOneTests.xctest`: 3,682 / 3,682 lines (100.00%)
-  - `CycleOneUITests.xctest`: 773 / 773 lines (100.00%)
+- Coverage from latest merged run (`UnitCoverage.xcresult` + `UICoverage.xcresult`):
+  - `CycleOne.app`: 10,893 / 10,893 lines (100.00%)
+  - `CycleOneTests.xctest`: 4,298 / 4,316 lines (99.58%)
+  - `CycleOneUITests.xctest`: 955 / 962 lines (99.27%)
 
 ## Security and Edge-Case Checks (2026-04-02)
 - [x] CSV export formula injection mitigation verified (`=`, `+`, `-`, `@` leading values are prefixed safely)

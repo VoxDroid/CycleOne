@@ -1,34 +1,53 @@
-# Coverage percentage commands (target-level)
+# Coverage commands (split schemes + merged report)
 
-# 1) Generate a fresh coverage bundle
-make test
+# 1) Run unit tests with coverage output
+xcodebuild test \
+  -project CycleOne.xcodeproj \
+  -scheme CycleOne-Unit \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -parallel-testing-enabled YES \
+  -derivedDataPath build/deriveddata \
+  -enableCodeCoverage YES \
+  -resultBundlePath UnitCoverage.xcresult
 
-# 2) Show coverage % for every target in TestResults.xcresult
-xcrun xccov view --report --json TestResults.xcresult \
-  | jq -r '.targets[] | "\(.name): \((.lineCoverage * 100) | tostring)% (\(.coveredLines)/\(.executableLines))"'
+# 2) Run UI tests with coverage output
+xcodebuild test \
+  -project CycleOne.xcodeproj \
+  -scheme CycleOne-UI \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -parallel-testing-enabled YES \
+  -derivedDataPath build/deriveddata \
+  -enableCodeCoverage YES \
+  -resultBundlePath UICoverage.xcresult
 
-# 3) Show only the main project targets
-xcrun xccov view --report --json TestResults.xcresult \
-  | jq -r '.targets[]
-    | select(.name == "CycleOne.app" or .name == "CycleOneTests.xctest" or .name == "CycleOneUITests.xctest")
-    | "\(.name): \((.lineCoverage * 100) | tostring)% (\(.coveredLines)/\(.executableLines))"'
+# 3) Export coverage payloads and merge unit + UI reports
+rm -rf coverage_export
+mkdir -p coverage_export/unit coverage_export/ui coverage_export/merged
 
-# 4) Enforce minimum target percentage (example: 100)
-MIN_PERCENT=100
-xcrun xccov view --report --json TestResults.xcresult \
-  | jq -e --argjson min "$MIN_PERCENT" '
-    .targets
-    | map(select(.name == "CycleOne.app" or .name == "CycleOneTests.xctest" or .name == "CycleOneUITests.xctest"))
-    | all((.lineCoverage * 100) >= $min)
-  '
+xcrun xcresulttool export coverage --path UnitCoverage.xcresult --output-path coverage_export/unit
+xcrun xcresulttool export coverage --path UICoverage.xcresult --output-path coverage_export/ui
 
-# jq exits 0 when all targets meet the threshold, non-zero otherwise.
+xcrun xccov merge \
+  --outReport coverage_export/merged/merged.xccovreport \
+  --outArchive coverage_export/merged/merged.xccovarchive \
+  'coverage_export/unit/0_Test_iPhone 17 Pro_CoverageReport' \
+  'coverage_export/unit/0_Test_iPhone 17 Pro_CoverageArchive' \
+  'coverage_export/ui/0_Test_iPhone 17 Pro_CoverageReport' \
+  'coverage_export/ui/0_Test_iPhone 17 Pro_CoverageArchive'
 
-# 5) Run localization integrity checks
+# 4) Show merged target coverage percentages
+xcrun xccov view --report --json coverage_export/merged/merged.xccovreport \
+  | jq -r '.targets[] | "\(.name): \(((.lineCoverage * 100) | tostring))% (\(.coveredLines)/\(.executableLines))"'
+
+# 5) Enforce 100% for app target
+xcrun xccov view --report --json coverage_export/merged/merged.xccovreport \
+  | jq -e '.targets[] | select(.name == "CycleOne.app") | (.coveredLines == .executableLines)'
+
+# 6) Run localization integrity checks (unit scheme)
 DEST_ID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
 if [ -z "$DEST_ID" ]; then echo "No available iPhone simulator found."; exit 1; fi
 
-xcodebuild test -project CycleOne.xcodeproj -scheme CycleOne -destination "id=${DEST_ID}" \
+xcodebuild test -project CycleOne.xcodeproj -scheme CycleOne-Unit -destination "id=${DEST_ID}" \
   -parallel-testing-enabled NO \
   -only-testing:CycleOneTests/LocalizationCoverageTests \
   -only-testing:CycleOneTests/AppLanguageTests

@@ -71,4 +71,19 @@ final class CycleEnumsTests: XCTestCase {
         XCTAssertTrue(defaults.contains(where: { $0.id == "mood_swings" && $0.category == .mood }))
         XCTAssertTrue(defaults.contains(where: { $0.id == "insomnia" && $0.category == .other }))
     }
+
+    func testSymptomLocalizedName_forNameCoversMatchAndFallback() {
+        XCTAssertEqual(
+            SymptomType.localizedName(forName: "Cramps"),
+            L10n.string("symptom.cramps", default: "Cramps")
+        )
+        XCTAssertEqual(
+            SymptomType.localizedName(forName: "cRaMpS"),
+            L10n.string("symptom.cramps", default: "Cramps")
+        )
+        XCTAssertEqual(
+            SymptomType.localizedName(forName: "Unknown Symptom"),
+            "Unknown Symptom"
+        )
+    }
 }

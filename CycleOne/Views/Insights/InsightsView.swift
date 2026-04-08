@@ -211,9 +211,6 @@ struct InsightsView: View {
             .onAppear {
                 viewModel.calculateStats()
             }
-            .onChange(of: selectedLanguageCode, initial: false) { _, _ in
-                viewModel.calculateStats()
-            }
         }
         .id("insights-stack-\(selectedLanguageCode)")
         .environment(

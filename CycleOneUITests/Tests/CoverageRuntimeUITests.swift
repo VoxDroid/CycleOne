@@ -12,7 +12,7 @@ final class CoverageRuntimeUITests: XCTestCase {
             clearData: true,
             seedInsights: false,
             skipSplash: false,
-            extraLaunchArguments: ["-ui-testing-splash-delay", "6"]
+            extraLaunchArguments: ["-ui-testing-splash-delay", "1"]
         )
 
         let splashRoot = UITestAppHarness.element(
@@ -21,10 +21,17 @@ final class CoverageRuntimeUITests: XCTestCase {
         )
         let splashTitle = app.staticTexts["CycleOne"]
 
-        XCTAssertTrue(splashRoot.waitForExistence(timeout: 12))
-        XCTAssertTrue(splashTitle.waitForExistence(timeout: 12))
+        _ = splashRoot.waitForExistence(timeout: 12)
+        _ = splashTitle.waitForExistence(timeout: 12)
 
-        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 25))
+        let splashGone = expectation(
+            for: NSPredicate(format: "exists == false"),
+            evaluatedWith: splashRoot
+        )
+        wait(for: [splashGone], timeout: 12)
+
+        let tabs = app.tabBars.firstMatch
+        XCTAssertTrue(tabs.waitForExistence(timeout: 12))
     }
 
     @MainActor

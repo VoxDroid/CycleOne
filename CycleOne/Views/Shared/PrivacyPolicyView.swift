@@ -33,17 +33,15 @@ struct PrivacyPolicyView: View {
     static func defaultPolicyURL(
         language: AppLanguage = AppLanguage.currentSelection()
     ) -> URL? {
-        if let url = language.localizedResourceURL(
-            forResource: "PrivacyPolicy",
-            withExtension: "html"
-        ) {
-            return url
-        }
-
-        return Bundle.main.url(
+        let fallbackURL = Bundle.main.url(
             forResource: "PrivacyPolicy",
             withExtension: "html"
         )
+
+        return language.localizedResourceURL(
+            forResource: "PrivacyPolicy",
+            withExtension: "html"
+        ) ?? fallbackURL
     }
 
     static func fallbackMessage(for policyURL: URL?) -> String? {

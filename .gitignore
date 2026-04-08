@@ -53,12 +53,11 @@ Pods/
 .git/
 
 ## Test results
-TestResults.xcresult/
-TestResults-*
-TestResults_*
+*.xcresult
 
 ## Logs
 *.log
 
 ## Coverage
 coverage.json
+coverage_export/

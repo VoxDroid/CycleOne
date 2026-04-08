@@ -117,6 +117,9 @@ final class NotificationSettingsViewLogicTests: XCTestCase {
 
         XCTAssertEqual(NotificationSettingsView.daysLabel(for: 1), "1 day")
         XCTAssertEqual(NotificationSettingsView.daysLabel(for: 2), "2 days")
+        XCTAssertEqual(NotificationSettingsView.daysLabel(for: 3), "3 days")
+        XCTAssertEqual(NotificationSettingsView.daysLabel(for: 5), "5 days")
+        XCTAssertEqual(NotificationSettingsView.daysLabel(for: 7), "7 days")
     }
 
     @MainActor

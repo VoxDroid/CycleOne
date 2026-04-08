@@ -151,27 +151,14 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
 private extension Bundle {
     static func localizedBundle(for languageCode: String) -> Bundle? {
-        if
-            let directPath = Bundle.main.path(
-                forResource: languageCode,
-                ofType: "lproj"
-            ),
-            let bundle = Bundle(path: directPath)
-        {
-            return bundle
-        }
-
-        if
-            let groupedPath = Bundle.main.path(
-                forResource: languageCode,
-                ofType: "lproj",
-                inDirectory: "LocalizationResources"
-            ),
-            let bundle = Bundle(path: groupedPath)
-        {
-            return bundle
-        }
-
-        return nil
+        let localizationPath = Bundle.main.path(
+            forResource: languageCode,
+            ofType: "lproj",
+            inDirectory: "LocalizationResources"
+        ) ?? Bundle.main.path(
+            forResource: languageCode,
+            ofType: "lproj"
+        )
+        return localizationPath.flatMap(Bundle.init(path:))
     }
 }

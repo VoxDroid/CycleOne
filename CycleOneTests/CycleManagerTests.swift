@@ -135,6 +135,46 @@ final class CycleManagerTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(throwingContext.saveCallCount, 2)
     }
 
+    func testRebuildAllCycles_shortGapDoesNotCreateSecondCycle() throws {
+        let start = Date().adding(days: -12).startOfDay
+
+        let first = DayLog(context: context)
+        first.id = UUID()
+        first.date = start
+        first.flowLevel = FlowLevel.light.rawValue
+
+        let second = DayLog(context: context)
+        second.id = UUID()
+        second.date = start.adding(days: 10)
+        second.flowLevel = FlowLevel.heavy.rawValue
+
+        try context.save()
+
+        CycleManager.shared.rebuildAllCycles(in: context)
+
+        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        let cycles = try context.fetch(request)
+        XCTAssertEqual(cycles.count, 1)
+    }
+
+    func testRebuildAllCycles_skipsInvalidDateLog() throws {
+        let validLog = DayLog(context: context)
+        validLog.id = UUID()
+        validLog.date = Date().adding(days: -20).startOfDay
+        validLog.flowLevel = FlowLevel.light.rawValue
+
+        let invalidLog = DayLog(context: context)
+        invalidLog.id = UUID()
+        invalidLog.date = nil
+        invalidLog.flowLevel = FlowLevel.heavy.rawValue
+
+        CycleManager.shared.rebuildAllCycles(in: context)
+
+        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        let cycles = try context.fetch(request)
+        XCTAssertEqual(cycles.count, 1)
+    }
+
     func testUpdateCycleMetrics_periodLengthStopsAtNonFlowDay() throws {
         let startDate = Date().adding(days: -6).startOfDay
 
@@ -213,6 +253,24 @@ final class CycleManagerTests: XCTestCase {
         CycleManager.shared.updateCycleMetrics(in: throwingContext)
 
         XCTAssertTrue(true)
+    }
+
+    func testUpdateCycleMetrics_skipsCycleWithMissingStartDate() throws {
+        let validCycle = Cycle(context: context)
+        validCycle.id = UUID()
+        validCycle.startDate = Date().adding(days: -30).startOfDay
+        validCycle.createdAt = Date()
+
+        let invalidCycle = Cycle(context: context)
+        invalidCycle.id = UUID()
+        invalidCycle.startDate = nil
+        invalidCycle.createdAt = Date()
+
+        CycleManager.shared.updateCycleMetrics(in: context)
+
+        let request: NSFetchRequest<Cycle> = Cycle.fetchRequest()
+        let cycles = try context.fetch(request)
+        XCTAssertEqual(cycles.count, 2)
     }
 
     func testDebugExtractHelpers_coverValueVariants() {
