@@ -54,4 +54,5 @@ jobs:
           command -v swiftformat >/dev/null 2>&1 || brew install swiftformat
 
       - name: Run Checks
-        run: make check
+        timeout-minutes: 80
+        run: make check UI_PARALLEL_TESTING=NO

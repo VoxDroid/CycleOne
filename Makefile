@@ -4,6 +4,9 @@
 
 SIM_DEST ?= platform=iOS Simulator,name=iPhone 17 Pro
 DERIVED_DATA_PATH ?= build/deriveddata
+DESTINATION_TIMEOUT ?= 300
+UNIT_PARALLEL_TESTING ?= YES
+UI_PARALLEL_TESTING ?= YES
 
 lint:
 	swiftlint lint --config .swiftlint.yml
@@ -23,7 +26,8 @@ test:
 		-project CycleOne.xcodeproj \
 		-scheme CycleOne-Unit \
 		-destination '$(SIM_DEST)' \
-		-parallel-testing-enabled YES \
+		-destination-timeout $(DESTINATION_TIMEOUT) \
+		-parallel-testing-enabled $(UNIT_PARALLEL_TESTING) \
 		-derivedDataPath $(DERIVED_DATA_PATH) \
 		-resultBundlePath TestResults.xcresult
 
@@ -33,7 +37,8 @@ test-ui:
 		-project CycleOne.xcodeproj \
 		-scheme CycleOne-UI \
 		-destination '$(SIM_DEST)' \
-		-parallel-testing-enabled YES \
+		-destination-timeout $(DESTINATION_TIMEOUT) \
+		-parallel-testing-enabled $(UI_PARALLEL_TESTING) \
 		-derivedDataPath $(DERIVED_DATA_PATH)
 
 test-reset:
